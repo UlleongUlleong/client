@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { BiHomeAlt } from 'react-icons/bi';
 import { FaRegThumbsUp, FaRegUser } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 interface NavButtonProps {
   label: string;
   Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  path: string;
 }
 
 interface NavigationBarProps {
@@ -17,13 +19,13 @@ const NavigationBar = ({ children }: NavigationBarProps) => {
     <NavigationBarStyle>
       <div className="navbar">
         <div>
-          <NavButton label="Home" Icon={BiHomeAlt} />
-          <NavButton label="Reviews" Icon={FaRegThumbsUp} />
+          <NavButton label="Home" Icon={BiHomeAlt} path="/home" />
+          <NavButton label="Reviews" Icon={FaRegThumbsUp} path="/reviews" />
         </div>
         <div className="user-btn">
-          <button>
+          <Link to="/profile">
             <FaRegUser />
-          </button>
+          </Link>
         </div>
       </div>
       {children}
@@ -31,12 +33,12 @@ const NavigationBar = ({ children }: NavigationBarProps) => {
   );
 };
 
-const NavButton = ({ label, Icon }: NavButtonProps) => (
+const NavButton = ({ label, Icon, path }: NavButtonProps) => (
   <div className="btn">
-    <button>
+    <Link to={path}>
       <div>{label}</div>
       <Icon />
-    </button>
+    </Link>
   </div>
 );
 
@@ -62,11 +64,15 @@ const NavigationBarStyle = styled.div`
     align-items: center;
     padding-bottom: 20px;
 
-    button {
+    a {
       color: white;
+      text-decoration: none;
       background: none;
       border: none;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
       div {
         font-size: 0.8rem;
@@ -87,8 +93,9 @@ const NavigationBarStyle = styled.div`
     justify-content: center;
     align-items: center;
 
-    button {
+    a {
       color: white;
+      text-decoration: none;
       background: none;
       border: none;
       cursor: pointer;
