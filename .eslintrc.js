@@ -14,7 +14,7 @@ export default {
   plugins: ['react-refresh', 'react'],
   settings: {
     react: {
-      version: 'detect',
+      version: '18.0',
     },
   },
   rules: {
@@ -22,10 +22,16 @@ export default {
       'warn',
       { allowConstantExport: true },
     ],
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-        "warn"
-    ],
-    "react/react-in-jsx-scope": "off", 
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn'],
+    'react/react-in-jsx-scope': 'off',
   },
+  overrides: [
+    {
+      files: ['*.ts', '*.tsx'], // TypeScript 파일에만 적용
+      rules: {
+        '@typescript-eslint/no-unused-vars': ['warn'], // 경고로 설정
+      },
+    },
+  ],
 };
