@@ -67,6 +67,7 @@ const RoomInfoInputStyle = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding-bottom: 20px;
   }
 
   .input-group {

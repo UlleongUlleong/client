@@ -22,7 +22,7 @@ const MakeChatStyle = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 4%;
+  padding: 2% 0;
   box-sizing: border-box;
   overflow: auto;
 
