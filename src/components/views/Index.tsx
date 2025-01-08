@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NavigationBar from './layouts/NavigationBar';
 import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 const Index = () => {
   const routeLists = [
@@ -21,6 +22,11 @@ const Index = () => {
     {
       path: '/login',
       element: <Login />,
+      noNav: true,
+    },
+    {
+      path: '/register',
+      element: <Register />,
       noNav: true,
     },
   ];
