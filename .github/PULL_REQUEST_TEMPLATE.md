@@ -1,3 +1,11 @@
+---
+name: Pull Request
+about: pr 템플릿
+title: '[타입]: 작업 요약'
+labels: ''
+assignees: ''
+---
+
 ## #️⃣ 연관된 이슈 (선택)
 
 > ex) #이슈번호, #이슈번호
