@@ -1,16 +1,21 @@
-import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NavigationBar from './layouts/NavigationBar';
-
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import React from 'react';
 const Index = () => {
   const routeLists = [
     {
       path: '/',
-      element: <></>,
+      element: <Home />,
     },
     {
       path: '/reviews',
       element: <></>,
+    },
+    {
+      path: '*',
+      element: <NotFound />,
     },
   ];
 
