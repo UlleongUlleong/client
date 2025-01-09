@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import NavigationBar from '../components/NavigationBar';
+import NavigationBar from './layouts/NavigationBar';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import ChatLists from './pages/ChatLists';
