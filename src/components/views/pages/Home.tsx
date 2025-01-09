@@ -3,7 +3,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { IconButton } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Spinner from '../../../styles/spinner.gif';
+import Spinner from '../../../assets/spinner.gif';
 import React from 'react';
 import {
   MainContainer,
@@ -238,7 +238,7 @@ function Home() {
     <MainContainer>
       <TopBar>
         <StyledTextField />
-        <IconButton sx={{ margin: '8px' }}>
+        <IconButton sx={{ margin: '20px' }}>
           <SearchOutlinedIcon sx={{ color: 'black' }} />
         </IconButton>
         <LoginButton>Login</LoginButton>

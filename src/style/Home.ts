@@ -48,9 +48,9 @@ export const CategoryTitle = styled.span`
 
 export const StyledTextField = styled(TextField)`
   width: 50%;
-  max-width: 700px;
+  max-width: 650px;
   font-family: 'Noto Sans KR', serif;
-
+  left: 20px;
   .MuiOutlinedInput-root {
     font-family: 'Noto Sans KR', serif;
     color: #000;
