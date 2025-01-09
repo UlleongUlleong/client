@@ -3,7 +3,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { IconButton } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Spinner from '../../../assets/spinner.gif';
+import Spinner from '../../assets/Spinner.gif';
 import React from 'react';
 import {
   MainContainer,
@@ -22,7 +22,7 @@ import {
   SliderContainer,
   CategoryTitle,
   Loading,
-} from '../../../style/Home.ts';
+} from '../../styles/Home.ts';
 
 //text 30자 넘으면 ..으로 표시하게
 export interface ChatRoom {
@@ -246,7 +246,7 @@ function Home() {
       <Category>
         {}
         <CategoryTitle title="최신 순">최신 순</CategoryTitle>
-        <a className="view_all" href="/newest">
+        <a className="view_all" href="/chatLists">
           전체보기
         </a>
       </Category>
