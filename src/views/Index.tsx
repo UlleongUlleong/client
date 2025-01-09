@@ -11,7 +11,7 @@ const Index = () => {
       element: <Home />,
     },
     {
-      path: '/chatLists',
+      path: '/chatlist',
       element: <ChatLists />,
     },
     {
