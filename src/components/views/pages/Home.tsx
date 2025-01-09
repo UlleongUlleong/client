@@ -150,34 +150,39 @@ function Home() {
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 2,
-    centerPadding: '0px',
-
+    slidesToShow: 5,
+    slidesToScroll: 5,
     responsive: [
       {
-        breakpoint: 1900,
+        breakpoint: 2400,
+        settings: {
+          slidesToShow: 5,
+          slidesToScroll: 5,
+        },
+      },
+      {
+        breakpoint: 1957,
         settings: {
           slidesToShow: 4,
           slidesToScroll: 4,
         },
       },
       {
-        breakpoint: 1460,
+        breakpoint: 1585,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
         },
       },
       {
-        breakpoint: 1023,
+        breakpoint: 1213,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 767,
+        breakpoint: 842,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,

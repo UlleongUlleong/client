@@ -48,11 +48,12 @@ const NavigationBarStyle = styled.div`
 
   .navbar {
     display: flex;
+    position: fixed;
     flex-direction: column;
     justify-content: space-between;
     width: 6%;
     min-width: 80px;
-    height: 100%;
+    height: 100vh;
     background: black;
     padding: 30px 0;
   }

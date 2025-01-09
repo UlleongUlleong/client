@@ -2,27 +2,33 @@ import styled from 'styled-components';
 import { TextField } from '@mui/material';
 import Slider from 'react-slick';
 export const MainContainer = styled.div`
-  width: 95%;
-  height: 100%;
-  flex-direction: column;
+  width: calc(100% - 80px);
+  position: relative;
+  margin-left: 80px; // NavigationBar의 width만큼 margin 추가
+  padding: 0px;
+  min-height: 100vh;
 `;
 
 export const TopBar = styled.div`
-  display: flex;
-  justify-content: center;
+  left: 80px; // navbar의 min-width값으로 고정
+  height: 100px;
+  background-color: blue;
   align-items: center;
-  align-content: center;
-  width: 100%;
-  height: 140px;
 `;
 
 export const SliderContainer = styled.div`
   width: 100%;
-  background-color: black;
+  min-width: 400px;
+  background-color: gray;
+  align-items: center;
+  margin-bottom: 30px;
+
+  padding: 0; // 패딩 제거
 `;
 
 export const StyledTextField = styled(TextField)`
   width: 50%;
+
   font-family: 'Inter', sans-serif;
   background: #ededed;
 
@@ -50,14 +56,11 @@ export const LoginButton = styled.button`
 export const ChatRoomsGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
-
-  gap: 30px;
+  width: 90%;
+  gap: 15px;
   background-color: bisque;
-  justify-content: center;
-  padding-top: 25px;
-  align-items: center;
-  align-content: center;
+  margin: 0 auto;
+  padding: 15px;
 
   /* @media (min-width: 1920px) {
     max-width: 1900px;
@@ -105,17 +108,17 @@ export const ChatRoomsGrid = styled.div`
 `;
 
 export const ChatRoom = styled.div`
-  height: 300px;
+  background-color: coral;
+  flex-direction: column;
   align-items: center;
   cursor: pointer;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+  padding: 10px;
+  margin: 10px auto;
 `;
 export const ChatImage = styled.div`
-  height: 218px;
-  width: 320px;
-
+  height: 200px;
+  width: 300px;
+  margin: 0 auto;
   img {
     width: 100%;
     height: 100%;
@@ -125,11 +128,10 @@ export const ChatImage = styled.div`
 `;
 
 export const ChatTitleBox = styled.div`
-  width: 95%;
+  width: 290px;
+  margin: 5px auto;
   height: 20px;
   text-align: left;
-  margin-top: 3px;
-  margin-left: 5px;
 `;
 
 export const Title = styled.span`
@@ -140,9 +142,9 @@ export const Title = styled.span`
 `;
 
 export const ChatDescription = styled.div`
-  height: 15%;
-  width: 95%;
-  margin-left: 5px;
+  width: 290px;
+  margin: 0 auto;
+  background-color: #ffffff;
 `;
 
 export const Text = styled.span`
@@ -156,26 +158,35 @@ export const Text = styled.span`
 `;
 
 export const StyledSlider = styled(Slider)`
-  height: 300px;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   background-color: aliceblue;
-  justify-content: center;
-  align-items: center;
-
+  position: relative;
   .slick-list {
-    height: 100%;
-    width: 100%;
-  }
-  .slick-dots {
-    width: 100%;
+    margin: 0;
   }
 
-  /* .slick-track {
-    display: flex;
-    align-items: center;
-  } */
+  .slick-slide {
+    padding: 0 15px;
+  }
 
   .slick-arrow {
+    width: 40px;
+    height: 40px;
+    z-index: 1;
+
+    &::before {
+      font-size: 35px;
+    }
+
+    &.slick-prev {
+      left: -30px;
+    }
+
+    &.slick-next {
+      right: -30px;
+    }
+
     &:hover {
       &::before {
         color: rgb(131, 131, 131);
