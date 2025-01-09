@@ -10,25 +10,30 @@ export const MainContainer = styled.div`
 `;
 
 export const TopBar = styled.div`
-  left: 80px; // navbar의 min-width값으로 고정
-  height: 100px;
-  background-color: blue;
-  align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* 세로 중앙 정렬 */
+  // navbar의 min-width값으로 고정
+  height: 130px;
+  padding: 0 20px;
+  min-width: 400px;
 `;
 
-export const SliderContainer = styled.div`
-  width: 100%;
-  min-width: 400px;
-  background-color: gray;
-  align-items: center;
-  margin-bottom: 30px;
-
-  padding: 0; // 패딩 제거
+export const Category = styled.div`
+  justify-content: space-between;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  padding: 0 20px;
+  .view_all {
+    text-decoration: underline;
+  }
+  .category_name {
+  }
 `;
 
 export const StyledTextField = styled(TextField)`
   width: 50%;
-
+  max-width: 800px;
   font-family: 'Inter', sans-serif;
   background: #ededed;
 
@@ -46,11 +51,24 @@ export const StyledTextField = styled(TextField)`
 export const LoginButton = styled.button`
   width: 60px;
   height: 30px;
-  margin: 0 10px;
   font-family: 'Inter', sans-serif;
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(0, 0, 0);
   border-radius: 5px;
+  position: absolute;
+  right: 15px;
+  cursor: pointer;
+`;
+
+export const SliderContainer = styled.div`
+  width: 100%;
+  min-width: 400px;
+  left: 10%;
+
+  align-items: center;
+  margin-bottom: 30px;
+
+  padding: 0; // 패딩 제거
 `;
 
 export const ChatRoomsGrid = styled.div`
@@ -58,57 +76,11 @@ export const ChatRoomsGrid = styled.div`
   flex-wrap: wrap;
   width: 90%;
   gap: 15px;
-  background-color: bisque;
-  margin: 0 auto;
+  margin: 10px auto;
   padding: 15px;
-
-  /* @media (min-width: 1920px) {
-    max-width: 1900px;
-    & > * {
-      width: calc(20% - 20px);
-      min-width: 350px;
-    }
-  } */
-
-  /* // 1440px ~ 1919px (최대 4개)
-  @media (min-width: 1440px) and (max-width: 1919px) {
-    max-width: 1580px;
-    & > * {
-      width: calc(25% - 20px);
-      min-width: 300px;
-    }
-  }
-
-  // 1024px ~ 1439px (최대 3개)
-  @media (min-width: 1024px) and (max-width: 1439px) {
-    max-width: 1200px;
-    & > * {
-      width: calc(33.333% - 20px);
-      min-width: 280px;
-    }
-  }
-
-  // 768px ~ 1023px (최대 2개)
-  @media (min-width: 768px) and (max-width: 1023px) {
-    max-width: 800px;
-    & > * {
-      width: calc(50% - 20px);
-      min-width: 260px;
-    }
-  }
-
-  // 768px 미만 (1개)
-  @media (max-width: 767px) {
-    max-width: 400px;
-    & > * {
-      width: calc(100% - 20px);
-      min-width: 220px;
-    }
-  } */
 `;
 
 export const ChatRoom = styled.div`
-  background-color: coral;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
@@ -144,7 +116,6 @@ export const Title = styled.span`
 export const ChatDescription = styled.div`
   width: 290px;
   margin: 0 auto;
-  background-color: #ffffff;
 `;
 
 export const Text = styled.span`
@@ -160,7 +131,7 @@ export const Text = styled.span`
 export const StyledSlider = styled(Slider)`
   width: 90%;
   margin: 0 auto;
-  background-color: aliceblue;
+
   position: relative;
   .slick-list {
     margin: 0;

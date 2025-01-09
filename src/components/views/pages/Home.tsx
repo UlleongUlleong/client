@@ -13,6 +13,7 @@ import {
   ChatRoom,
   ChatImage,
   ChatTitleBox,
+  Category,
   Title,
   ChatDescription,
   Text,
@@ -238,6 +239,12 @@ function Home() {
         </IconButton>
         <LoginButton>Login</LoginButton>
       </TopBar>
+      <Category>
+        <div className="category_name">카테고리</div>
+        <a className="view_all" href={'/category'}>
+          전체보기
+        </a>
+      </Category>
       <SliderContainer>
         <StyledSlider {...settings}>
           {featuredRooms.map((room) => (
@@ -255,6 +262,7 @@ function Home() {
           ))}
         </StyledSlider>
       </SliderContainer>
+      <div>하이요 </div>
       <ChatRoomsGrid>
         {scrollRooms.map((room, index) => (
           <ChatRoom
