@@ -3,6 +3,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { IconButton } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Spinner from '../../../styles/spinner.gif';
 import React from 'react';
 import {
   MainContainer,
@@ -20,6 +21,7 @@ import {
   StyledSlider,
   SliderContainer,
   CategoryTitle,
+  Loading,
 } from '../../../style/Home.ts';
 
 //text 30자 넘으면 ..으로 표시하게
@@ -148,6 +150,7 @@ function Home() {
   const observer = useRef<IntersectionObserver>();
   const lastRoomElementRef = useRef<HTMLDivElement>(null);
 
+  const user_category = ['소주', '맥주', '시끌시끌'];
   const settings = {
     dots: true,
     infinite: false,
@@ -177,14 +180,14 @@ function Home() {
         },
       },
       {
-        breakpoint: 1213,
+        breakpoint: 1230,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 842,
+        breakpoint: 858,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -203,9 +206,8 @@ function Home() {
         .fill(null)
         .map((_, index) => ({
           ...dummyChatRooms[index % dummyChatRooms.length],
-          id: Date.now() + index, // 유니크한 ID 생성
+          id: Number(Date.now()) + index, // 유니크한 ID 생성
         }));
-
       setScrollRooms((prev) => [...prev, ...newRooms]);
       setHasMore(newRooms.length > 0);
     } catch (error) {
@@ -227,6 +229,7 @@ function Home() {
 
     if (lastRoomElementRef.current) {
       observer.current.observe(lastRoomElementRef.current);
+      //관측 시작
     }
 
     return () => observer.current?.disconnect();
@@ -241,6 +244,7 @@ function Home() {
         <LoginButton>Login</LoginButton>
       </TopBar>
       <Category>
+        {}
         <CategoryTitle title="최신 순">최신 순</CategoryTitle>
         <a className="view_all" href="/newest">
           전체보기
@@ -263,7 +267,12 @@ function Home() {
           ))}
         </StyledSlider>
       </SliderContainer>
-      <CategoryTitle title="최신순">사용자 추천 순</CategoryTitle>
+      {user_category.length > 0 ? (
+        <CategoryTitle>사용자 추천 순</CategoryTitle>
+      ) : (
+        <CategoryTitle> 기본 순</CategoryTitle>
+      )}
+
       <ChatRoomsGrid>
         {scrollRooms.map((room, index) => (
           <ChatRoom
@@ -281,7 +290,11 @@ function Home() {
             </ChatDescription>
           </ChatRoom>
         ))}
-        {loading && <div>Loading...</div>}
+        {loading && (
+          <Loading>
+            <img src={Spinner}></img>
+          </Loading>
+        )}
       </ChatRoomsGrid>
     </MainContainer>
   );

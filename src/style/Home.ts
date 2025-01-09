@@ -5,17 +5,16 @@ export const MainContainer = styled.div`
   width: calc(100% - 80px);
   position: relative;
   margin-left: 80px; // NavigationBar의 width만큼 margin 추가
-  padding: 0px;
   min-height: 100vh;
 `;
 
 export const TopBar = styled.div`
   display: flex;
+  margin-top: 20px;
   justify-content: center;
   align-items: center; /* 세로 중앙 정렬 */
   // navbar의 min-width값으로 고정
   height: 130px;
-  padding: 0 20px;
   min-width: 400px;
 `;
 
@@ -41,14 +40,14 @@ export const CategoryTitle = styled.span`
   font-size: 15px;
   background-color: #f5f5f5;
   position: relative;
-  left: 30px;
-  top: 10px;
+  left: 3%;
+  top: 20px;
   border-radius: 2px;
 `;
 
 export const StyledTextField = styled(TextField)`
   width: 50%;
-  max-width: 800px;
+  max-width: 700px;
   font-family: 'Noto Sans KR', serif;
 
   .MuiOutlinedInput-root {
@@ -70,7 +69,7 @@ export const LoginButton = styled.button`
   border: 1px solid rgb(0, 0, 0);
   border-radius: 5px;
   position: absolute;
-  right: 15px;
+  right: 20px;
   cursor: pointer;
 `;
 
@@ -186,4 +185,10 @@ export const StyledSlider = styled(Slider)`
     color: rgb(0, 0, 0);
     content: '❯';
   }
+`;
+
+export const Loading = styled.div`
+  font-family: 'Noto Sans KR', serif;
+  align-items: center;
+  margin: 0 auto;
 `;
