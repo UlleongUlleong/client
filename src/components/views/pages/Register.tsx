@@ -17,7 +17,8 @@ const RegisterStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  padding: 20px 0;
+
   .container {
     width: 40%;
     min-width: 500px;
