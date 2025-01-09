@@ -20,25 +20,39 @@ export const TopBar = styled.div`
 `;
 
 export const Category = styled.div`
+  font-family: 'Noto Sans KR', serif;
   justify-content: space-between;
-  font-family: 'Inter', sans-serif;
-  display: flex;
-  padding: 0 20px;
+
+  height: 50px;
   .view_all {
     text-decoration: underline;
+    font-size: 12px;
+    float: right;
+    position: relative;
+    right: 30px;
+    top: 30px;
+
+    cursor: pointer;
   }
-  .category_name {
-  }
+`;
+
+export const CategoryTitle = styled.span`
+  font-family: 'Noto Sans KR', serif;
+  font-size: 15px;
+  background-color: #f5f5f5;
+  position: relative;
+  left: 30px;
+  top: 10px;
+  border-radius: 2px;
 `;
 
 export const StyledTextField = styled(TextField)`
   width: 50%;
   max-width: 800px;
-  font-family: 'Inter', sans-serif;
-  background: #ededed;
+  font-family: 'Noto Sans KR', serif;
 
   .MuiOutlinedInput-root {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Noto Sans KR', serif;
     color: #000;
 
     &.Mui-focused .MuiOutlinedInput-notchedOutline {
@@ -51,7 +65,7 @@ export const StyledTextField = styled(TextField)`
 export const LoginButton = styled.button`
   width: 60px;
   height: 30px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans KR', serif;
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(0, 0, 0);
   border-radius: 5px;
@@ -107,7 +121,7 @@ export const ChatTitleBox = styled.div`
 `;
 
 export const Title = styled.span`
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans KR', serif;
   font-weight: 600;
   font-size: 14px;
   color: #000000;
@@ -119,7 +133,7 @@ export const ChatDescription = styled.div`
 `;
 
 export const Text = styled.span`
-  font-family: 'Inter', sans-serif;
+  font-family: 'Noto Sans KR', serif;
   font-size: 12px;
   color: #000000;
   display: block;
@@ -134,11 +148,10 @@ export const StyledSlider = styled(Slider)`
 
   position: relative;
   .slick-list {
-    margin: 0;
+    margin: 0 15px;
   }
 
   .slick-slide {
-    padding: 0 15px;
   }
 
   .slick-arrow {

@@ -19,6 +19,7 @@ import {
   Text,
   StyledSlider,
   SliderContainer,
+  CategoryTitle,
 } from '../../../style/Home.ts';
 
 //text 30자 넘으면 ..으로 표시하게
@@ -240,8 +241,8 @@ function Home() {
         <LoginButton>Login</LoginButton>
       </TopBar>
       <Category>
-        <div className="category_name">카테고리</div>
-        <a className="view_all" href={'/category'}>
+        <CategoryTitle title="최신 순">최신 순</CategoryTitle>
+        <a className="view_all" href="/newest">
           전체보기
         </a>
       </Category>
@@ -262,7 +263,7 @@ function Home() {
           ))}
         </StyledSlider>
       </SliderContainer>
-      <div>하이요 </div>
+      <CategoryTitle title="최신순">사용자 추천 순</CategoryTitle>
       <ChatRoomsGrid>
         {scrollRooms.map((room, index) => (
           <ChatRoom
