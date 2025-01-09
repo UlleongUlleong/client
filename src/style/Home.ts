@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 export const MainContainer = styled.div`
   width: calc(100% - 80px);
   position: relative;
+  padding: 0px;
   margin-left: 80px; // NavigationBar의 width만큼 margin 추가
   min-height: 100vh;
 `;
@@ -12,7 +13,7 @@ export const TopBar = styled.div`
   display: flex;
   margin-top: 20px;
   justify-content: center;
-  align-items: center; /* 세로 중앙 정렬 */
+  align-items: center;
   // navbar의 min-width값으로 고정
   height: 130px;
   min-width: 400px;

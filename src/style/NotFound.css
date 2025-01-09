@@ -3,14 +3,16 @@
 .page {
   width: calc(100% - 80px);
   position: relative;
-  margin-left: 80px;
+  margin-left: 40px;
   padding: 0px;
   min-height: 100vh;
 }
 
 .error-page-wrapper {
   height: 100vh;
-  background: white;
+  position: relative;
+  margin-left: 80px;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
