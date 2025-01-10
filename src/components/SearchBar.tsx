@@ -82,8 +82,11 @@ const SearchWrapper = styled.div`
 const Input = styled.input`
   flex: 1;
   border: none;
+  width: 100%;
   outline: none;
   margin: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const IconButton = styled.button`
@@ -91,6 +94,7 @@ const IconButton = styled.button`
   border: none;
   cursor: pointer;
   padding: 4px;
+
   display: flex;
   align-items: center;
 `;

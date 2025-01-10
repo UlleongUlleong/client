@@ -3,11 +3,17 @@ import { TextField } from '@mui/material';
 import Slider from 'react-slick';
 
 export const MainContainer = styled.div`
+  width: calc(100% - 80px);
+  margin-left: 80px;
   width: 100%;
   position: relative;
   padding: 0px;
   min-height: 100vh;
   overflow-y: auto;
+  @media (max-width: 468px) {
+    width: calc(100% - 70px);
+    margin-left: 70px;
+  }
 `;
 
 export const TopBar = styled.div`
@@ -16,7 +22,10 @@ export const TopBar = styled.div`
   justify-content: center;
   align-items: center;
   height: 130px;
-  min-width: 400px;
+
+  @media (max-width: 468px) {
+    min-width: 200px;
+  }
 `;
 
 export const Category = styled.div`
