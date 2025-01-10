@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import RegisterBox from '../../register/RegisterBox';
+import RegisterBox from '../../components/register/RegisterBox';
 
 const Register = () => {
   return (

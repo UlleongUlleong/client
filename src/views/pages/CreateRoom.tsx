@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import SelectTheme from '../../create-room/SelecteTheme';
-import SelectKeywords from '../../create-room/SelectKeywords';
-import RoomInfoInput from '../../create-room/RoomInfoInput';
+import SelectTheme from '../../components/create-room/SelecteTheme';
+import SelectKeywords from '../../components/create-room/SelectKeywords';
+import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 
 const MakeChat = () => {
   return (

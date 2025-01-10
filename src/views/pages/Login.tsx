@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import LoginBox from '../../login/LoginBox';
+import LoginBox from '../../components/login/LoginBox';
 
 const Login = () => {
   return (
