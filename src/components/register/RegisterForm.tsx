@@ -1,7 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const RegisterForm = () => {
+interface RegisterFormProps {
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  confirmPassword: string;
+  setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
+  nickname: string;
+  setNickname: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const RegisterForm = ({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  confirmPassword,
+  setConfirmPassword,
+  nickname,
+  setNickname,
+}: RegisterFormProps) => {
   return (
     <RegisterFormStyle>
       <form>
@@ -9,21 +29,31 @@ const RegisterForm = () => {
           className="register"
           type="email"
           placeholder="이메일을 입력하세요"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <input
-          className="register"
-          type="password"
-          placeholder="비밀번호를 입력하세요"
-        />
-        <input
-          className="register"
-          type="password"
-          placeholder="비밀번호를 한 번 더 입력하세요"
-        />
+        <div className="password-group">
+          <input
+            className="register"
+            type="password"
+            placeholder="비밀번호를 입력하세요"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            className="register"
+            type="password"
+            placeholder="비밀번호를 한 번 더 입력하세요"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </div>
         <input
           className="register"
           type="text"
           placeholder="사용하실 닉네임을 입력해주세요"
+          value={nickname}
+          onChange={(e) => setNickname(e.target.value)}
         />
       </form>
     </RegisterFormStyle>
@@ -48,6 +78,12 @@ const RegisterFormStyle = styled.div`
     flex-direction: column;
     gap: 30px;
     width: 100%;
+  }
+
+  .password-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .register {

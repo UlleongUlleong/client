@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
 
 const RegisterBox = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [nickname, setNickname] = useState<string>('');
+  const [allChecked, setAllChecked] = useState<boolean>(false);
+  const [checkedAge, setCheckedAge] = useState<boolean>(false);
+  const [checkedUseInfo, setCheckedUseInfo] = useState<boolean>(false);
+
+  useEffect(() => {
+    setAllChecked(checkedAge && checkedUseInfo);
+  }, [checkedAge, checkedUseInfo]);
+
+  const handleAllChecked = (isChecked: boolean) => {
+    setAllChecked(isChecked);
+    setCheckedAge(isChecked);
+    setCheckedUseInfo(isChecked);
+  };
+
+  const handleRegister = () => {
+    // 동의 여부
+    if (!checkedAge || !checkedUseInfo) {
+      alert('필수 항목에 동의해야 회원가입이 가능합니다.');
+      return;
+    }
+    // 회원가입 로직 넣기
+    console.log('회원가입 성공');
+    alert('회원가입이 완료되었습니다');
+  };
+
   return (
     <RegisterBoxStyle>
       <div className="logo">
@@ -11,29 +40,54 @@ const RegisterBox = () => {
       </div>
       <h1>회원가입</h1>
       <div className="register-form">
-        <RegisterForm />
+        <RegisterForm
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          setPassword={setPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          nickname={nickname}
+          setNickname={setNickname}
+        />
       </div>
       <div className="keywords-group">
         <SelectKeywords title="register" />
       </div>
       <div className="check-form">
-        <div>
-          <input type="radio" />
+        <div className="check-group">
+          <input
+            type="checkbox"
+            checked={allChecked}
+            onChange={(e) => handleAllChecked(e.target.checked)}
+          />
           <span>모두 동의합니다.</span>
         </div>
-        <div className="check-detail">
-          <div>
-            <input type="radio" />
-            <span>만 19세 이상입니다.</span>
+        <div className="check-detail-group">
+          <div className="check-group">
+            <input
+              type="checkbox"
+              checked={checkedAge}
+              onChange={(e) => {
+                setCheckedAge(e.target.checked);
+              }}
+            />
+            <span>만 19세 이상입니다. (필수)</span>
           </div>
-          <div>
-            <input type="radio" />
+          <div className="check-group">
+            <input
+              type="checkbox"
+              checked={checkedUseInfo}
+              onChange={(e) => setCheckedUseInfo(e.target.checked)}
+            />
             <span>개인정보 수집 및 이용 (필수)</span>
           </div>
         </div>
       </div>
       <div className="register-btn">
-        <button type="button">회원가입하기</button>
+        <button type="button" onClick={handleRegister}>
+          회원가입하기
+        </button>
       </div>
     </RegisterBoxStyle>
   );
@@ -79,11 +133,17 @@ const RegisterBoxStyle = styled.div`
     gap: 6px;
   }
 
-  .check-detail {
+  .check-detail-group {
     display: flex;
     flex-direction: column;
     gap: 4px;
     padding-left: 10px;
+    font-size: 0.9rem;
+  }
+
+  .check-group {
+    display: flex;
+    gap: 4px;
   }
 
   .register-btn {
