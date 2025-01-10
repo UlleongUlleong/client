@@ -1,12 +1,14 @@
 import styled from 'styled-components';
 import { TextField } from '@mui/material';
 import Slider from 'react-slick';
+
 export const MainContainer = styled.div`
-  width: calc(100% - 80px);
+  width: 100%;
   position: relative;
   padding: 0px;
-  margin-left: 80px; // NavigationBar의 width만큼 margin 추가
+  // NavigationBar의 width만큼 margin 추가
   min-height: 100vh;
+  overflow-y: auto;
 `;
 
 export const TopBar = styled.div`
@@ -94,7 +96,7 @@ export const ChatRoomsGrid = styled.div`
   padding: 15px;
 `;
 
-export const ChatRoom = styled.div`
+export const ChatRoomContainer = styled.div`
   flex-direction: column;
   align-items: center;
   cursor: pointer;

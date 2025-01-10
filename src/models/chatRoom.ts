@@ -1,4 +1,4 @@
-export type ChatRoom = {
+export type ChatRoomType = {
   id: number;
   ownerId: number;
   name: string;
