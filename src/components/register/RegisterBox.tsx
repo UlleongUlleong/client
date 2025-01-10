@@ -23,7 +23,6 @@ const RegisterBox = () => {
   };
 
   const handleRegister = () => {
-    // 동의 여부
     if (!checkedAge || !checkedUseInfo) {
       alert('필수 항목에 동의해야 회원가입이 가능합니다.');
       return;
