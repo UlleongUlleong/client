@@ -55,6 +55,9 @@ const NavigationBarStyle = styled.div`
     height: 100%;
     background: black;
     padding: 30px 0;
+    @media (max-width: 432px) {
+      min-width: 70px;
+    }
   }
 
   .btn {

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ChatRoom, { dummyChatRooms, IChatRoom } from './ChatRoom';
-import { StyleChatRoomsGrid } from './styles/Home';
+import { StyleChatRoomsGrid } from '../styles/Home';
 import Spinner from '../assets/Spinner.gif';
-import { LastItemContainer } from './styles/Home';
+import { LastItemContainer } from '../styles/Home';
 
 function ChatRoomGrid() {
   const [scrollChatRooms, setScrollChatRooms] = useState<IChatRoom[]>(

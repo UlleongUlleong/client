@@ -1,4 +1,4 @@
-import '../../components/styles/NotFound.css';
+import '../../styles/NotFound.css';
 import React from 'react';
 function NotFound() {
   return (

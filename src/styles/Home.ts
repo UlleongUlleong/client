@@ -6,7 +6,6 @@ export const MainContainer = styled.div`
   width: 100%;
   position: relative;
   padding: 0px;
-  // NavigationBar의 width만큼 margin 추가
   min-height: 100vh;
   overflow-y: auto;
 `;
@@ -16,7 +15,6 @@ export const TopBar = styled.div`
   margin-top: 20px;
   justify-content: center;
   align-items: center;
-  // navbar의 min-width값으로 고정
   height: 130px;
   min-width: 400px;
 `;
@@ -24,16 +22,16 @@ export const TopBar = styled.div`
 export const Category = styled.div`
   font-family: 'Noto Sans KR', serif;
   justify-content: space-between;
-
   height: 50px;
   .view_all {
-    text-decoration: none;
-    font-size: 12px;
+    text-decoration: underline;
+    font-size: 14px;
     float: right;
     position: relative;
     right: 30px;
     top: 30px;
     cursor: pointer;
+    color: black;
     &:visited {
       color: black;
     }
@@ -45,18 +43,21 @@ export const Category = styled.div`
 
 export const CategoryTitle = styled.span`
   font-family: 'Noto Sans KR', serif;
-  font-size: 15px;
+  font-size: 16px;
   position: relative;
   left: 3%;
   top: 20px;
+  font-weight: 600;
   border-radius: 2px;
 `;
 
 export const StyledTextField = styled(TextField)`
   width: 50%;
   max-width: 650px;
+  border-radius: 5px;
   font-family: 'Noto Sans KR', serif;
   left: 20px;
+
   .MuiOutlinedInput-root {
     font-family: 'Noto Sans KR', serif;
     color: #000;
@@ -65,6 +66,23 @@ export const StyledTextField = styled(TextField)`
       border-color: gray;
       border-width: 2px;
     }
+  }
+`;
+
+export const StyledTextFields = styled.form`
+  width: 50%;
+  max-width: 650px;
+  font-family: 'Noto Sans KR', serif;
+  .input {
+    width: 90%;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .icon {
+    position: relative;
+    margin: 0;
   }
 `;
 
@@ -83,10 +101,10 @@ export const LoginButton = styled.button`
 export const StyleChatRoomsGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 90%;
+  width: 100%;
   gap: 10px;
-  margin: 10px auto;
-  padding: 15px;
+  margin: 1px auto;
+  padding: 8px;
 `;
 
 export const ChatRoomContainer = styled.div`
@@ -158,32 +176,28 @@ export const Text = styled.span`
 `;
 
 export const StyledSlider = styled(Slider)`
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
-
-  position: relative;
   .slick-list {
-    margin: 0 15px;
   }
 
   .slick-slide {
   }
 
   .slick-arrow {
-    width: 40px;
-    height: 40px;
-    z-index: 1;
+    width: 30px;
+    height: 30px;
 
     &::before {
-      font-size: 35px;
+      font-size: 30px;
     }
 
     &.slick-prev {
-      left: -30px;
+      left: 0px;
     }
 
     &.slick-next {
-      right: -30px;
+      right: 0px;
     }
 
     &:hover {

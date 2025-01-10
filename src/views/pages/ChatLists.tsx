@@ -4,7 +4,7 @@ import {
   MainContainer,
   CategoryTitle,
   StyleChatRoomsGrid,
-} from '../../components/styles/Home';
+} from '../../styles/Home';
 import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
 import SearchBar from '../../components/SearchBar';
 function ChatLists() {

@@ -7,7 +7,7 @@ import {
   ChatDescription,
   Text,
   ChatRoomParty,
-} from './styles/Home.ts';
+} from '../styles/Home.ts';
 export interface IChatRoom {
   id: number;
   ownerId: number;
