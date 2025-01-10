@@ -104,7 +104,6 @@ export const StyleChatRoomsGrid = styled.div`
   width: 100%;
   gap: 10px;
   margin: 1px auto;
-  padding: 8px;
 `;
 
 export const ChatRoomContainer = styled.div`
@@ -113,14 +112,18 @@ export const ChatRoomContainer = styled.div`
   cursor: pointer;
   display: flex;
   padding: 10px;
-
-  margin: 10px auto;
   margin: 0 auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;
   width: 300px;
   margin: 0 auto;
+
+  @media (max-width: 468px) {
+    height: 150px;
+    width: 225px;
+  }
+
   img {
     width: 100%;
     height: 100%;
@@ -144,6 +147,11 @@ export const ChatRoomParty = styled.div`
     color: white;
     font-weight: 600;
   }
+
+  @media (max-width: 468px) {
+    right: 80px;
+    top: 40px;
+  }
 `;
 
 export const ChatTitleBox = styled.div`
@@ -151,6 +159,10 @@ export const ChatTitleBox = styled.div`
   margin: 5px auto;
   height: 20px;
   text-align: left;
+
+  @media (max-width: 468px) {
+    width: 210px;
+  }
 `;
 
 export const Title = styled.span`
@@ -158,11 +170,17 @@ export const Title = styled.span`
   font-weight: 600;
   font-size: 14px;
   color: #000000;
+  @media (max-width: 468px) {
+    font-size: 13px;
+  }
 `;
 
 export const ChatDescription = styled.div`
   width: 290px;
   margin: 0 auto;
+  @media (max-width: 468px) {
+    width: 210px;
+  }
 `;
 
 export const Text = styled.span`
@@ -173,6 +191,9 @@ export const Text = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  @media (max-width: 468px) {
+    font-size: 11px;
+  }
 `;
 
 export const StyledSlider = styled(Slider)`
