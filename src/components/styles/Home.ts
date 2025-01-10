@@ -27,21 +27,25 @@ export const Category = styled.div`
 
   height: 50px;
   .view_all {
-    text-decoration: underline;
+    text-decoration: none;
     font-size: 12px;
     float: right;
     position: relative;
     right: 30px;
     top: 30px;
-
     cursor: pointer;
+    &:visited {
+      color: black;
+    }
+    &:hover {
+      color: gray;
+    }
   }
 `;
 
 export const CategoryTitle = styled.span`
   font-family: 'Noto Sans KR', serif;
   font-size: 15px;
-  background-color: #f5f5f5;
   position: relative;
   left: 3%;
   top: 20px;
@@ -76,17 +80,6 @@ export const LoginButton = styled.button`
   cursor: pointer;
 `;
 
-export const SliderContainer = styled.div`
-  width: 100%;
-  min-width: 400px;
-  left: 10%;
-
-  align-items: center;
-  margin-bottom: 30px;
-
-  padding: 0; // 패딩 제거
-`;
-
 export const StyleChatRoomsGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -100,7 +93,9 @@ export const ChatRoomContainer = styled.div`
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  display: flex;
   padding: 10px;
+
   margin: 10px auto;
   margin: 0 auto;
 `;
@@ -113,6 +108,23 @@ export const ChatImage = styled.div`
     height: 100%;
     border-radius: 10px;
     object-fit: cover;
+  }
+`;
+
+export const ChatRoomParty = styled.div`
+  position: relative;
+  display: block;
+  padding: 5px;
+  width: 50px;
+  right: 120px;
+  top: 40px;
+  background-color: rgba(0, 0, 0, 0.8);
+
+  border-radius: 20px;
+  .number {
+    font-family: 'Noto Sans KR', serif;
+    color: white;
+    font-weight: 600;
   }
 `;
 

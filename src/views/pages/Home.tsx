@@ -1,3 +1,4 @@
+import React from 'react';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { IconButton } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
@@ -6,24 +7,19 @@ import { Link } from 'react-router-dom';
 
 import ChatRoom from '../../components/ChatRoom.tsx';
 
-import React from 'react';
 import { dummyChatRooms } from '../../components/ChatRoom.tsx';
 import ChatRoomGrid from '../../components/ChatRoomGrid.tsx';
 import {
   MainContainer,
-  TopBar,
-  StyledTextField,
-  LoginButton,
   StyledSlider,
   SliderContainer,
   CategoryTitle,
   Category,
+  ChatRoomContainer,
 } from '../../components/styles/Home.ts';
+import SearchBar from '../../components/SearchBar.tsx';
 function Home() {
   const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
-
-  // 무한스크롤 채팅방 상태
-
   const user_category = ['소주', '맥주', '시끌시끌'];
   const settings = {
     dots: true,
@@ -73,26 +69,19 @@ function Home() {
 
   return (
     <MainContainer>
-      <TopBar>
-        <StyledTextField />
-        <IconButton sx={{ margin: '20px' }}>
-          <SearchOutlinedIcon sx={{ color: 'black' }} />
-        </IconButton>
-        <LoginButton>Login</LoginButton>
-      </TopBar>
+      <SearchBar />
       <Category>
         <CategoryTitle title="최신 순">최신 순</CategoryTitle>
-        <Link className="view_all" to="/chatlist" state={{ data: 'hihihi' }}>
+        <Link className="view_all" to="/chatlist" state={{ data: '최신 순' }}>
           더보기
         </Link>
       </Category>
-      <SliderContainer>
-        <StyledSlider {...settings}>
-          {featuredRooms.map((room) => (
-            <ChatRoom key={room.id} room={room}></ChatRoom>
-          ))}
-        </StyledSlider>
-      </SliderContainer>
+
+      <StyledSlider {...settings}>
+        {featuredRooms.map((room) => (
+          <ChatRoom key={room.id} room={room}></ChatRoom>
+        ))}
+      </StyledSlider>
 
       {user_category.length > 0 ? (
         <CategoryTitle>사용자 추천 순</CategoryTitle>

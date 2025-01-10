@@ -6,6 +6,7 @@ import {
   Title,
   ChatDescription,
   Text,
+  ChatRoomParty,
 } from './styles/Home.ts';
 export interface IChatRoom {
   id: number;
@@ -122,6 +123,9 @@ export const dummyChatRooms: IChatRoom[] = [
 function ChatRoom({ room }: { room: IChatRoom }) {
   return (
     <ChatRoomContainer key={room.id}>
+      <ChatRoomParty>
+        <div className="number">4</div>
+      </ChatRoomParty>
       <ChatImage>
         <img src={room.theme.url} alt={room.name} />
       </ChatImage>
