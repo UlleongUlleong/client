@@ -1,9 +1,10 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NavigationBar from './layouts/NavigationBar';
-import Mypage from '../../pages/Mypage';
-import ProfileLike from '../../pages/ProfileLike';
-import ProfileReview from '../../pages/ProfileReview';
+import Mypage from './pages/Mypage';
+import ProfileLike from './pages/ProfileLike';
+import ProfileReview from './pages/ProfileReview';
+import AlcoholDetail from './pages/AlcoholDetail';
 
 const Index = () => {
   const routeLists = [
@@ -27,7 +28,10 @@ const Index = () => {
       path: '/profile/review',
       element: <ProfileReview />
     },
-
+    {
+      path: '/alcohol/:id',
+      element: <AlcoholDetail />
+    },
   ];
 
   const router = createBrowserRouter(

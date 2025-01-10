@@ -143,7 +143,7 @@ const CategoryModalStyle = styled.div`
 
     .button-container {
         display: flex;
-        justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+        justify-content: flex-end;
         width: 100%;
         .save-btn {
             font-size: 16px;

@@ -3,10 +3,10 @@ import { styled } from 'styled-components';
 import { FaCog, FaPlus, FaRegUserCircle } from "react-icons/fa";
 import Slider from "react-slick";
 import { Link } from 'react-router-dom';
-import Card from '../components/Card';
-import CategoryModal from '../components/CategoryModal';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import Card from '../../components/MypageCom/Card';
+import CategoryModal from '../../components/MypageCom/CategoryModal';
 
 function Mypage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,7 +108,6 @@ function Mypage() {
                     </Slider>
                 </div>
             </div>
-
             {isModalOpen && (
                 <CategoryModal closeModal={toggleModal} />
             )}
@@ -120,7 +119,8 @@ const MypageStyle = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width : 100%;
+    width : 94%;
+    overflow-y: auto;
 
     .mypage {
         display: flex;

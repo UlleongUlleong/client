@@ -1,8 +1,8 @@
-import React from 'react';
 import { styled } from 'styled-components';
-import ProfileCard from '../components/ProfileCard';
+import React from 'react';
+import ProfileCard from '../../components/ProfileCard';
 
-function ProfileReview() {
+function ProfileLike() {
 
     const reviewedCards = [
         { imageSrc: "https://picsum.photos/200", title: "마루나 동백 양주", description: 4.0, review: "리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다." },
@@ -13,11 +13,11 @@ function ProfileReview() {
         { imageSrc: "https://picsum.photos/200", title: "발디비에스 까베르네 소비뇽", description: 4.7, review: "리뷰랍니다." },
         { imageSrc: "https://picsum.photos/200", title: "발디비에스 까베르네 소비뇽", description: 4.7, review: "리뷰랍니다." },
     ];
+
     return (
-        <ProfileReviewStyle>
+        <ProfileLikeStyle>
             <div className="content">
-                <h1>내가 리뷰한 술</h1>
-                <h2>Test</h2>
+                <h1>내가 좋아하는 술</h1>
                 <div className="container">
                     {reviewedCards.map((card, index) => (
                         <ProfileCard
@@ -30,18 +30,21 @@ function ProfileReview() {
                     ))}
                 </div>
             </div>
-        </ProfileReviewStyle>
-    )
+        </ProfileLikeStyle>)
 }
 
-const ProfileReviewStyle = styled.div`
-    width: 100%;
+const ProfileLikeStyle = styled.div`
+    width: 94%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    overflow-y: auto;
 
-
+    h1 {
+        margin-top:20px;
+        margin-bottom: 20px;
+    }
     .container {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -55,4 +58,4 @@ const ProfileReviewStyle = styled.div`
     }
 `;
 
-export default ProfileReview;
+export default ProfileLike;
