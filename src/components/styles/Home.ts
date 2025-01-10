@@ -87,11 +87,11 @@ export const SliderContainer = styled.div`
   padding: 0; // 패딩 제거
 `;
 
-export const ChatRoomsGrid = styled.div`
+export const StyleChatRoomsGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 90%;
-  gap: 15px;
+  gap: 10px;
   margin: 10px auto;
   padding: 15px;
 `;
@@ -102,6 +102,7 @@ export const ChatRoomContainer = styled.div`
   cursor: pointer;
   padding: 10px;
   margin: 10px auto;
+  margin: 0 auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;
@@ -194,4 +195,9 @@ export const Loading = styled.div`
   font-family: 'Noto Sans KR', serif;
   align-items: center;
   margin: 0 auto;
+`;
+export const LastItemContainer = styled.div`
+  font-family: 'Noto Sans KR', serif;
+  margin: 0 auto;
+  align-items: center;
 `;

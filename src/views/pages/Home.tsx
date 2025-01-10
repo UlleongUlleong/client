@@ -1,37 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { IconButton } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
-import Spinner from '../../assets/Spinner.gif';
+
 import ChatRoom from '../../components/ChatRoom.tsx';
-import { IChatRoom } from '../../components/ChatRoom.tsx';
+
 import React from 'react';
 import { dummyChatRooms } from '../../components/ChatRoom.tsx';
+import ChatRoomGrid from '../../components/ChatRoomGrid.tsx';
 import {
   MainContainer,
   TopBar,
   StyledTextField,
   LoginButton,
-  ChatRoomsGrid,
   StyledSlider,
   SliderContainer,
   CategoryTitle,
   Category,
-  Loading,
 } from '../../components/styles/Home.ts';
 function Home() {
   const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
 
   // 무한스크롤 채팅방 상태
-  const [scrollRooms, setScrollRooms] = useState<IChatRoom[]>(
-    dummyChatRooms.slice(0, 6),
-  );
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const observer = useRef<IntersectionObserver>();
-  const lastRoomElementRef = useRef<HTMLDivElement>(null);
 
   const user_category = ['소주', '맥주', '시끌시끌'];
   const settings = {
@@ -80,43 +71,6 @@ function Home() {
   };
   // 슬라이더 이동 함수
 
-  // 더미 데이터를 가져오는 함수 (실제로는 API 호출)
-  const fetchMoreRooms = async () => {
-    setLoading(true);
-    try {
-      // 실제 API 호출 대신 더미 데이터 생성
-      const newRooms = Array(6)
-        .fill(null)
-        .map((_, index) => ({
-          ...dummyChatRooms[index % dummyChatRooms.length],
-          id: Number(Date.now()) + index, // 유니크한 ID 생성
-        }));
-      setScrollRooms((prev) => [...prev, ...newRooms]);
-      setHasMore(newRooms.length > 0);
-    } catch (error) {
-      console.error('Error fetching more rooms:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Intersection Observer 설정
-  useEffect(() => {
-    if (loading) return;
-
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore) {
-        fetchMoreRooms();
-      }
-    });
-
-    if (lastRoomElementRef.current) {
-      observer.current.observe(lastRoomElementRef.current);
-      //관측 시작
-    }
-
-    return () => observer.current?.disconnect();
-  }, [loading, hasMore]);
   return (
     <MainContainer>
       <TopBar>
@@ -139,22 +93,14 @@ function Home() {
           ))}
         </StyledSlider>
       </SliderContainer>
+
       {user_category.length > 0 ? (
         <CategoryTitle>사용자 추천 순</CategoryTitle>
       ) : (
         <CategoryTitle> 기본 순</CategoryTitle>
       )}
 
-      <ChatRoomsGrid>
-        {scrollRooms.map((room) => (
-          <ChatRoom key={room.id} room={room}></ChatRoom>
-        ))}
-        {loading && (
-          <Loading>
-            <img src={Spinner}></img>
-          </Loading>
-        )}
-      </ChatRoomsGrid>
+      <ChatRoomGrid />
     </MainContainer>
   );
 }
