@@ -39,6 +39,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
+
 interface Category {
   id: number;
   name: string;
@@ -48,13 +50,16 @@ interface SearchBarProps {
   onSearch: (categories: Category[], searchText: string) => void;
 }
 
-const categories: Category[] = [
+const moodcategories: Category[] = [
   { id: 1, name: '혼술' },
   { id: 2, name: '반주' },
   { id: 3, name: '시끌시끌' },
   { id: 4, name: '조용한' },
   { id: 5, name: '고민상담' },
   { id: 6, name: '레시피공유' },
+];
+
+const alchoholcategories: AlcoholCategory[] = [
   { id: 7, name: '소주' },
   { id: 8, name: '맥주' },
   { id: 9, name: '와인' },
@@ -266,7 +271,25 @@ const SearchBar = () => {
           <CategorySection>
             <SectionTitle>카테고리 선택</SectionTitle>
             <CategoryGrid>
-              {categories.map((category) => (
+              {moodcategories.map((category) => (
+                <CategoryItem
+                  key={category.id}
+                  onClick={() => toggleCategory(category)}
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.some(
+                      (cat) => cat.id === category.id,
+                    )}
+                    readOnly
+                  />
+                  <span>{category.name}</span>
+                </CategoryItem>
+              ))}
+            </CategoryGrid>
+            <Divider />
+            <CategoryGrid>
+              {alchoholcategories.map((category) => (
                 <CategoryItem
                   key={category.id}
                   onClick={() => toggleCategory(category)}
