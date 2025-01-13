@@ -6,7 +6,7 @@ import { LastItemContainer } from '../styles/Home';
 
 function ChatRoomGrid() {
   const [scrollChatRooms, setScrollChatRooms] = useState<IChatRoom[]>(
-    dummyChatRooms.slice(0, 6),
+    dummyChatRooms.slice(0, 8),
   );
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -17,14 +17,14 @@ function ChatRoomGrid() {
     setLoading(true);
     //API 호출로 대체하기
     try {
-      const newChatRooms = Array(6)
-        .fill(null)
-        .map((_, index) => ({
-          ...dummyChatRooms[index % dummyChatRooms.length],
-          id: Number(Date.now()) + index, // 유니크한 ID 생성
-        }));
-      setScrollChatRooms((prev) => [...prev, ...newChatRooms]);
-      setHasMore(newChatRooms.length > 0);
+      // const newChatRooms = Array(6)
+      //   .fill(null)
+      //   .map((_, index) => ({
+      //     ...dummyChatRooms[index % dummyChatRooms.length],
+      //     id: Number(Date.now()) + index, // 유니크한 ID 생성
+      //   }));
+      // setScrollChatRooms((prev) => [...prev, ...newChatRooms]);
+      // setHasMore(newChatRooms.length > 0);
     } catch (error) {
       console.log(error);
     } finally {

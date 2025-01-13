@@ -13,6 +13,7 @@ import {
   CategoryTitle,
   Category,
   StyleChatRoomsGrid,
+  SliderWrapper,
 } from '../../styles/Home.ts';
 import SearchBar from '../../components/SearchBar.tsx';
 function Home() {
@@ -22,39 +23,39 @@ function Home() {
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 5,
+    slidesToShow: 6,
+    slidesToScroll: 6,
     responsive: [
       {
-        breakpoint: 2400,
+        breakpoint: 2220,
         settings: {
           slidesToShow: 5,
           slidesToScroll: 5,
         },
       },
       {
-        breakpoint: 1957,
+        breakpoint: 1859,
         settings: {
           slidesToShow: 4,
           slidesToScroll: 4,
         },
       },
       {
-        breakpoint: 1585,
+        breakpoint: 1499,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
         },
       },
       {
-        breakpoint: 1230,
+        breakpoint: 1139,
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
         },
       },
       {
-        breakpoint: 858,
+        breakpoint: 780,
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -73,6 +74,7 @@ function Home() {
           더보기
         </Link>
       </Category>
+
       <StyledSlider {...settings}>
         {featuredRooms.map((room) => (
           <StyleChatRoomsGrid key={room.id}>

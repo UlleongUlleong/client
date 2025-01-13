@@ -28,6 +28,14 @@ export const TopBar = styled.div`
   }
 `;
 
+export const SliderWrapper = styled.div`
+  padding: 20px;
+  width: 100%;
+
+  @media (max-width: 468px) {
+    padding: 10px;
+  }
+`;
 export const Category = styled.div`
   font-family: 'Noto Sans KR', serif;
   justify-content: space-between;
@@ -108,11 +116,23 @@ export const LoginButton = styled.button`
 `;
 
 export const StyleChatRoomsGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 340px);
+  gap: 20px;
+  justify-content: center;
   width: 100%;
-  gap: 10px;
-  margin: 1px auto;
+
+  &::after {
+    content: '';
+    grid-column: 1 / -1;
+    height: 0;
+  }
+
+  @media (max-width: 468px) {
+    grid-template-columns: repeat(auto-fill, 245px);
+    gap: 15px;
+    padding: 10px;
+  }
 `;
 
 export const ChatRoomContainer = styled.div`
@@ -206,9 +226,33 @@ export const Text = styled.span`
 `;
 
 export const StyledSlider = styled(Slider)`
-  width: 100%;
+  justify-content: center;
+  align-items: center;
   margin: 0 auto;
+  display: flex;
+
   .slick-list {
+    @media (max-width: 2579px) {
+      width: 2150px;
+    }
+    @media (max-width: 2219px) {
+      width: 1800px;
+    }
+    @media (max-width: 1859px) {
+      width: 1450px;
+    }
+    @media (max-width: 1499px) {
+      width: 1080px;
+    }
+    @media (max-width: 1139px) {
+      width: 720px;
+    }
+    @media (max-width: 468px) {
+      width: 280px;
+    }
+    @media (max-width: 400px) {
+      width: 250px;
+    }
   }
 
   .slick-slide {

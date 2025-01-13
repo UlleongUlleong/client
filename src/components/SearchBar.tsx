@@ -28,17 +28,26 @@
 // export default SearchBar;
 
 import React, { useState } from 'react';
-import styled from 'styled-components';
+
 import { ChevronDown, Search } from 'lucide-react';
 import {
   TopBar,
-  StyledTextField,
   LoginButton,
-  StyledTextFields,
-} from '../styles/Home.ts';
-import SearchIcon from '@mui/icons-material/Search';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import IconButton from '@mui/material/IconButton';
+  Container,
+  ConfirmButton,
+  SearchWrapper,
+  Dropdown,
+  SelectedTagsSection,
+  CategoryTag,
+  CategorySection,
+  SectionTitle,
+  CategoryGrid,
+  CategoryItem,
+  DeleteIcon,
+  Input,
+  IconButton,
+} from '../styles/SearchBar.ts';
+
 import Divider from '@mui/material/Divider';
 
 interface Category {
@@ -59,7 +68,7 @@ const moodcategories: Category[] = [
   { id: 6, name: '레시피공유' },
 ];
 
-const alchoholcategories: AlcoholCategory[] = [
+const alchoholcategories: Category[] = [
   { id: 7, name: '소주' },
   { id: 8, name: '맥주' },
   { id: 9, name: '와인' },
@@ -69,153 +78,6 @@ const alchoholcategories: AlcoholCategory[] = [
   { id: 13, name: '위스키' },
 ];
 
-const Container = styled.div`
-  position: relative;
-  width: 50%;
-  max-width: 800px;
-`;
-
-const SearchWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  border: 1px solid #ddd;
-  padding: 8px 12px;
-  border-radius: 4px;
-  background: white;
-`;
-
-const Input = styled.input`
-  flex: 1;
-  border: none;
-  width: 100%;
-  outline: none;
-  margin: 0 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const IconButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-
-  display: flex;
-  align-items: center;
-`;
-
-const Dropdown = styled.div<{ isOpen: boolean }>`
-  z-index: 1;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-top: 4px;
-  display: ${(props) => (props.isOpen ? 'block' : 'none')};
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const SelectedTagsSection = styled.div`
-  padding: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-`;
-
-const CategoryTag = styled.span`
-  background: #e9e9e9;
-  color: black;
-  padding: 4px 12px;
-  border-radius: 16px;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-
-  &:hover {
-    background: #2b2b2b;
-  }
-`;
-
-const DeleteIcon = styled.span`
-  font-size: 16px;
-  position: relative;
-  line-height: 1;
-  bottom: 1px;
-`;
-
-const CategorySection = styled.div`
-  padding: 5px 16px;
-`;
-
-const SectionTitle = styled.div`
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 5px;
-`;
-
-const CategoryGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  max-height: 250px;
-  overflow-y: auto;
-
-  @media (max-width: 1589px) {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  @media (max-width: 1356px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-  @media (max-width: 1087px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  @media (max-width: 850px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (max-width: 617px) {
-    grid-template-columns: repeat(1, 1fr);
-  }
-`;
-
-const CategoryItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  cursor: pointer;
-  font-family: 'Noto Sans KR', sans-serif;
-  font-size: 14px;
-  border-radius: 4px;
-  @media (max-width: 470px) {
-    font-size: 12px;
-  }
-  &:hover {
-    background: #f5f5f5;
-  }
-
-  input[type='checkbox'] {
-    margin-right: 8px;
-  }
-`;
-
-const ConfirmButton = styled.button`
-  padding: 6px 16px;
-  background: #000000;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  margin: 6px 0px;
-  cursor: pointer;
-  float: right;
-
-  &:hover {
-    background: #0056b3;
-  }
-`;
 const SearchBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
@@ -309,6 +171,8 @@ const SearchBar = () => {
           </CategorySection>
         </Dropdown>
       </Container>
+
+      <LoginButton>Login</LoginButton>
     </TopBar>
   );
 };
