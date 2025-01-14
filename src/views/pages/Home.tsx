@@ -1,7 +1,7 @@
 import React from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import ChatRoom from '../../components/ChatRoom.tsx';
 import {
@@ -18,6 +18,7 @@ import {
 } from '../../styles/Home.ts';
 import SearchBar from '../../components/SearchBar.tsx';
 function Home() {
+  const navigate = useNavigate();
   const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
   const user_category = ['소주', '맥주', '시끌시끌'];
   const settings = {
@@ -66,6 +67,9 @@ function Home() {
   };
   // 슬라이더 이동 함수
 
+  const navigateToMakeRoom = () => {
+    navigate('/makeroom');
+  };
   return (
     <MainContainer>
       <SearchBar />
@@ -89,7 +93,9 @@ function Home() {
       ) : (
         <CategoryTitle> 기본 순</CategoryTitle>
       )}
-      <MakeChatRoomButton>방 만들기</MakeChatRoomButton>
+      <MakeChatRoomButton onClick={navigateToMakeRoom}>
+        방 만들기
+      </MakeChatRoomButton>
       <ChatRoomGrid />
     </MainContainer>
   );
