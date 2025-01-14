@@ -3,11 +3,10 @@ import styled from 'styled-components';
 export const ChatRoomContainer = styled.div`
   flex-direction: column;
   align-items: center;
-
   cursor: pointer;
   display: flex;
   padding: 10px;
-  margin: 0 auto;
+  margin: 10px auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;
@@ -29,18 +28,22 @@ export const ChatImage = styled.div`
 
 export const ChatRoomParty = styled.div`
   position: relative;
-  display: block;
+  display: flex;
   padding: 5px;
-  width: 50px;
-  right: 120px;
-  top: 40px;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 20px;
+  width: 55px;
+  right: 115px;
+  top: 45px;
+  background-color: rgba(0, 0, 0, 0.7);
+  gap: 3px;
+  justify-content: center;
   align-items: center;
-  justify-content .number {
+  border-radius: 20px;
+  .number {
     font-family: 'Noto Sans KR', serif;
     color: white;
     font-weight: 600;
+    font-size: 16px;
+    position: relative;
   }
 
   @media (max-width: 468px) {

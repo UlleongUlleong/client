@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  MainContainer,
-  CategoryTitle,
-  StyleChatRoomsGrid,
-} from '../../styles/Home';
+import { MainContainer } from '../../styles/Home';
+import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
 import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
 import SearchBar from '../../components/SearchBar';
 function ChatLists() {

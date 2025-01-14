@@ -1,35 +1,6 @@
-// import React from 'react';
-
-// function SearchBar() {
-//   const [search, setSearch] = React.useState('');
-//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     setSearch(e.target.value);
-//   };
-
-//   return (
-//
-//       <StyledTextFields>
-//         <form action="/search" method="get">
-//           <input className="text" type="search"></input>
-//           <div className="img" onClick={(e) => handleChange(e)}>
-//             <KeyboardArrowDownIcon />
-//           </div>
-//         </form>
-//       </StyledTextFields>
-
-//       <IconButton sx={{ margin: '20px' }}>
-//         <SearchIcon sx={{ color: 'black' }} />
-//       </IconButton>
-//       <LoginButton>Login</LoginButton>
-//     </TopBar>
-//   );
-// }
-
-// export default SearchBar;
-
 import React, { useState } from 'react';
 
-import { ChevronDown, Search } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import {
   TopBar,
   LoginButton,
@@ -106,7 +77,7 @@ const SearchBar = () => {
       <Container>
         <SearchWrapper>
           <IconButton onClick={() => setIsOpen(!isOpen)}>
-            <ChevronDown size={20} />
+            {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </IconButton>
           <Input
             value={searchText}

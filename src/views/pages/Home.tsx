@@ -4,16 +4,17 @@ import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
 
 import ChatRoom from '../../components/ChatRoom.tsx';
-
+import {
+  StyleChatRoomsGrid,
+  Category,
+  CategoryTitle,
+} from '../../styles/ChatRoomGrid.ts';
 import { dummyChatRooms } from '../../components/ChatRoom.tsx';
 import ChatRoomGrid from '../../components/ChatRoomGrid.tsx';
 import {
   MainContainer,
   StyledSlider,
-  CategoryTitle,
-  Category,
-  StyleChatRoomsGrid,
-  SliderWrapper,
+  MakeChatRoomButton,
 } from '../../styles/Home.ts';
 import SearchBar from '../../components/SearchBar.tsx';
 function Home() {
@@ -69,11 +70,11 @@ function Home() {
     <MainContainer>
       <SearchBar />
       <Category>
-        <CategoryTitle title="최신 순">최신 순</CategoryTitle>
-        <Link className="view_all" to="/chatlist" state={{ data: '최신 순' }}>
+        <Link to="/chatlist" className="more " state={{ data: '최신 순' }}>
           더보기
         </Link>
       </Category>
+      <CategoryTitle>최신 순</CategoryTitle>
 
       <StyledSlider {...settings}>
         {featuredRooms.map((room) => (
@@ -88,7 +89,7 @@ function Home() {
       ) : (
         <CategoryTitle> 기본 순</CategoryTitle>
       )}
-
+      <MakeChatRoomButton>방 만들기</MakeChatRoomButton>
       <ChatRoomGrid />
     </MainContainer>
   );

@@ -1,4 +1,6 @@
 import React from 'react';
+import { User } from 'lucide-react';
+import PersonIcon from '@mui/icons-material/Person';
 import {
   ChatRoomContainer,
   ChatImage,
@@ -7,7 +9,7 @@ import {
   ChatDescription,
   Text,
   ChatRoomParty,
-} from '../styles/Home.ts';
+} from '../styles/chatRoom.ts';
 export interface IChatRoom {
   id: number;
   ownerId: number;
@@ -121,10 +123,19 @@ export const dummyChatRooms: IChatRoom[] = [
   },
 ];
 function ChatRoom({ room }: { room: IChatRoom }) {
+  const partyNumber = room.maxParticipants - 1;
   return (
     <ChatRoomContainer key={room.id}>
       <ChatRoomParty>
-        <div className="number">4</div>
+        <PersonIcon
+          sx={{
+            position: 'relative',
+
+            color: 'white',
+            fontSize: '24px',
+          }}
+        />
+        <div className="number">{partyNumber}</div>
       </ChatRoomParty>
       <ChatImage>
         <img src={room.theme.url} alt={room.name} />

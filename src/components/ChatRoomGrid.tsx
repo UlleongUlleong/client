@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ChatRoom, { dummyChatRooms, IChatRoom } from './ChatRoom';
-import { StyleChatRoomsGrid } from '../styles/Home';
+
+import { StyleChatRoomsGrid } from '../styles/ChatRoomGrid';
 import Spinner from '../assets/Spinner.gif';
-import { LastItemContainer } from '../styles/Home';
+import { LastItemContainer, Loading } from '../styles/Home';
 
 function ChatRoomGrid() {
   const [scrollChatRooms, setScrollChatRooms] = useState<IChatRoom[]>(
@@ -17,14 +18,14 @@ function ChatRoomGrid() {
     setLoading(true);
     //API 호출로 대체하기
     try {
-      // const newChatRooms = Array(6)
-      //   .fill(null)
-      //   .map((_, index) => ({
-      //     ...dummyChatRooms[index % dummyChatRooms.length],
-      //     id: Number(Date.now()) + index, // 유니크한 ID 생성
-      //   }));
-      // setScrollChatRooms((prev) => [...prev, ...newChatRooms]);
-      // setHasMore(newChatRooms.length > 0);
+      const newChatRooms = Array(6)
+        .fill(null)
+        .map((_, index) => ({
+          ...dummyChatRooms[index % dummyChatRooms.length],
+          id: Number(Date.now()) + index, // 유니크한 ID 생성
+        }));
+      setScrollChatRooms((prev) => [...prev, ...newChatRooms]);
+      setHasMore(newChatRooms.length > 0);
     } catch (error) {
       console.log(error);
     } finally {
@@ -68,9 +69,9 @@ function ChatRoomGrid() {
         return <ChatRoom key={room.id} room={room} />;
       })}
       {loading && (
-        <LastItemContainer>
+        <Loading>
           <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
-        </LastItemContainer>
+        </Loading>
       )}
     </StyleChatRoomsGrid>
   );

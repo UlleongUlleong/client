@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { TextField } from '@mui/material';
 import Slider from 'react-slick';
 
 export const MainContainer = styled.div`
@@ -34,152 +33,6 @@ export const SliderWrapper = styled.div`
 
   @media (max-width: 468px) {
     padding: 10px;
-  }
-`;
-export const Category = styled.div`
-  font-family: 'Noto Sans KR', serif;
-  justify-content: space-between;
-  height: 50px;
-  .view_all {
-    text-decoration: underline;
-    font-size: 14px;
-    float: right;
-    position: relative;
-    right: 30px;
-    top: 30px;
-    cursor: pointer;
-    color: black;
-    &:visited {
-      color: black;
-    }
-    &:hover {
-      color: gray;
-    }
-  }
-`;
-
-export const CategoryTitle = styled.span`
-  font-family: 'Noto Sans KR', serif;
-  font-size: 16px;
-  position: relative;
-  left: 3%;
-  top: 20px;
-  font-weight: 600;
-  border-radius: 2px;
-`;
-
-export const StyledTextField = styled(TextField)`
-  width: 50%;
-  max-width: 650px;
-  border-radius: 5px;
-  font-family: 'Noto Sans KR', serif;
-  left: 20px;
-
-  .MuiOutlinedInput-root {
-    font-family: 'Noto Sans KR', serif;
-    color: #000;
-
-    &.Mui-focused .MuiOutlinedInput-notchedOutline {
-      border-color: gray;
-      border-width: 2px;
-    }
-  }
-`;
-
-export const StyledTextFields = styled.form`
-  width: 50%;
-  max-width: 650px;
-  font-family: 'Noto Sans KR', serif;
-  .input {
-    width: 90%;
-    border: 1px solid #bbb;
-    border-radius: 5px;
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  .icon {
-    position: relative;
-    margin: 0;
-  }
-`;
-
-export const LoginButton = styled.button`
-  width: 60px;
-  height: 30px;
-  font-family: 'Noto Sans KR', serif;
-  background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(0, 0, 0);
-  border-radius: 5px;
-  position: absolute;
-  right: 20px;
-  cursor: pointer;
-`;
-
-export const StyleChatRoomsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 340px);
-  gap: 20px;
-  justify-content: center;
-  width: 100%;
-
-  &::after {
-    content: '';
-    grid-column: 1 / -1;
-    height: 0;
-  }
-
-  @media (max-width: 468px) {
-    grid-template-columns: repeat(auto-fill, 245px);
-    gap: 15px;
-    padding: 10px;
-  }
-`;
-
-export const ChatRoomContainer = styled.div`
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  display: flex;
-  padding: 10px;
-  margin: 0 auto;
-`;
-export const ChatImage = styled.div`
-  height: 200px;
-  width: 300px;
-  margin: 0 auto;
-
-  @media (max-width: 468px) {
-    height: 150px;
-    width: 225px;
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-`;
-
-export const ChatRoomParty = styled.div`
-  position: relative;
-  display: block;
-  padding: 5px;
-  width: 50px;
-  right: 120px;
-  top: 40px;
-  background-color: rgba(0, 0, 0, 0.8);
-
-  border-radius: 20px;
-  .number {
-    font-family: 'Noto Sans KR', serif;
-    color: white;
-    font-weight: 600;
-  }
-
-  @media (max-width: 468px) {
-    right: 80px;
-    top: 40px;
   }
 `;
 
@@ -294,10 +147,35 @@ export const StyledSlider = styled(Slider)`
 export const Loading = styled.div`
   font-family: 'Noto Sans KR', serif;
   align-items: center;
-  margin: 0 auto;
+  display: grid;
+  position: relative;
+  bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 `;
 export const LastItemContainer = styled.div`
   font-family: 'Noto Sans KR', serif;
   margin: 0 auto;
-  align-items: center;
+`;
+
+export const MakeChatRoomButton = styled.button`
+  color: black;
+  border: none;
+  background: white;
+  z-index: 2;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', serif;
+  font-size: 14px;
+  padding: 13px 18px;
+  position: fixed;
+  bottom: 50px;
+  right: 60px;
+  box-shadow:
+    0px 4px 8px 3px rgba(0, 0, 0, 0.15),
+    0px 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  &:hover {
+    background: #0056b3;
+  }
 `;

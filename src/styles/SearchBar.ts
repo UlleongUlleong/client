@@ -52,7 +52,7 @@ export const SearchWrapper = styled.div`
   align-items: center;
   border: 1px solid #ddd;
   padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 15px;
   background: white;
 `;
 
@@ -179,7 +179,7 @@ export const ConfirmButton = styled.button`
   background: #000000;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   margin: 6px 0px;
   cursor: pointer;
   float: right;
