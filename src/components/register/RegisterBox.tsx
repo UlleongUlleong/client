@@ -11,6 +11,7 @@ const RegisterBox = () => {
   const [allChecked, setAllChecked] = useState<boolean>(false);
   const [checkedAge, setCheckedAge] = useState<boolean>(false);
   const [checkedUseInfo, setCheckedUseInfo] = useState<boolean>(false);
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
 
   useEffect(() => {
     setAllChecked(checkedAge && checkedUseInfo);
@@ -23,12 +24,18 @@ const RegisterBox = () => {
   };
 
   const handleRegister = () => {
+    if (!email || !password || !confirmPassword || !nickname) {
+      alert('필수 정보를 입력해주세요. (이메일, 비밀번호, 닉네임)');
+      return;
+    }
+    if (!isEmailVerified) {
+      alert('이메일 인증을 완료해주세요.');
+      return;
+    }
     if (!checkedAge || !checkedUseInfo) {
       alert('필수 항목에 동의해야 회원가입이 가능합니다.');
       return;
     }
-    // 회원가입 로직 넣기
-    console.log('회원가입 성공');
     alert('회원가입이 완료되었습니다');
   };
 
@@ -48,6 +55,7 @@ const RegisterBox = () => {
           setConfirmPassword={setConfirmPassword}
           nickname={nickname}
           setNickname={setNickname}
+          setIsEmailVerified={setIsEmailVerified}
         />
       </div>
       <div className="keywords-group">

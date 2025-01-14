@@ -10,6 +10,7 @@ interface RegisterFormProps {
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
   nickname: string;
   setNickname: React.Dispatch<React.SetStateAction<string>>;
+  setIsEmailVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const RegisterForm = ({
@@ -21,6 +22,7 @@ const RegisterForm = ({
   setConfirmPassword,
   nickname,
   setNickname,
+  setIsEmailVerified,
 }: RegisterFormProps) => {
   const openEmailVerificationWindow = () => {
     if (!email) {
@@ -39,12 +41,19 @@ const RegisterForm = ({
       `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
     );
 
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'emailVerified' && event.data.success) {
+        setIsEmailVerified(true);
+        alert('이메일 인증이 완료되었습니다!');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
     const interval = setInterval(() => {
       if (verificationWindow?.closed) {
         clearInterval(interval);
-
-        // 성공적으로 인증완료를 했다면
-        // alert('이메일 인증이 완료되었습니다!');
+        window.removeEventListener('message', handleMessage);
       }
     }, 500);
   };
@@ -158,7 +167,7 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={openEmailVerificationWindow}
+            onClick={() => {}}
           >
             중복 검사
           </button>
@@ -245,6 +254,7 @@ const RegisterFormStyle = styled.div`
     font-size: 0.7rem;
     font-weight: bold;
     width: 28%;
+    cursor: pointer;
   }
 `;
 

@@ -28,6 +28,7 @@ const EmailVerificationTab = () => {
 
   const verification = () => {
     if (verificationCode === '111111') {
+      window.opener.postMessage({ type: 'emailVerified', success: true }, '*');
       window.close();
     } else {
       alert('잘못된 인증 코드입니다.');
