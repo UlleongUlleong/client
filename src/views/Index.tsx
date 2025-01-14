@@ -4,6 +4,7 @@ import NavigationBar from './layouts/NavigationBar';
 import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import EmailVerificationTab from '../components/register/email-verify/EmailVerificationTab';
 
 const Index = () => {
   const routeLists = [
@@ -27,6 +28,11 @@ const Index = () => {
     {
       path: '/register',
       element: <Register />,
+      noNav: true,
+    },
+    {
+      path: '/email-verification',
+      element: <EmailVerificationTab />,
       noNav: true,
     },
   ];

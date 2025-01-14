@@ -39,16 +39,6 @@ const SelectKeywords = ({ title }: SelectKeywordsProps) => {
             <KeywordButton size={buttonSize} keyword="위스키" />
           </div>
         </div>
-        {title === 'register' && (
-          <>
-            <div className="section">
-              <div className="section-title">*기타</div>
-              <div className="keywords-btn">
-                <KeywordButton size={buttonSize} keyword="선택안함" />
-              </div>
-            </div>
-          </>
-        )}
       </div>
     </SelectKeywordsStyle>
   );

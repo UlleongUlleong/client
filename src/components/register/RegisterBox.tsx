@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import RegisterForm from './RegisterForm';
+import RegisterForm from './InputForm';
 import SelectKeywords from '../create-room/SelectKeywords';
 
 const RegisterBox = () => {
@@ -153,6 +153,7 @@ const RegisterBoxStyle = styled.div`
     button {
       background: black;
       border-radius: 30px;
+      border: none;
       width: 100%;
       padding: 10px 0;
       color: white;
