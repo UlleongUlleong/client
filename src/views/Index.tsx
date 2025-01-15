@@ -1,6 +1,9 @@
-import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NavigationBar from './layouts/NavigationBar';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import ChatLists from './pages/ChatLists';
+import React from 'react';
 import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -14,7 +17,11 @@ const Index = () => {
   const routeLists = [
     {
       path: '/',
-      element: <></>,
+      element: <Home />,
+    },
+    {
+      path: '/chatlist',
+      element: <ChatLists />,
     },
     {
       path: '/reviews',
@@ -55,6 +62,10 @@ const Index = () => {
       path: '/alcohol/:id',
       element: <AlcoholDetail />
     },
+    {
+      path: '*',
+      element: <NotFound />,
+    },
   ];
 
   const router = createBrowserRouter(
@@ -66,6 +77,7 @@ const Index = () => {
         ) : (
           <NavigationBar>{item.element}</NavigationBar>
         ),
+
       };
     }),
   );
