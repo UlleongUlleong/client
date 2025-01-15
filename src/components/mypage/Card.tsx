@@ -1,18 +1,25 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export interface CardProps {
   imageSrc: string;
   title: string;
   description: number;
+  id: number;
 }
 
-function Card({ imageSrc, title, description }: CardProps) {
+function Card({ imageSrc, title, description, id }: CardProps) {
   const fullStars = Math.floor(description);
   const emptyStars = 5 - fullStars;
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/alcohol/${id.toString()}`);
+  };
 
   return (
-    <CardWrapper>
+    <CardWrapper onClick={handleCardClick}>
       <CardImage src={imageSrc} alt={title} />
       <CardContent>
         <CardTitle>{title}</CardTitle>
@@ -44,7 +51,9 @@ const CardWrapper = styled.div`
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   cursor: pointer;
 
   &:hover {
@@ -68,9 +77,9 @@ const CardTitle = styled.h3`
   margin: 0;
   text-align: center;
   color: #333;
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 const CardStars = styled.div`
@@ -86,12 +95,12 @@ const StarsWrapper = styled.div`
 
 const Star = styled.span<{ empty?: boolean }>`
   font-size: 20px;
-  color: ${({ empty }) => (empty ? '#ddd' : '#000000')}; 
+  color: ${({ empty }) => (empty ? '#ddd' : '#000000')};
 `;
 
 const Rating = styled.span`
   font-size: 16px;
-  margin-left: 8px; 
+  margin-left: 8px;
   color: #333;
 `;
 
