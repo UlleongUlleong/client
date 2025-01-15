@@ -24,12 +24,16 @@ function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
             {Array(fullStars)
               .fill(null)
               .map((_, index) => (
-                <div key={`full-${index}`} className="star full">★</div>
+                <div key={`full-${index}`} className="star full">
+                  ★
+                </div>
               ))}
             {Array(emptyStars)
               .fill(null)
               .map((_, index) => (
-                <div key={`empty-${index}`} className="star empty">☆</div>
+                <div key={`empty-${index}`} className="star empty">
+                  ☆
+                </div>
               ))}
           </div>
           <div className="rating">{description.toFixed(1)}</div>
@@ -41,7 +45,8 @@ function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
 }
 
 const ProfileCardStyle = styled.div`
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   border: 1px solid #ddd;
   border-radius: 12px;
   overflow: hidden;
@@ -52,15 +57,16 @@ const ProfileCardStyle = styled.div`
   .cardImage {
     width: 200px;
     height: 200px;
-    margin : 16px;
+    margin: 16px;
     justify-content: center;
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
     img {
-        width: 100%;
-        height: 100%;
-        border-radius: 12px;
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      object-fit: cover;
     }
   }
 
@@ -93,17 +99,17 @@ const ProfileCardStyle = styled.div`
     }
 
     .full {
-      color: #000; 
+      color: #000;
     }
 
     .empty {
-      color: #ddd; 
+      color: #ddd;
     }
   }
 
   .rating {
     font-size: 16px;
-    font-weight : bold;
+    font-weight: bold;
     margin-left: 8px;
     color: #333;
   }
@@ -111,8 +117,55 @@ const ProfileCardStyle = styled.div`
     margin-top: 10px;
     font-size: 14px;
     color: #666;
-    flex-grow: 1;  
-    overflow-wrap: break-word; 
+    flex-grow: 1;
+    overflow-wrap: break-word;
+  }
+
+  @media (max-width: 768px) {
+    .cardImage {
+      width: 40%;
+      height: auto;
+    }
+    .cardTitle {
+      font-size: 16px;
+    }
+    .rating {
+      font-size: 12px;
+    }
+    .review {
+      font-size: 12px;
+    }
+  }
+  @media (max-width: 425px) {
+    .cardImage {
+      width: 30%;
+      height: auto;
+    }
+    .cardTitle {
+      font-size: 12px;
+    }
+    .rating {
+      font-size: 10px;
+    }
+    .review {
+      font-size: 10px;
+    }
+  }
+  @media (max-width: 320px) {
+    .cardStars {
+      .star {
+        font-size: 14px;
+      }
+    }
+    .cardTitle {
+      font-size: 10px;
+    }
+    .rating {
+      font-size: 8px;
+    }
+    .review {
+      font-size: 8px;
+    }
   }
 `;
 
