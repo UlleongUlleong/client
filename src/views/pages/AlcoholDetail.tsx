@@ -1,8 +1,8 @@
 import { styled } from 'styled-components';
 import React, { useState } from 'react';
-import ReviewCard from '../../components/AlcoholDetailCom/ReviewCard';
-import ReviewModal from '../../components/AlcoholDetailCom/ReviewModal';
-import DetailCard from '../../components/AlcoholDetailCom/DetailCard';
+import DetailCard from '../../components/alcoholdetail/DetailCard';
+import ReviewCard from '../../components/alcoholdetail/ReviewCard';
+import ReviewModal from '../../components/alcoholdetail/ReviewModal';
 
 function AlcoholDetail() {
     const dummyData = {

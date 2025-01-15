@@ -5,13 +5,25 @@ import Slider from "react-slick";
 import { Link } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Card from '../../components/MypageCom/Card';
-import CategoryModal from '../../components/MypageCom/CategoryModal';
+import Card from '../../components/mypage/Card';
+import CategoryModal from '../../components/mypage/CategoryModal';
 
 function Mypage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [profileImage, setProfileImage] = useState(null);
 
     const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setProfileImage(reader.result); // 이미지 미리보기용 URL 설정
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const likedCards = [
         { imageSrc: "https://picsum.photos/200", title: "마루나 동백 양주", description: 4.5 },
@@ -36,6 +48,29 @@ function Mypage() {
         slidesToShow: 5,
         slidesToScroll: 1,
         arrows: true,
+        responsive: [
+            {
+                breakpoint: 1280,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
+                },
+            },
+            {
+                breakpoint: 880,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
+                },
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
+                },
+            },
+        ],
     };
 
     return <>
@@ -44,10 +79,19 @@ function Mypage() {
                 <div className="profile-container">
                     <div className="profile-image-wrapper">
                         <div className="profile-image">
-                            <FaRegUserCircle size={200} />
+                            {profileImage ?
+                                (<img src={profileImage} alt="Profile" />) :
+                                (<FaRegUserCircle size={200} />)
+                            }
                         </div>
                         <div className="plus-icon">
                             <FaPlus size={16} />
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                style={{ display: "none" }}
+                            />
                         </div>
                     </div>
                     <div className="profile-details">
@@ -56,13 +100,13 @@ function Mypage() {
                             <div className="keyword">
                                 <span className="topLabel">나의 키워드</span>
                                 <span className="label">주제 / 분위기: </span>
-                                <span>
+                                <span className="category-container">
                                     <span className="value">시끌시끌</span>
                                     <span className="value">시끌시끌</span>
                                     <span className="value">시끌시끌</span>
                                 </span>
                                 <span className="label">주종: </span>
-                                <span>
+                                <span className="category-container">
                                     <span className="value">소주</span>
                                     <span className="value">맥주</span>
                                 </span>
@@ -130,19 +174,36 @@ const MypageStyle = styled.div`
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         width: 80%;
         position : relative;
+        margin-top : 100px;
+
+        @media (max-width: 768px) {
+            flex-direction: column; 
+            padding: 20px;
+            width: 80%;
+        }
     }
 
     .profile-container {
         display: flex;
         align-items: center;
         position: relative;
+        flex-wrap :wrap;
         width: 100%;
+
+        @media (max-width: 768px) {
+            flex-direction: column;
+        }
     }
 
     .profile-image-wrapper {
         position: relative;
         width: 200px;
         height: 200px;
+
+        @media (max-width: 768px) {
+            width: 150px;
+            height: 150px;
+        }
     }
 
     .profile-image {
@@ -174,6 +235,10 @@ const MypageStyle = styled.div`
 
     .profile-details {
         margin-left: 20px;
+        @media (max-width: 768px) {
+            margin-left: 0;
+            text-align: center;
+        }
     }
 
     .name {
@@ -198,6 +263,11 @@ const MypageStyle = styled.div`
     .label {
         font-weight: bold;
     }
+    .category-container {
+        display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4칸 고정 */
+    gap: 10px;
+    }
 
     .value {
         font-size: 16px;
@@ -205,6 +275,7 @@ const MypageStyle = styled.div`
         background-color: #f7f7f7;
         border-radius: 20px;
         border: 1px solid #ddd;
+        text-align: center;
     }
 
     .settings-icon {
@@ -221,6 +292,7 @@ const MypageStyle = styled.div`
         margin-top: 20px;
         display: flex;
         flex-direction: column;
+
     }
 
     .liked .title, .review .title {
@@ -270,7 +342,8 @@ const MypageStyle = styled.div`
     .slick-slide {
         display: flex;
         justify-content: center;
-        align-items: center; 
+        align-items: center;
+        
     }
 `;
 

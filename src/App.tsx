@@ -1,5 +1,5 @@
 import React from 'react';
-import { GlobalStyle } from './components/style/globalStyle';
+import { GlobalStyle } from './style/globalStyle';
 import Index from './views/Index';
 
 function App() {

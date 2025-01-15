@@ -118,25 +118,28 @@ const CategoryModalStyle = styled.div`
     .category-set {
         display: grid;
         grid-template-columns: 120px 1fr;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: auto auto;
         grid-gap: 20px;
         margin-bottom: 60px;
 
         .select {
             display: grid;
-            grid-template-rows: 1fr 1fr;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap : 10px;
+
             .value {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 12px;
+                font-size: clamp(12px, 3vw, 16px);
                 padding: 4px 16px;
                 background-color: #f7f7f7;
                 border-radius: 20px;
                 border: 1px solid #ddd;
                 margin: 4px;
                 cursor: pointer;
+                text-align: center;
+                white-space: nowrap;
             }
         }
     }
