@@ -1,8 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const LoginForm = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [stayLoggedIn, setStayLoggedIn] = React.useState<boolean>(false);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!email || !password) {
+      alert('이메일과 비밀번호를 모두 입력해주세요.');
+      return;
+    }
+    // 로그인 로직
+  };
+
   return (
     <LoginFormStyle>
       <form>
@@ -10,26 +24,37 @@ const LoginForm = () => {
           className="login"
           type="text"
           placeholder="이메일을 입력하세요"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           className="login"
           type="password"
           placeholder="비밀번호를 입력하세요"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </form>
       <div className="login-options">
         <div className="stay-logged-group">
-          <input className="radio" type="radio" id="stay-logged-radio" />
+          <input
+            className="checkbox"
+            type="checkbox"
+            checked={stayLoggedIn}
+            onChange={(e) => setStayLoggedIn(e.target.checked)}
+          />
           <label htmlFor="stay-logged-radio">로그인 유지</label>
         </div>
         <Link to="/">
-          <span className="find-pwd">비밀번호 찾기</span>
+          <span className="find-pwd-link">비밀번호 찾기</span>
         </Link>
       </div>
-      <button type="button" onClick={() => {}}>
+      <button type="submit" onClick={handleLogin}>
         이메일로 로그인
       </button>
-      <span className="register">회원가입</span>
+      <Link to="/register">
+        <span className="register-link">회원가입</span>
+      </Link>
     </LoginFormStyle>
   );
 };
@@ -64,9 +89,10 @@ const LoginFormStyle = styled.div`
       align-items: center;
       gap: 4px;
 
-      .radio {
+      .checkbox {
         width: 14px;
         height: 14px;
+        margin-bottom: 3px;
       }
 
       label {
@@ -75,7 +101,8 @@ const LoginFormStyle = styled.div`
       }
     }
 
-    .find-pwd {
+    .find-pwd-link {
+      all: unset;
       font-size: 0.9rem;
       color: #9b9b9b;
       text-decoration: underline;
@@ -107,16 +134,18 @@ const LoginFormStyle = styled.div`
     }
   }
 
-  .register {
+  .register-link {
+    all: unset;
     display: block;
     margin-top: 20px;
     text-align: center;
     font-size: 0.9rem;
     text-decoration: underline;
     cursor: pointer;
+    color: black;
 
     &:hover {
-      color: #000;
+      color: #555;
     }
   }
 `;
