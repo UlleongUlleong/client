@@ -1,6 +1,10 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NavigationBar from './layouts/NavigationBar';
+import MakeChat from './pages/CreateRoom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import EmailVerificationTab from '../components/register/email-verify/EmailVerificationTab';
 import Mypage from './pages/Mypage';
 import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
@@ -15,6 +19,25 @@ const Index = () => {
     {
       path: '/reviews',
       element: <></>,
+    },
+    {
+      path: '/rooms',
+      element: <MakeChat />,
+    },
+    {
+      path: '/login',
+      element: <Login />,
+      noNav: true,
+    },
+    {
+      path: '/register',
+      element: <Register />,
+      noNav: true,
+    },
+    {
+      path: '/email-verification',
+      element: <EmailVerificationTab />,
+      noNav: true,
     },
     {
       path: '/profile',
@@ -38,7 +61,11 @@ const Index = () => {
     routeLists.map((item) => {
       return {
         ...item,
-        element: <NavigationBar>{item.element}</NavigationBar>,
+        element: item.noNav ? (
+          item.element
+        ) : (
+          <NavigationBar>{item.element}</NavigationBar>
+        ),
       };
     }),
   );
