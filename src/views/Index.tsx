@@ -1,9 +1,9 @@
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NavigationBar from './layouts/NavigationBar';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import ChatLists from './pages/ChatLists';
-import React from 'react';
 import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -12,6 +12,7 @@ import Mypage from './pages/Mypage';
 import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
+
 
 const Index = () => {
   const routeLists = [
@@ -77,7 +78,6 @@ const Index = () => {
         ) : (
           <NavigationBar>{item.element}</NavigationBar>
         ),
-
       };
     }),
   );
