@@ -2,32 +2,41 @@ import React from 'react';
 import styled from 'styled-components';
 import KeywordButton from './keywords/KeywordButton';
 
-const SelectKeywords = () => {
+interface SelectKeywordsProps {
+  title: string;
+}
+
+const SelectKeywords = ({ title }: SelectKeywordsProps) => {
+  const headTitle =
+    title === 'register' ? '관심 키워드를 선택해주세요.(선택)' : '키워드 선택';
+
+  const buttonSize = title === 'register' ? 'small' : 'large';
+
   return (
-    <SelectKeywordsStyle>
-      <h4>키워드 선택</h4>
+    <SelectKeywordsStyle $title={title}>
+      <h4>{headTitle}</h4>
       <div>
         <div className="section">
           <div className="section-title">*주제/분위기</div>
           <div className="keywords-btn">
-            <KeywordButton keyword="혼술" />
-            <KeywordButton keyword="반주" />
-            <KeywordButton keyword="시끌시끌" />
-            <KeywordButton keyword="조용한" />
-            <KeywordButton keyword="고민상담" />
-            <KeywordButton keyword="레시피공유" />
+            <KeywordButton size={buttonSize} keyword="혼술" />
+            <KeywordButton size={buttonSize} keyword="반주" />
+            <KeywordButton size={buttonSize} keyword="시끌시끌" />
+            <KeywordButton size={buttonSize} keyword="조용한" />
+            <KeywordButton size={buttonSize} keyword="고민상담" />
+            <KeywordButton size={buttonSize} keyword="레시피공유" />
           </div>
         </div>
         <div className="section">
           <div className="section-title">*주종</div>
           <div className="keywords-btn">
-            <KeywordButton keyword="소주" />
-            <KeywordButton keyword="맥주" />
-            <KeywordButton keyword="와인" />
-            <KeywordButton keyword="칵테일" />
-            <KeywordButton keyword="하이볼" />
-            <KeywordButton keyword="전통주" />
-            <KeywordButton keyword="위스키" />
+            <KeywordButton size={buttonSize} keyword="소주" />
+            <KeywordButton size={buttonSize} keyword="맥주" />
+            <KeywordButton size={buttonSize} keyword="와인" />
+            <KeywordButton size={buttonSize} keyword="칵테일" />
+            <KeywordButton size={buttonSize} keyword="하이볼" />
+            <KeywordButton size={buttonSize} keyword="전통주" />
+            <KeywordButton size={buttonSize} keyword="위스키" />
           </div>
         </div>
       </div>
@@ -35,16 +44,20 @@ const SelectKeywords = () => {
   );
 };
 
-const SelectKeywordsStyle = styled.div`
+interface SelectKeywordsStyleProps {
+  $title: string;
+}
+
+const SelectKeywordsStyle = styled.div<SelectKeywordsStyleProps>`
   position: relative;
-  left: 10%;
-  width: 80%;
+  left: ${({ $title }) => ($title === 'register' ? '0%' : '10%')};
+  width: ${({ $title }) => ($title === 'register' ? '100%' : '80%')};
   display: flex;
   flex-direction: column;
   padding: 10px 0;
 
   h4 {
-    font-size: 1.2rem;
+    font-size: ${({ $title }) => ($title === 'register' ? '1rem' : '1.2rem')};
   }
 
   .section {

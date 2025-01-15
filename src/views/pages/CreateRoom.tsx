@@ -9,7 +9,7 @@ const MakeChat = () => {
     <MakeChatStyle>
       <div className="content">
         <SelectTheme />
-        <SelectKeywords />
+        <SelectKeywords title="create-room" />
         <RoomInfoInput />
       </div>
     </MakeChatStyle>
