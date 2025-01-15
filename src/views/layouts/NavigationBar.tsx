@@ -50,14 +50,12 @@ const NavigationBarStyle = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 80px;
+    width: 6%;
+    min-width: 80px;
     height: 100%;
+
     background: black;
     padding: 30px 0;
-    position: fixed;
-    @media (max-width: 468px) {
-      min-width: 70px;
-    }
   }
 
   .btn {

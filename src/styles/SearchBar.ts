@@ -5,46 +5,36 @@ export const TopBar = styled.div`
   margin-top: 20px;
   justify-content: center;
   align-items: center;
-  height: 130px;
+  height: 100px;
 
   @media (max-width: 468px) {
     min-width: 200px;
   }
 `;
 
-export const StyledTextFields = styled.form`
-  width: 50%;
-  max-width: 650px;
-  font-family: 'Noto Sans KR', serif;
-  .input {
-    width: 90%;
-    border: 1px solid #bbb;
-    border-radius: 5px;
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  .icon {
-    position: relative;
-    margin: 0;
-  }
-`;
-
 export const LoginButton = styled.button`
-  width: 60px;
-  height: 30px;
   font-family: 'Noto Sans KR', serif;
+  padding: 6px 16px;
   background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid #a9a9a9;
   border-radius: 5px;
+  color: black;
   position: absolute;
-  right: 20px;
+  right: 25px;
   cursor: pointer;
+
+  @media (max-width: 468px) {
+    right: 10px;
+  }
 `;
 
 export const Container = styled.div`
   position: relative;
   width: 50%;
   max-width: 800px;
+  @media (max-width: 468px) {
+    right: 10px;
+  }
 `;
 
 export const SearchWrapper = styled.div`
@@ -53,11 +43,13 @@ export const SearchWrapper = styled.div`
   border: 1px solid #ddd;
   padding: 8px 12px;
   border-radius: 15px;
-  background: white;
+  background: #f5f5f5;
 `;
 
 export const Input = styled.input`
+  font-family: 'Noto Sans KR', serif;
   flex: 1;
+  background: #f5f5f5;
   border: none;
   width: 100%;
   outline: none;
@@ -78,6 +70,7 @@ export const IconButton = styled.button`
 
 export const Dropdown = styled.div<{ isOpen: boolean }>`
   z-index: 1;
+  color: black;
   position: absolute;
   top: 100%;
   left: 0;
@@ -178,6 +171,7 @@ export const ConfirmButton = styled.button`
   padding: 6px 16px;
   background: #000000;
   color: white;
+
   border: none;
   border-radius: 6px;
   margin: 6px 0px;

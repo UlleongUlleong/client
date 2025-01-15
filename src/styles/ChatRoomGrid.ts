@@ -1,11 +1,12 @@
 import styled from 'styled-components';
+
 export const StyleChatRoomsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 340px);
   gap: 20px;
   justify-content: center;
   width: 100%;
-
+  margin-top: 20px;
   &::after {
     content: '';
     grid-column: 1 / -1;
@@ -13,9 +14,7 @@ export const StyleChatRoomsGrid = styled.div`
   }
 
   @media (max-width: 468px) {
-    grid-template-columns: repeat(auto-fill, 245px);
-    gap: 15px;
-    padding: 10px;
+    grid-template-columns: repeat(auto-fill, 280px);
   }
 `;
 

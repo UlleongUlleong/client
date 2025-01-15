@@ -77,7 +77,11 @@ const SearchBar = () => {
       <Container>
         <SearchWrapper>
           <IconButton onClick={() => setIsOpen(!isOpen)}>
-            {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+            {isOpen ? (
+              <ChevronUp size={20} color="black" />
+            ) : (
+              <ChevronDown size={20} color="black" />
+            )}
           </IconButton>
           <Input
             value={searchText}
@@ -85,7 +89,7 @@ const SearchBar = () => {
             placeholder="검색어를 입력하세요"
           />
           <IconButton onClick={handleSearch}>
-            <Search size={20} />
+            <Search size={20} color="black" />
           </IconButton>
         </SearchWrapper>
 
@@ -143,7 +147,7 @@ const SearchBar = () => {
         </Dropdown>
       </Container>
 
-      <LoginButton>Login</LoginButton>
+      <LoginButton>로그인</LoginButton>
     </TopBar>
   );
 };

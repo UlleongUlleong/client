@@ -2,17 +2,11 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 
 export const MainContainer = styled.div`
-  width: calc(100% - 80px);
-  margin-left: 80px;
   width: 100%;
   position: relative;
   padding: 0px;
   min-height: 100vh;
   overflow-y: auto;
-  @media (max-width: 468px) {
-    width: calc(100% - 70px);
-    margin-left: 70px;
-  }
 `;
 
 export const TopBar = styled.div`
@@ -163,7 +157,7 @@ export const MakeChatRoomButton = styled.button`
   color: black;
   border: none;
   background: white;
-  z-index: 2;
+  z-index: 100;
   cursor: pointer;
   font-family: 'Noto Sans KR', serif;
   font-size: 14px;
@@ -176,6 +170,9 @@ export const MakeChatRoomButton = styled.button`
     0px 1px 3px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   &:hover {
-    background: #0056b3;
+    background: #f2f2f2;
+  }
+  @media (max-width: 468px) {
+    right: 20px;
   }
 `;

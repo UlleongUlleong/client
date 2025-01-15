@@ -16,7 +16,9 @@ import {
   StyledSlider,
   MakeChatRoomButton,
 } from '../../styles/Home.ts';
+
 import SearchBar from '../../components/SearchBar.tsx';
+import Dropdown from '../../components/Dropdown.tsx';
 function Home() {
   const navigate = useNavigate();
   const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
@@ -70,6 +72,11 @@ function Home() {
   const navigateToMakeRoom = () => {
     navigate('/makeroom');
   };
+  const handleSort = (value: string) => {
+    console.log('Selected sort option:', value);
+    // 정렬 로직 구현
+  };
+
   return (
     <MainContainer>
       <SearchBar />
@@ -79,20 +86,19 @@ function Home() {
         </Link>
       </Category>
       <CategoryTitle>최신 순</CategoryTitle>
-
       <StyledSlider {...settings}>
         {featuredRooms.map((room) => (
           <StyleChatRoomsGrid key={room.id}>
             <ChatRoom key={room.id} room={room}></ChatRoom>
           </StyleChatRoomsGrid>
         ))}
-      </StyledSlider>
-
+      </StyledSlider>{' '}
+      <Dropdown onSelect={handleSort} />
       {user_category.length > 0 ? (
         <CategoryTitle>사용자 추천 순</CategoryTitle>
       ) : (
         <CategoryTitle> 기본 순</CategoryTitle>
-      )}
+      )}{' '}
       <MakeChatRoomButton onClick={navigateToMakeRoom}>
         방 만들기
       </MakeChatRoomButton>
