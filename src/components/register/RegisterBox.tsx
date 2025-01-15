@@ -32,6 +32,9 @@ const RegisterBox = () => {
       alert('이메일 인증을 완료해주세요.');
       return;
     }
+    if (password !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+    }
     if (!checkedAge || !checkedUseInfo) {
       alert('필수 항목에 동의해야 회원가입이 가능합니다.');
       return;

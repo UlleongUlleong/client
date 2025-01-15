@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const EmailVerificationTab = () => {
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-  const [timeLeft, setTimeLeft] = useState<number>(30);
+  const [timeLeft, setTimeLeft] = useState<number>(5);
   const [isTimeOver, setIsTimeOver] = useState<boolean>(false);
   const email = 'test@programmers.com';
 
@@ -37,9 +37,10 @@ const EmailVerificationTab = () => {
 
   const resendCode = () => {
     if (!isTimeOver) return;
-    setTimeLeft(30);
+    setTimeLeft(5);
     setIsTimeOver(false);
-    // alert('새 인증 코드를 전송하였습니다.');
+    setVerificationCode('');
+    alert('새 인증 코드를 전송하였습니다.');
   };
 
   const handleButtonClick = () => {
