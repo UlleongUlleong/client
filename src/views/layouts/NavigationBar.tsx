@@ -53,7 +53,6 @@ const NavigationBarStyle = styled.div`
     width: 6%;
     min-width: 80px;
     height: 100%;
-
     background: black;
     padding: 30px 0;
   }
