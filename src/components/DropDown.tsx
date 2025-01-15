@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import React from 'react';
 interface DropdownProps {
-  onSelect: (value: string) => void;
+  onSelect: (sortType: string) => void;
 }
 
 const DropdownContainer = styled.div`
@@ -79,8 +79,8 @@ const DropdownItem = styled.li`
 `;
 
 const sortOptions = [
-  { value: 'date', label: '생성일 순' },
-  { value: 'members', label: '인원 순' },
+  { value: 'creationDate', label: '생성일 순' },
+  { value: 'userCount', label: '인원 순' },
 ];
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {

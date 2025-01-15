@@ -10,6 +10,7 @@ import {
   Text,
   ChatRoomParty,
 } from '../styles/chatRoom.ts';
+import { useNavigate } from 'react-router-dom';
 export interface IChatRoom {
   id: number;
   ownerId: number;
@@ -142,8 +143,12 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   const partyNumber = room.joinedParticipants;
   const isFull = partyNumber === room.maxParticipants;
   const FULL = 'FULL';
+  const navigate = useNavigate();
+  const handleChatRoomClick = () => {
+    navigate(`/chat/${room.id}`);
+  };
   return (
-    <ChatRoomContainer key={room.id}>
+    <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
       <ChatRoomParty isFull={isFull}>
         <PersonIcon
           sx={{
