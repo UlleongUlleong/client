@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import RegisterForm from './InputForm';
+import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
 
 const RegisterBox = () => {
