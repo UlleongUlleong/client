@@ -5,6 +5,10 @@ import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import EmailVerificationTab from '../components/register/email-verify/EmailVerificationTab';
+import Mypage from './pages/Mypage';
+import ProfileLike from './pages/ProfileLike';
+import ProfileReview from './pages/ProfileReview';
+import AlcoholDetail from './pages/AlcoholDetail';
 
 const Index = () => {
   const routeLists = [
@@ -34,6 +38,22 @@ const Index = () => {
       path: '/email-verification',
       element: <EmailVerificationTab />,
       noNav: true,
+    },
+    {
+      path: '/profile',
+      element: <Mypage />
+    },
+    {
+      path: '/profile/like',
+      element: <ProfileLike />
+    },
+    {
+      path: '/profile/review',
+      element: <ProfileReview />
+    },
+    {
+      path: '/alcohol/:id',
+      element: <AlcoholDetail />
     },
   ];
 
