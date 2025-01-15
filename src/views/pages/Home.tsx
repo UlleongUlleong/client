@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -70,11 +70,30 @@ function Home() {
   // 슬라이더 이동 함수
 
   const navigateToMakeRoom = () => {
-    navigate('/makeroom');
+    navigate('/rooms');
   };
+
+  useEffect(() => {}, [featuredRooms]);
+
   const handleSort = (value: string) => {
-    console.log('Selected sort option:', value);
-    // 정렬 로직 구현
+    console.log(value);
+    if (value === '생성일 순') {
+      featuredRooms.sort((a, b) => {
+        return a.createdAt > b.createdAt
+          ? -1
+          : a.createdAt < b.createdAt
+            ? 1
+            : 0;
+      });
+    } else if (value === '참여자 순') {
+      featuredRooms.sort((a, b) => {
+        return a.maxParticipants > b.maxParticipants
+          ? -1
+          : a.maxParticipants < b.maxParticipants
+            ? 1
+            : 0;
+      });
+    }
   };
 
   return (

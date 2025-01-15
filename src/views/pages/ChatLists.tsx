@@ -4,6 +4,7 @@ import { MainContainer } from '../../styles/Home';
 import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
 import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
 import SearchBar from '../../components/SearchBar';
+import Dropdown from '../../components/Dropdown';
 function ChatLists() {
   const location = useLocation();
   useEffect(() => {});
@@ -12,6 +13,7 @@ function ChatLists() {
     <MainContainer>
       <SearchBar />
       <CategoryTitle>{data}</CategoryTitle>
+      <Dropdown></Dropdown>
       <StyleChatRoomsGrid>
         {dummyChatRooms.map((rooms, index) => {
           return <ChatRoom room={rooms} key={index} />;

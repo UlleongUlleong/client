@@ -17,7 +17,9 @@ export interface IChatRoom {
   description: string;
   theme: Theme;
   maxParticipants: number;
+  joinedParticipants: number;
   alcoholCategory: AlcoholCategory[];
+  createdAt: string;
 }
 
 export interface Theme {
@@ -41,7 +43,9 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 4,
+    joinedParticipants: 3,
     alcoholCategory: [{ id: 1, name: '소주' }],
+    createdAt: '2025-01-01T00:00:00.000Z',
   },
   {
     id: 2,
@@ -53,7 +57,9 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 6,
+    joinedParticipants: 4,
     alcoholCategory: [{ id: 2, name: '위스키' }],
+    createdAt: '2025-01-02T00:00:00.000Z',
   },
   {
     id: 3,
@@ -65,7 +71,9 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 5,
+    joinedParticipants: 2,
     alcoholCategory: [{ id: 3, name: '와인' }],
+    createdAt: '2025-01-03T00:00:00.000Z',
   },
   {
     id: 4,
@@ -77,7 +85,9 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 8,
+    joinedParticipants: 6,
     alcoholCategory: [{ id: 4, name: '맥주' }],
+    createdAt: '2025-01-03T14:00:00.000Z',
   },
   {
     id: 5,
@@ -89,7 +99,9 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 10,
+    joinedParticipants: 1,
     alcoholCategory: [{ id: 5, name: '칵테일' }],
+    createdAt: '2025-01-04T00:00:00.000Z',
   },
   {
     id: 6,
@@ -101,10 +113,12 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 6,
+    joinedParticipants: 2,
     alcoholCategory: [
       { id: 6, name: '막걸리' },
       { id: 7, name: '전통주' },
     ],
+    createdAt: '2025-01-05T00:00:00.000Z',
   },
   {
     id: 7,
@@ -116,26 +130,28 @@ export const dummyChatRooms: IChatRoom[] = [
       url: 'https://www.qplace.kr/content/images/2023/03/1316-------------.jpg',
     },
     maxParticipants: 6,
+    joinedParticipants: 6,
     alcoholCategory: [
       { id: 6, name: '막걸리' },
       { id: 7, name: '전통주' },
     ],
+    createdAt: '2025-01-06T00:00:00.000Z',
   },
 ];
 function ChatRoom({ room }: { room: IChatRoom }) {
-  const partyNumber = room.maxParticipants - 1;
+  const partyNumber = room.joinedParticipants;
+  const isFull = partyNumber === room.maxParticipants;
+  const FULL = 'FULL';
   return (
     <ChatRoomContainer key={room.id}>
-      <ChatRoomParty>
+      <ChatRoomParty isFull={isFull}>
         <PersonIcon
           sx={{
             position: 'relative',
-
-            color: 'white',
             fontSize: '24px',
           }}
         />
-        <div className="number">{partyNumber}</div>
+        <div className="number">{isFull ? FULL : partyNumber}</div>
       </ChatRoomParty>
       <ChatImage>
         <img src={room.theme.url} alt={room.name} />

@@ -93,13 +93,17 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
     onSelect(option.value);
   };
 
+  const filteredOptions = sortOptions.filter(
+    (option) => option.value !== selectedOption.value,
+  );
+
   return (
     <DropdownContainer>
       <DropdownButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         {selectedOption.label}
       </DropdownButton>
       <DropdownList isOpen={isOpen}>
-        {sortOptions.map((option) => (
+        {filteredOptions.map((option) => (
           <DropdownItem key={option.value} onClick={() => handleSelect(option)}>
             {option.label}
           </DropdownItem>

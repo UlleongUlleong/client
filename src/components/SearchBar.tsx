@@ -20,6 +20,7 @@ import {
 } from '../styles/SearchBar.ts';
 
 import Divider from '@mui/material/Divider';
+import { useNavigate } from 'react-router-dom';
 
 interface Category {
   id: number;
@@ -53,7 +54,7 @@ const SearchBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [searchText, setSearchText] = useState('');
-
+  const navigate = useNavigate();
   const toggleCategory = (category: Category) => {
     setSelectedCategories((prev) => {
       const isSelected = prev.some((cat) => cat.id === category.id);
@@ -70,6 +71,10 @@ const SearchBar = () => {
 
   const handleConfirm = () => {
     setIsOpen(false);
+  };
+
+  const navigateToLogin = () => {
+    navigate('/login');
   };
 
   return (
@@ -147,7 +152,7 @@ const SearchBar = () => {
         </Dropdown>
       </Container>
 
-      <LoginButton>로그인</LoginButton>
+      <LoginButton onClick={navigateToLogin}>로그인</LoginButton>
     </TopBar>
   );
 };

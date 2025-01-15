@@ -6,6 +6,7 @@ export type ChatRoomType = {
   theme: theme;
   maxParticipants: number;
   alcoholCategory: [];
+  createdAt: string;
 };
 
 export type theme = {

@@ -2,10 +2,8 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 
 export const MainContainer = styled.div`
-  width: 100%;
+  width: 94%;
   position: relative;
-  padding: 0px;
-  min-height: 100vh;
   overflow-y: auto;
 `;
 
