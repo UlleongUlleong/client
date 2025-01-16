@@ -6,7 +6,9 @@ import Dropdown from '../../components/Dropdown';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { GridTopBar } from './Home';
 import { sortReviewOptions } from '../../models/dropDownOption';
-import AlocholGird from '../../components/AlocholGird';
+import AlocholGird from '../../components/AlocholGrid';
+import { Category } from '../../styles/ChatRoomGrid';
+import { Link } from 'react-router-dom';
 
 const dummyData: IAlcohol[] = [
   {
@@ -48,9 +50,18 @@ function Reviews() {
       <SearchBar isMoodCategories={false} />
 
       <GridTopBar>
-        <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
         <CategoryTitle>별점 TOP10</CategoryTitle>
+        <Category>
+          <Link
+            to="/reviewLists"
+            className="more"
+            state={{ alcoholsData: dummyData, categoryName: '별점 TOP10' }}
+          >
+            더보기
+          </Link>
+        </Category>
       </GridTopBar>
+
       <AlocholGird alcohols={dummyData} />
     </ReviewsMainContainer>
   );

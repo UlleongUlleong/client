@@ -13,6 +13,7 @@ import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
 import Reviews from './pages/Reviews';
+import ReviewLists from './pages/ReviewLists';
 
 const Index = () => {
   const routeLists = [
@@ -26,11 +27,15 @@ const Index = () => {
     },
     {
       path: '/reviews',
-      element: <Reviews></Reviews>,
+      element: <Reviews />,
     },
     {
       path: '/rooms',
       element: <MakeChat />,
+    },
+    {
+      path: '/reviewLists',
+      element: <ReviewLists />,
     },
     {
       path: '/login',
