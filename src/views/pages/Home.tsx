@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
-
+import Dropdown from '../../components/Dropdown.tsx';
 import ChatRoom from '../../components/ChatRoom.tsx';
 import {
   StyleChatRoomsGrid,
@@ -18,7 +18,7 @@ import {
 } from '../../styles/Home.ts';
 
 import SearchBar from '../../components/SearchBar.tsx';
-import Dropdown from '../../components/Dropdown.tsx';
+
 function Home() {
   const navigate = useNavigate();
   const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
@@ -95,12 +95,16 @@ function Home() {
       });
     }
   };
-
+  const categories = ['mood', 'alcohol'];
   return (
     <MainContainer>
-      <SearchBar />
+      <SearchBar isMoodCategories={true} />
       <Category>
-        <Link to="/chatlist" className="more " state={{ data: '최신 순' }}>
+        <Link
+          to="/chatlist"
+          className="more "
+          state={{ newChatRoom: dummyChatRooms, sort: '최신 순' }}
+        >
           더보기
         </Link>
       </Category>

@@ -7,69 +7,6 @@ export const MainContainer = styled.div`
   overflow-y: auto;
 `;
 
-export const TopBar = styled.div`
-  display: flex;
-  margin-top: 20px;
-  justify-content: center;
-  align-items: center;
-  height: 130px;
-
-  @media (max-width: 468px) {
-    min-width: 200px;
-  }
-`;
-
-export const SliderWrapper = styled.div`
-  padding: 20px;
-  width: 100%;
-
-  @media (max-width: 468px) {
-    padding: 10px;
-  }
-`;
-
-export const ChatTitleBox = styled.div`
-  width: 290px;
-  margin: 5px auto;
-  height: 20px;
-  text-align: left;
-
-  @media (max-width: 468px) {
-    width: 210px;
-  }
-`;
-
-export const Title = styled.span`
-  font-family: 'Noto Sans KR', serif;
-  font-weight: 600;
-  font-size: 14px;
-  color: #000000;
-  @media (max-width: 468px) {
-    font-size: 13px;
-  }
-`;
-
-export const ChatDescription = styled.div`
-  width: 290px;
-  margin: 0 auto;
-  @media (max-width: 468px) {
-    width: 210px;
-  }
-`;
-
-export const Text = styled.span`
-  font-family: 'Noto Sans KR', serif;
-  font-size: 12px;
-  color: #000000;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  @media (max-width: 468px) {
-    font-size: 11px;
-  }
-`;
-
 export const StyledSlider = styled(Slider)`
   justify-content: center;
   align-items: center;

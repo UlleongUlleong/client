@@ -18,44 +18,38 @@ import {
   Input,
   IconButton,
 } from '../styles/SearchBar.ts';
-
+import { CategoryType, ICategory } from '../types/Category.ts';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
+import { dummyChatRooms } from './ChatRoom.tsx';
 
-interface Category {
-  id: number;
-  name: string;
+const moodTypeCategories: ICategory[] = [
+  { id: 1, name: '혼술', type: 'mood' },
+  { id: 2, name: '반주', type: 'mood' },
+  { id: 3, name: '시끌시끌', type: 'mood' },
+  { id: 4, name: '조용한', type: 'mood' },
+  { id: 5, name: '고민상담', type: 'mood' },
+  { id: 6, name: '레시피공유', type: 'mood' },
+];
+interface searchBarProps {
+  isMoodCategories: boolean;
 }
-
-interface SearchBarProps {
-  onSearch: (categories: Category[], searchText: string) => void;
-}
-
-const moodcategories: Category[] = [
-  { id: 1, name: '혼술' },
-  { id: 2, name: '반주' },
-  { id: 3, name: '시끌시끌' },
-  { id: 4, name: '조용한' },
-  { id: 5, name: '고민상담' },
-  { id: 6, name: '레시피공유' },
+const alcoholTypeCategories: ICategory[] = [
+  { id: 7, name: '소주', type: 'alcohol' },
+  { id: 8, name: '맥주', type: 'alcohol' },
+  { id: 9, name: '와인', type: 'alcohol' },
+  { id: 10, name: '칵테일', type: 'alcohol' },
+  { id: 11, name: '하이볼', type: 'alcohol' },
+  { id: 12, name: '전통주', type: 'alcohol' },
+  { id: 13, name: '위스키', type: 'alcohol' },
 ];
 
-const alchoholcategories: Category[] = [
-  { id: 7, name: '소주' },
-  { id: 8, name: '맥주' },
-  { id: 9, name: '와인' },
-  { id: 10, name: '칵테일' },
-  { id: 11, name: '하이볼' },
-  { id: 12, name: '전통주' },
-  { id: 13, name: '위스키' },
-];
-
-const SearchBar = () => {
+const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
-  const toggleCategory = (category: Category) => {
+  const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {
       const isSelected = prev.some((cat) => cat.id === category.id);
       if (isSelected) {
@@ -66,6 +60,14 @@ const SearchBar = () => {
   };
 
   const handleSearch = () => {
+    navigate('/chatlist', {
+      state: {
+        chatRoom: dummyChatRooms,
+        sort: '검색 결과',
+        category: selectedCategories,
+      },
+    });
+
     onSearch(selectedCategories, searchText);
   };
 
@@ -112,26 +114,34 @@ const SearchBar = () => {
           {/* 카테고리 선택 섹션 */}
           <CategorySection>
             <SectionTitle>카테고리 선택</SectionTitle>
+            {isMoodCategories ? (
+              <>
+                <CategoryGrid>
+                  {moodTypeCategories.map((category) => (
+                    <CategoryItem
+                      key={category.id}
+                      onClick={() => toggleCategory(category)}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.some(
+                          (cat) => cat.id === category.id,
+                        )}
+                        readOnly
+                      />
+                      <span>{category.name}</span>
+                    </CategoryItem>
+                  ))}
+                </CategoryGrid>
+
+                <Divider />
+              </>
+            ) : (
+              <></>
+            )}
+
             <CategoryGrid>
-              {moodcategories.map((category) => (
-                <CategoryItem
-                  key={category.id}
-                  onClick={() => toggleCategory(category)}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.some(
-                      (cat) => cat.id === category.id,
-                    )}
-                    readOnly
-                  />
-                  <span>{category.name}</span>
-                </CategoryItem>
-              ))}
-            </CategoryGrid>
-            <Divider />
-            <CategoryGrid>
-              {alchoholcategories.map((category) => (
+              {alcoholTypeCategories.map((category) => (
                 <CategoryItem
                   key={category.id}
                   onClick={() => toggleCategory(category)}

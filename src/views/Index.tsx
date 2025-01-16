@@ -12,7 +12,7 @@ import Mypage from './pages/Mypage';
 import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
-
+import Reviews from './pages/Reviews';
 
 const Index = () => {
   const routeLists = [
@@ -26,7 +26,7 @@ const Index = () => {
     },
     {
       path: '/reviews',
-      element: <></>,
+      element: <Reviews></Reviews>,
     },
     {
       path: '/rooms',
@@ -49,19 +49,19 @@ const Index = () => {
     },
     {
       path: '/profile',
-      element: <Mypage />
+      element: <Mypage />,
     },
     {
       path: '/profile/like',
-      element: <ProfileLike />
+      element: <ProfileLike />,
     },
     {
       path: '/profile/review',
-      element: <ProfileReview />
+      element: <ProfileReview />,
     },
     {
       path: '/alcohol/:id',
-      element: <AlcoholDetail />
+      element: <AlcoholDetail />,
     },
     {
       path: '*',
