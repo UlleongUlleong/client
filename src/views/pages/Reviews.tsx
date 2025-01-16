@@ -63,6 +63,19 @@ function Reviews() {
       </GridTopBar>
 
       <AlocholGird alcohols={dummyData} />
+      <GridTopBar>
+        <CategoryTitle>와인</CategoryTitle>
+        <Category>
+          <Link
+            to="/reviewLists"
+            className="more"
+            state={{ alcoholsData: dummyData, categoryName: '와인' }}
+          >
+            더보기
+          </Link>
+        </Category>
+      </GridTopBar>
+      <AlocholGird alcohols={dummyData} />
     </ReviewsMainContainer>
   );
 }
