@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 interface KeywordButtonProps {
   keyword: string;
+  size: 'small' | 'large';
 }
 
-const KeywordButton = ({ keyword }: KeywordButtonProps) => {
+const KeywordButton = ({ keyword, size }: KeywordButtonProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
 
   const onClickBtn = () => {
@@ -13,7 +14,7 @@ const KeywordButton = ({ keyword }: KeywordButtonProps) => {
   };
 
   return (
-    <KeywordButtonStyle isClicked={isClicked} onClick={onClickBtn}>
+    <KeywordButtonStyle isClicked={isClicked} onClick={onClickBtn} $size={size}>
       {keyword}
     </KeywordButtonStyle>
   );
@@ -21,13 +22,14 @@ const KeywordButton = ({ keyword }: KeywordButtonProps) => {
 
 interface KeywordButtonStyleProps {
   isClicked: boolean;
+  $size: string;
 }
 
 const KeywordButtonStyle = styled.button<KeywordButtonStyleProps>`
   border: solid;
   border-radius: 30px;
   padding: 5px 15px;
-  font-size: 1rem;
+  font-size: ${({ $size }) => ($size === 'small' ? '0.9rem' : '1rem')};
   background: ${(props) => (props.isClicked ? '#e8f0fe' : '#f5f4f4')};
   border-color: ${(props) => (props.isClicked ? '#273ec2' : '#bcbcbc')};
   border-width: 1px;

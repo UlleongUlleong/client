@@ -19,7 +19,7 @@ const NavigationBar = ({ children }: NavigationBarProps) => {
     <NavigationBarStyle>
       <div className="navbar">
         <div>
-          <NavButton label="Home" Icon={BiHomeAlt} path="/home" />
+          <NavButton label="Home" Icon={BiHomeAlt} path="/" />
           <NavButton label="Reviews" Icon={FaRegThumbsUp} path="/reviews" />
         </div>
         <div className="user-btn">
