@@ -1,29 +1,12 @@
 import React from 'react';
 import SearchBar from '../../components/SearchBar';
 import { ReviewsMainContainer } from '../../styles/Reviews';
-import styled from 'styled-components';
-import Alcohol from '../../components/Alcohol';
 import { IAlcohol } from '../../models/alcohol';
 import Dropdown from '../../components/Dropdown';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { GridTopBar } from './Home';
 import { sortReviewOptions } from '../../models/dropDownOption';
-export const StyleAlcoholReviewsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 230px);
-  justify-content: space-around;
-  padding: 10px;
-  margin-top: 30px;
-  &::after {
-    content: '';
-    grid-column: 1 / -1;
-    height: 0;
-  }
-
-  @media (max-width: 468px) {
-    grid-template-columns: repeat(auto-fill, 150px);
-  }
-`;
+import AlocholGird from '../../components/AlocholGird';
 
 const dummyData: IAlcohol[] = [
   {
@@ -66,13 +49,9 @@ function Reviews() {
 
       <GridTopBar>
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
-        <CategoryTitle>사용자 추천 순</CategoryTitle>
+        <CategoryTitle>별점 TOP10</CategoryTitle>
       </GridTopBar>
-      <StyleAlcoholReviewsGrid>
-        {dummyData.map((data, index) => (
-          <Alcohol key={index} alcol={data} />
-        ))}
-      </StyleAlcoholReviewsGrid>
+      <AlocholGird alcohols={dummyData} />
     </ReviewsMainContainer>
   );
 }
