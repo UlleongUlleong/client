@@ -5,16 +5,11 @@ import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
 import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
 import SearchBar from '../../components/SearchBar';
 import Dropdown from '../../components/Dropdown';
-const BASE_URL = 'http://localhost:8080';
-
 import { IChatRoom } from '../../components/ChatRoom';
+import { GridTopBar } from './Home';
+import { sortChatRoomOptions } from '../../models/dropDownOption';
 
-interface ICategory {
-  id: number;
-  name: string;
-  type: string;
-}
-
+const BASE_URL = 'http://localhost:8080';
 function ChatLists() {
   const location = useLocation();
 
@@ -55,11 +50,18 @@ function ChatLists() {
       console.error(error);
     }
   };
+
   return (
     <MainContainer>
       <SearchBar />
-      <CategoryTitle>{sort ? sort : null}</CategoryTitle>
-      <Dropdown onSelect={loadChatRooms}></Dropdown>
+      <GridTopBar>
+        <CategoryTitle>{sort ? sort : null}</CategoryTitle>
+        <Dropdown
+          onSelect={loadChatRooms}
+          sortOptions={sortChatRoomOptions}
+        ></Dropdown>
+      </GridTopBar>
+
       <StyleChatRoomsGrid>
         {dummyChatRooms.map((rooms, index) => {
           return <ChatRoom room={rooms} key={index} />;

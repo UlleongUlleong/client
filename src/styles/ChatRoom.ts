@@ -5,8 +5,7 @@ export const ChatRoomContainer = styled.div`
   align-items: center;
   cursor: pointer;
   display: flex;
-  padding: 10px;
-  margin: 10px auto;
+  margin: 0 auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;

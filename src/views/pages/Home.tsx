@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../../components/Dropdown.tsx';
 import ChatRoom from '../../components/ChatRoom.tsx';
+import { sortChatRoomOptions } from '../../models/dropDownOption';
 import {
   StyleChatRoomsGrid,
   Category,
@@ -18,6 +19,13 @@ import {
 } from '../../styles/Home.ts';
 
 import SearchBar from '../../components/SearchBar.tsx';
+import styled from 'styled-components';
+
+export const GridTopBar = styled.div`
+  height: 50px;
+
+  justify-content: space-between;
+`;
 
 function Home() {
   const navigate = useNavigate();
@@ -76,7 +84,6 @@ function Home() {
   useEffect(() => {}, [featuredRooms]);
 
   const handleSort = (value: string) => {
-    console.log(value);
     if (value === '생성일 순') {
       featuredRooms.sort((a, b) => {
         return a.createdAt > b.createdAt
@@ -95,33 +102,38 @@ function Home() {
       });
     }
   };
-  const categories = ['mood', 'alcohol'];
+
   return (
     <MainContainer>
       <SearchBar isMoodCategories={true} />
-      <Category>
-        <Link
-          to="/chatlist"
-          className="more "
-          state={{ newChatRoom: dummyChatRooms, sort: '최신 순' }}
-        >
-          더보기
-        </Link>
-      </Category>
-      <CategoryTitle>최신 순</CategoryTitle>
+      <GridTopBar>
+        <CategoryTitle>최신 순</CategoryTitle>
+        <Category>
+          <Link
+            to="/chatlist"
+            className="more"
+            state={{ newChatRoom: dummyChatRooms, sort: '최신 순' }}
+          >
+            더보기
+          </Link>
+        </Category>
+      </GridTopBar>
+
       <StyledSlider {...settings}>
         {featuredRooms.map((room) => (
           <StyleChatRoomsGrid key={room.id}>
             <ChatRoom key={room.id} room={room}></ChatRoom>
           </StyleChatRoomsGrid>
         ))}
-      </StyledSlider>{' '}
-      <Dropdown onSelect={handleSort} />
-      {user_category.length > 0 ? (
-        <CategoryTitle>사용자 추천 순</CategoryTitle>
-      ) : (
-        <CategoryTitle> 기본 순</CategoryTitle>
-      )}{' '}
+      </StyledSlider>
+      <GridTopBar>
+        {user_category.length > 0 ? (
+          <CategoryTitle>사용자 추천 순</CategoryTitle>
+        ) : (
+          <CategoryTitle> 기본 순</CategoryTitle>
+        )}
+        <Dropdown onSelect={handleSort} sortOptions={sortChatRoomOptions} />
+      </GridTopBar>
       <MakeChatRoomButton onClick={navigateToMakeRoom}>
         방 만들기
       </MakeChatRoomButton>

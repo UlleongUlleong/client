@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import React from 'react';
+import { ISortOption } from '../models/dropDownOption';
 interface DropdownProps {
   onSelect: (sortType: string) => void;
 }
 
 const DropdownContainer = styled.div`
   position: relative;
-  top: 45px;
+  top: 25px;
   right: 30px;
   font-family: 'Noto Sans KR', serif;
-  position: relative;
   width: 100px;
   font-size: 14px;
   user-select: none;
@@ -77,13 +77,15 @@ const DropdownItem = styled.li`
     background-color: #f5f5f5;
   }
 `;
+interface DropdownProps {
+  onSelect: (sortType: string) => void;
+  sortOptions: ISortOption[];
+}
 
-const sortOptions = [
-  { value: 'creationDate', label: '생성일 순' },
-  { value: 'userCount', label: '인원 순' },
-];
-
-const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  onSelect,
+  sortOptions,
+}: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(sortOptions[0]);
 
