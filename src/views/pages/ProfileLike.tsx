@@ -73,7 +73,7 @@ const ProfileLikeStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 94%;
   padding: 20px;
   overflow-y: auto;
 
@@ -84,7 +84,7 @@ const ProfileLikeStyle = styled.div`
   .content {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    max-width: 100%;
   }
   .container {
     display: grid;

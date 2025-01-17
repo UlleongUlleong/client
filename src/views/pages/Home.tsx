@@ -70,7 +70,7 @@ function Home() {
   // 슬라이더 이동 함수
 
   const navigateToMakeRoom = () => {
-    navigate('/makeroom');
+    navigate('/rooms');
   };
   const handleSort = (value: string) => {
     console.log('Selected sort option:', value);

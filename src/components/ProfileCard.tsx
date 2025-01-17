@@ -45,14 +45,15 @@ function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
 }
 
 const ProfileCardStyle = styled.div`
+  display: flex;
   width: 100%;
   max-width: 600px;
+  min-height: 240px;
   border: 1px solid #ddd;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  display: flex;
+  overflow: hidden;
 
   .cardImage {
     width: 200px;
@@ -75,6 +76,7 @@ const ProfileCardStyle = styled.div`
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .cardTitle {

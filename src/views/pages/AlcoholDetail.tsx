@@ -54,20 +54,23 @@ const AlcoholDetailStyle = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 100%;
+  width: 94%;
   min-height: 100%;
   overflow-y: auto;
 
   .search-bar {
     font-size: 40px;
+    text-align: center;
+    margin-bottom: 20px;
   }
 
   .content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    place-items: center;
+    gap: 40px;
     width: 100%;
-    flex-grow: 1;
+    justify-content: center;
+    align-items: start;
 
     @media (max-width: 768px) {
       display: flex;

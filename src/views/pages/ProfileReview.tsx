@@ -72,10 +72,9 @@ const ProfileReviewStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 94%;
   padding: 20px;
   overflow-y: auto;
-
   h1 {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -83,7 +82,7 @@ const ProfileReviewStyle = styled.div`
   .content {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    max-width: 100%;
   }
   .container {
     display: grid;

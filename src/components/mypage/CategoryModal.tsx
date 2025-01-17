@@ -204,7 +204,7 @@ const CategoryModalStyle = styled.div`
         white-space: nowrap;
 
         &.selected {
-          border: 2px solid #007bff;
+          border: 1px solid #007bff;
         }
       }
     }

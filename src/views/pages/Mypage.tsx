@@ -398,6 +398,9 @@ const MypageStyle = styled.div`
     align-items: flex-end;
     .h1 {
       font-size: 24px;
+      @media (max-width: 424px) {
+        font-size: 16px;
+      }
     }
     .link {
       font-size: 16px;
