@@ -38,18 +38,8 @@ const Index = () => {
       noNav: true,
     },
     {
-      path: '/find-password',
-      element: <FindPassword />,
-      noNav: true,
-    },
-    {
       path: '/register',
       element: <Register />,
-      noNav: true,
-    },
-    {
-      path: '/email-verification',
-      element: <EmailVerificationTab />,
       noNav: true,
     },
     {
