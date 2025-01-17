@@ -110,7 +110,7 @@ function Home() {
         <CategoryTitle>최신 순</CategoryTitle>
         <Category>
           <Link
-            to="/chatlist"
+            to="/chat-lists"
             className="more"
             state={{ newChatRoom: dummyChatRooms, sort: '최신 순' }}
           >

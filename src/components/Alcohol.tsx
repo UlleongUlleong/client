@@ -11,9 +11,14 @@ import {
   AlcoholImage,
   Reviewer,
 } from '../styles/Alcohol';
+import { useNavigate } from 'react-router-dom';
 function Alcohol({ alcol }: { alcol: IAlcohol }) {
+  const navigate = useNavigate();
+  const gotoDetailPage = () => {
+    navigate(`/alcohol/${alcol.id}`);
+  };
   return (
-    <CardContainer key={alcol.name}>
+    <CardContainer key={alcol.name} onClick={gotoDetailPage}>
       <AlcoholImage>
         <img src={alcol.image} alt={alcol.name} />
       </AlcoholImage>

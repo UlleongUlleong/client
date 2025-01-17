@@ -10,8 +10,9 @@ import AlocholGird from '../../components/AlocholGrid';
 import { Category } from '../../styles/ChatRoomGrid';
 import { Link } from 'react-router-dom';
 
-const dummyData: IAlcohol[] = [
+export const dummyData: IAlcohol[] = [
   {
+    id: 1,
     name: '콥케 파인 토니 포트 와인',
     image:
       'https://cafe24.poxo.com/ec01/letsdowine/fYw07Q+e08011Z5Qzbz30yC0JvqcXWvQcBdvn52sOz689E+Ww8NvS3kIz1BovuxPSD13RAqqxECLxwIolL8rLg==/_/web/product/big/202308/62efaf4fd26fe0f92fb321fcdaf1d7b5.jpg',
@@ -19,6 +20,7 @@ const dummyData: IAlcohol[] = [
     reviewers: 4,
   },
   {
+    id: 2,
     name: '레돔화이트스파클링와인',
     image:
       'https://cafe24.poxo.com/ec01/lavande65/0jJurf5+JqL2mXn6P+LWO4+ah+knlQDiTPehHkjQhdrHMqR/yJODeiUWVPDdFGeaE2COPmIXMX440F09BTcleA==/_/web/product/big/202109/6176971b9ec65be37840a6d55cd10b6a.jpg',
@@ -26,6 +28,7 @@ const dummyData: IAlcohol[] = [
     reviewers: 10,
   },
   {
+    id: 3,
     name: '콥케 파인 토니 포트 와인',
     image:
       'https://cafe24.poxo.com/ec01/letsdowine/fYw07Q+e08011Z5Qzbz30yC0JvqcXWvQcBdvn52sOz689E+Ww8NvS3kIz1BovuxPSD13RAqqxECLxwIolL8rLg==/_/web/product/big/202308/62efaf4fd26fe0f92fb321fcdaf1d7b5.jpg',
@@ -33,6 +36,7 @@ const dummyData: IAlcohol[] = [
     reviewers: 4,
   },
   {
+    id: 4,
     name: '레돔화이트스파클링와인',
     image:
       'https://cafe24.poxo.com/ec01/lavande65/0jJurf5+JqL2mXn6P+LWO4+ah+knlQDiTPehHkjQhdrHMqR/yJODeiUWVPDdFGeaE2COPmIXMX440F09BTcleA==/_/web/product/big/202109/6176971b9ec65be37840a6d55cd10b6a.jpg',
@@ -53,7 +57,7 @@ function Reviews() {
         <CategoryTitle>별점 TOP10</CategoryTitle>
         <Category>
           <Link
-            to="/reviewLists"
+            to="/alcohol-list"
             className="more"
             state={{ alcoholsData: dummyData, categoryName: '별점 TOP10' }}
           >
@@ -67,7 +71,7 @@ function Reviews() {
         <CategoryTitle>와인</CategoryTitle>
         <Category>
           <Link
-            to="/reviewLists"
+            to="/alcohol-list"
             className="more"
             state={{ alcoholsData: dummyData, categoryName: '와인' }}
           >

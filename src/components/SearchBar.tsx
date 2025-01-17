@@ -19,7 +19,6 @@ import {
   IconButton,
 } from '../styles/SearchBar.ts';
 import {
-  CategoryType,
   ICategory,
   moodTypeCategories,
   alcoholTypeCategories,
@@ -27,7 +26,8 @@ import {
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 import { dummyChatRooms } from './ChatRoom.tsx';
-
+import { dummyData } from '../views/pages/Reviews.tsx';
+import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -48,7 +48,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
         }
         return [category];
       }
-      //다중 선택택
+      //다중 선택
       const isSelected = prev.some((cat) => cat.id === category.id);
       if (isSelected) {
         return prev.filter((cat) => cat.id !== category.id);
@@ -58,13 +58,28 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   };
 
   const handleSearch = () => {
-    navigate('/chatlist', {
-      state: {
-        chatRoom: dummyChatRooms,
-        sort: '검색 결과',
-        category: selectedCategories,
-      },
-    });
+    //api 호출하고 그 값을 results에에 넘겨주면 될 것 같습니다.
+    if (isMoodCategories) {
+      navigate('/chat-lists', {
+        state: {
+          chatRooms: dummyChatRooms,
+          sortName: '검색 결과',
+          sortValue: searchText,
+          category: selectedCategories,
+        },
+      });
+    } else {
+      console.log(selectedCategories[0].name);
+      const name = selectedCategories[0].name;
+      navigate('/alcohol-list', {
+        state: {
+          alcoholsData: dummyData,
+          categoryName: name,
+          sortValue: searchText,
+          category: selectedCategories,
+        },
+      });
+    }
   };
 
   const handleConfirm = () => {

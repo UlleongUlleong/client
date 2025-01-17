@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { MainContainer } from '../../styles/Home';
 import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
 import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
@@ -13,7 +13,7 @@ const BASE_URL = 'http://localhost:8080';
 function ChatLists() {
   const location = useLocation();
 
-  const { newChatRooms, sort, category } = location.state; //정렬 값
+  const { newChatRooms, sortName, sortValue, category } = location.state; //정렬 값
   const [chatRooms, setChatRooms] = useState<IChatRoom[]>([]);
 
   useEffect(() => {
@@ -31,8 +31,8 @@ function ChatLists() {
     if (newChatRooms) {
       setChatRooms(newChatRooms);
     }
-    if (sort) {
-      requestApi = `${BASE_URL}/api/chatrooms?&sort=${sort}`;
+    if (sortValue) {
+      requestApi = `${BASE_URL}/api/chatrooms?&sort=${sortValue}`;
     }
     try {
       // const response = await fetch(
@@ -55,7 +55,7 @@ function ChatLists() {
     <MainContainer>
       <SearchBar />
       <GridTopBar>
-        <CategoryTitle>{sort ? sort : null}</CategoryTitle>
+        <CategoryTitle>{sortName ? sortName : null}</CategoryTitle>
         <Dropdown
           onSelect={loadChatRooms}
           sortOptions={sortChatRoomOptions}

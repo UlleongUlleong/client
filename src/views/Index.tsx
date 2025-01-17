@@ -22,7 +22,7 @@ const Index = () => {
       element: <Home />,
     },
     {
-      path: '/chatlist',
+      path: '/chat-lists',
       element: <ChatLists />,
     },
     {
@@ -34,7 +34,7 @@ const Index = () => {
       element: <MakeChat />,
     },
     {
-      path: '/reviewLists',
+      path: '/alcohol-list',
       element: <ReviewLists />,
     },
     {
