@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import FindPassword from './FindPassword';
 
 const LoginForm = () => {
   const [email, setEmail] = useState<string>('');
@@ -15,6 +16,24 @@ const LoginForm = () => {
       return;
     }
     // 로그인 로직
+  };
+
+  const openFindPassword = () => {
+    const width = 400;
+    const height = 300;
+    const left = window.screenX + (window.innerWidth - width) / 2;
+    const top = window.screenY + (window.innerHeight - height) / 2;
+
+    const win = window.open(
+      `http://localhost:5173/find-password`, // 인증 URL
+      'FindPassword',
+      `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
+    );
+
+    // 팝업 창 크기를 고정
+    win?.addEventListener('resize', () => {
+      win?.resizeTo(400, 400);
+    });
   };
 
   return (
@@ -45,9 +64,9 @@ const LoginForm = () => {
           />
           <label htmlFor="stay-logged-radio">로그인 유지</label>
         </div>
-        <Link to="/">
-          <span className="find-pwd-link">비밀번호 찾기</span>
-        </Link>
+        <button className="find-pwd-btn" onClick={openFindPassword}>
+          비밀번호 찾기
+        </button>
       </div>
       <button type="submit" onClick={handleLogin}>
         이메일로 로그인
@@ -101,7 +120,7 @@ const LoginFormStyle = styled.div`
       }
     }
 
-    .find-pwd-link {
+    .find-pwd-btn {
       all: unset;
       font-size: 0.9rem;
       color: #9b9b9b;

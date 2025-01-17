@@ -12,6 +12,7 @@ import Mypage from './pages/Mypage';
 import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
+import FindPassword from '../components/login/FindPassword';
 
 const Index = () => {
   const routeLists = [
@@ -34,6 +35,11 @@ const Index = () => {
     {
       path: '/login',
       element: <Login />,
+      noNav: true,
+    },
+    {
+      path: '/find-password',
+      element: <FindPassword />,
       noNav: true,
     },
     {
