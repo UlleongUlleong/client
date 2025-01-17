@@ -8,7 +8,7 @@ export const StyleAlcoholReviewsGrid = styled.div`
   grid-template-columns: repeat(auto-fill, 230px);
   justify-content: space-around;
   padding: 10px;
-  margin-top: 30px;
+  margin-top: 10px;
   &::after {
     content: '';
     grid-column: 1 / -1;

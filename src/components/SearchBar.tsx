@@ -32,6 +32,8 @@ interface searchBarProps {
   isMoodCategories: boolean;
 }
 
+//isMoodCategories가 true면 moodTypeCategories도 보여주고
+// false면 alcoholTypeCategories만 사용한다.
 const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
@@ -39,6 +41,14 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const navigate = useNavigate();
   const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {
+      //단일 선택
+      if (!isMoodCategories) {
+        if (prev.some((cat) => cat.id === category.id)) {
+          return [];
+        }
+        return [category];
+      }
+      //다중 선택택
       const isSelected = prev.some((cat) => cat.id === category.id);
       if (isSelected) {
         return prev.filter((cat) => cat.id !== category.id);
