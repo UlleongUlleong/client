@@ -37,3 +37,21 @@ export const checkEmailAvailability = async (email: string) => {
     throw error;
   }
 };
+
+// interface LoginContentProps {
+//   login: string;
+//   password: string;
+// }
+
+// export const login = async (loginContent: LoginContentProps) => {
+//   try {
+//     const response = await apiClientForJson.post(
+//       'api/users/login',
+//       loginContent,
+//     );
+//     return response.data;
+//   } catch (error: any) {
+//     console.log('error in login', error.response?.data || error.message);
+//     throw error;
+//   }
+// };

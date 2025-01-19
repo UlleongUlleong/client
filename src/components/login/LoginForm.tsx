@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { login } from '../../api/users/registerApi';
 
 const LoginForm = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [stayLoggedIn, setStayLoggedIn] = React.useState<boolean>(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
       alert('이메일과 비밀번호를 모두 입력해주세요.');
       return;
     }
-    // 로그인 로직
+
+    // const loginContent = {
+    //   email: email,
+    //   password: password,
+    // };
+    // try {
+    //   const response = await login(email, password);
+    //   console.log(response);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const openFindPassword = () => {
