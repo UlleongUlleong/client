@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
+import { register } from '../../api/users/registerApi';
 
 const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
@@ -39,6 +40,18 @@ const RegisterBox = () => {
       alert('필수 항목에 동의해야 회원가입이 가능합니다.');
       return;
     }
+
+    const registerContent = {
+      email: email,
+      password: password,
+      reEnterPassword: confirmPassword,
+      nickName: nickname,
+      mood: null,
+      mainAlcohol: null,
+    };
+
+    const result = register(registerContent);
+    console.log(result);
     alert('회원가입이 완료되었습니다');
   };
 

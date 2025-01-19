@@ -6,7 +6,7 @@ const EmailVerificationTab = () => {
   const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<number>(5);
   const [isTimeOver, setIsTimeOver] = useState<boolean>(false);
-  const email = 'test@programmers.com';
+  const [email, setEmail] = useState<string>('');
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -17,6 +17,21 @@ const EmailVerificationTab = () => {
     const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'sendEmail') {
+        const receivedEmail = event.data.email;
+        setEmail(receivedEmail);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
