@@ -28,8 +28,8 @@ export const register = async (registerContent: RegisterContentProps) => {
 export const checkEmailAvailability = async (email: string) => {
   try {
     const response = await apiClientForJson.post(
-      'api/register/email-availability',
-      email,
+      'api/users/email/availability',
+      { email },
     );
     return response.data;
   } catch (error: any) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { checkEmailAvailability } from '../../api/users/registerApi';
 
 interface RegisterFormProps {
   email: string;
@@ -24,12 +25,25 @@ const RegisterForm = ({
   setNickname,
   setIsEmailVerified,
 }: RegisterFormProps) => {
-  const openEmailVerificationWindow = () => {
+  const [emailAvailabilityMessage, setEmailAvailabilityMessage] = useState<
+    string | null
+  >(null);
+
+  const handleEmailCheck = async () => {
     if (!email) {
       alert('이메일을 입력해주세요.');
       return;
     }
 
+    try {
+      const response = await checkEmailAvailability(email);
+      setEmailAvailabilityMessage(response.message);
+      console.log(response.message);
+    } catch (error) {
+      setEmailAvailabilityMessage('이메일 중복 검사에 실패했습니다.');
+    }
+  };
+  const openEmailVerificationWindow = () => {
     const width = 400;
     const height = 400;
     const left = window.screenX + (window.innerWidth - width) / 2;
@@ -120,7 +134,7 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={openEmailVerificationWindow}
+            onClick={handleEmailCheck}
           >
             중복 검사
           </button>
