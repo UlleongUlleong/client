@@ -133,7 +133,6 @@ const RegisterForm = ({
     if (!numberRegex.test(password)) {
       return '비밀번호에는 숫자가 최소 1자 이상 포함되어야 합니다.';
     }
-
     return '';
   };
 
