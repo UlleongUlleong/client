@@ -17,7 +17,7 @@ function generateWineData(count: number) {
 }
 
 const wineData = generateWineData(30);
-
+console.log(wineData);
 export const handlers = [
   http.all('*', async () => {
     await delay(100);
@@ -78,7 +78,7 @@ export const handlers = [
       filteredData = filteredData.slice(startIdx, startIdx + limit);
       newCursor = filteredData.length
         ? filteredData[filteredData.length - 1].id
-        : null;
+        : cursor;
     } else {
       // offset과 limit 적용
       filteredData = filteredData.slice(offset, offset + limit);
@@ -88,7 +88,7 @@ export const handlers = [
     return new HttpResponse(
       JSON.stringify({
         와인: filteredData,
-        cursor: newCursor,
+        nextCursor: newCursor,
         // metadata: {
         //   total: wineData.length,
         //   count: filteredData.length,

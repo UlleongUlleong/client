@@ -61,7 +61,6 @@ function ReviewLists() {
         <CategoryTitle>{categoryName}</CategoryTitle>
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
-
       <AlocholGrid alcohols={allAlcohols} />
       {isFetchingNextPage && <Loading />}
       {isError && <div>{error}</div>}
