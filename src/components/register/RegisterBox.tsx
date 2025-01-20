@@ -24,15 +24,48 @@ const RegisterBox = () => {
     setCheckedUseInfo(isChecked);
   };
 
-  const handleRegister = () => {
+  const openEmailVerificationWindow = () => {
+    const width = 400;
+    const height = 400;
+    const left = window.screenX + (window.innerWidth - width) / 2;
+    const top = window.screenY + (window.innerHeight - height) / 2;
+
+    const verificationWindow = window.open(
+      `http://localhost:5173/email-verification?email=${encodeURIComponent(email)}`,
+      'EmailVerification',
+      `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
+    );
+
+    verificationWindow?.addEventListener('load', () => {
+      verificationWindow.postMessage({ type: 'sendEmail', email }, '*');
+    });
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'emailVerified' && event.data.success) {
+        setIsEmailVerified(true);
+        alert('이메일 인증이 완료되었습니다!');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    const interval = setInterval(() => {
+      if (verificationWindow?.closed) {
+        clearInterval(interval);
+        window.removeEventListener('message', handleMessage);
+      }
+    }, 500);
+  };
+
+  const handleEmailVerification = () => {
     if (!email || !password || !confirmPassword || !nickName) {
       alert('필수 정보를 입력해주세요. (이메일, 비밀번호, 닉네임)');
       return;
     }
-    if (!isEmailVerified) {
-      alert('이메일 인증을 완료해주세요.');
-      return;
-    }
+    // if (!isEmailVerified) {
+    //   alert('이메일 인증을 완료해주세요.');
+    //   return;
+    // }
     if (password !== confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');
     }
@@ -41,18 +74,20 @@ const RegisterBox = () => {
       return;
     }
 
-    const registerContent = {
-      email: email,
-      password: password,
-      reEnterPassword: confirmPassword,
-      nickName: nickName,
-      mood: null,
-      mainAlcohol: null,
-    };
+    openEmailVerificationWindow();
 
-    const result = register(registerContent);
-    console.log(result);
-    alert('회원가입이 완료되었습니다');
+    // const registerContent = {
+    //   email: email,
+    //   password: password,
+    //   reEnterPassword: confirmPassword,
+    //   nickName: nickName,
+    //   mood: null,
+    //   mainAlcohol: null,
+    // };
+
+    // const result = register(registerContent);
+    // console.log(result);
+    // alert('회원가입이 완료되었습니다');
   };
 
   return (
@@ -108,8 +143,8 @@ const RegisterBox = () => {
         </div>
       </div>
       <div className="register-btn">
-        <button type="button" onClick={handleRegister}>
-          회원가입하기
+        <button type="button" onClick={handleEmailVerification}>
+          {isEmailVerified ? '회원가입하기' : '이메일 인증하기'}
         </button>
       </div>
     </RegisterBoxStyle>

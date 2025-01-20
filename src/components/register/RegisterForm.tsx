@@ -26,7 +26,6 @@ const RegisterForm = ({
   setConfirmPassword,
   nickName,
   setNickName,
-  setIsEmailVerified,
 }: RegisterFormProps) => {
   const [emailAvailabilityMessage, setEmailAvailabilityMessage] = useState<
     string | null
@@ -71,38 +70,6 @@ const RegisterForm = ({
       setnickNameAvailabilityMessage(error.message);
       setIsNickNameError(true);
     }
-  };
-  const openEmailVerificationWindow = () => {
-    const width = 400;
-    const height = 400;
-    const left = window.screenX + (window.innerWidth - width) / 2;
-    const top = window.screenY + (window.innerHeight - height) / 2;
-
-    const verificationWindow = window.open(
-      `http://localhost:5173/email-verification?email=${encodeURIComponent(email)}`,
-      'EmailVerification',
-      `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
-    );
-
-    verificationWindow?.addEventListener('load', () => {
-      verificationWindow.postMessage({ type: 'sendEmail', email }, '*');
-    });
-
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'emailVerified' && event.data.success) {
-        setIsEmailVerified(true);
-        alert('이메일 인증이 완료되었습니다!');
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    const interval = setInterval(() => {
-      if (verificationWindow?.closed) {
-        clearInterval(interval);
-        window.removeEventListener('message', handleMessage);
-      }
-    }, 500);
   };
 
   const [passwordError, setPasswordError] = useState<string | null>();

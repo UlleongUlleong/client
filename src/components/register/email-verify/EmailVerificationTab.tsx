@@ -1,21 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import {
+  requestEmailCode,
+  verifyEmailCode,
+} from '../../../api/users/registerApi';
 
 const EmailVerificationTab = () => {
   const [verificationCode, setVerificationCode] = useState<string>('');
-  const [isButtonClicked, setIsButtonClicked] = useState<boolean>(false);
-  const [timeLeft, setTimeLeft] = useState<number>(5);
-  const [isTimeOver, setIsTimeOver] = useState<boolean>(false);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [email, setEmail] = useState<string>('');
 
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
-    if (timeLeft <= 0) {
-      setIsTimeOver(true);
-      return;
+    if (timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0 && timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
     }
 
-    const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
-    return () => clearInterval(timer);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [timeLeft]);
 
   useEffect(() => {
@@ -27,10 +38,7 @@ const EmailVerificationTab = () => {
     };
 
     window.addEventListener('message', handleMessage);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   const formatTime = (time: number) => {
@@ -41,26 +49,33 @@ const EmailVerificationTab = () => {
       .padStart(2, '0')}`;
   };
 
-  const verification = () => {
-    if (verificationCode === '111111') {
-      window.opener.postMessage({ type: 'emailVerified', success: true }, '*');
-      window.close();
-    } else {
-      alert('잘못된 인증 코드입니다.');
+  const handleRequestCode = async () => {
+    try {
+      setIsCodeSent(false);
+      setErrorMessage(null);
+      await requestEmailCode(email);
+      setIsCodeSent(true);
+      setTimeLeft(600); // 타이머 시작 (10분)
+      alert('인증코드가 전송되었습니다.');
+    } catch (error: any) {
+      setErrorMessage(
+        error.response?.data?.message || '인증코드 요청에 실패했습니다.',
+      );
     }
   };
 
-  const resendCode = () => {
-    if (!isTimeOver) return;
-    setTimeLeft(5);
-    setIsTimeOver(false);
-    setVerificationCode('');
-    alert('새 인증 코드를 전송하였습니다.');
-  };
-
-  const handleButtonClick = () => {
-    if (!isTimeOver) verification();
-    else resendCode();
+  const handleVerifyCode = async () => {
+    try {
+      setErrorMessage(null);
+      if (!verificationCode) throw new Error('인증코드를 입력해주세요.');
+      const response = await verifyEmailCode(email, verificationCode);
+      console.log(response);
+      alert(response.message || '이메일 인증이 완료되었습니다.');
+    } catch (error: any) {
+      setErrorMessage(
+        error.response?.data?.message || '인증코드 확인에 실패했습니다.',
+      );
+    }
   };
 
   return (
@@ -72,11 +87,15 @@ const EmailVerificationTab = () => {
         <h3>이메일 인증</h3>
         <form className="email-form">
           <input className="input-email" type="text" value={email} disabled />
-          <button type="button" onClick={() => setIsButtonClicked(true)}>
-            이메일 인증
+          <button
+            type="button"
+            onClick={handleRequestCode}
+            disabled={isCodeSent}
+          >
+            인증코드 요청
           </button>
         </form>
-        {isButtonClicked && (
+        {isCodeSent && (
           <div>
             <div className="msg">
               인증 메일이 {email} (으)로 전송되었습니다.
@@ -93,13 +112,14 @@ const EmailVerificationTab = () => {
               <button
                 className="register-btn"
                 type="button"
-                onClick={handleButtonClick}
+                onClick={handleVerifyCode}
               >
-                {!isTimeOver ? '확인' : '코드 재전송'}
+                인증코드 확인
               </button>
             </form>
           </div>
         )}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </StyledContainer>
   );
@@ -107,7 +127,6 @@ const EmailVerificationTab = () => {
 
 const StyledContainer = styled.div`
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -115,49 +134,42 @@ const StyledContainer = styled.div`
 
   .logo-img {
     width: 80px;
-    height: auto;
   }
 
   .verification-container {
     width: 80%;
-    display: flex;
-    flex-direction: column;
     padding: 20px 0;
 
     h3 {
       margin-bottom: 10px;
       font-size: 1.2rem;
-      // text-align: center;
     }
   }
 
   .email-form {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
     margin-bottom: 10px;
 
     input {
-      width: 76%;
-      padding: 8px;
-      font-size: 0.9rem;
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
       border: 1px solid #ccc;
-      border-radius: 4px;
     }
 
     button {
-      width: 22%;
-      background: black;
+      padding: 10px;
       border: none;
-      border-radius: 4px;
+      border-radius: 5px;
+      background-color: black;
       color: white;
-      font-size: 0.7rem;
-      padding: 8px;
       cursor: pointer;
-      // transition: background-color 0.3s;
 
-      // &:hover {
-      //   background: #333;
-      // }
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
     }
   }
 

@@ -1,5 +1,4 @@
 import { apiClient } from '../apiClient';
-import qs from 'qs';
 
 export const fetchData = async () => {};
 
@@ -14,7 +13,7 @@ interface RegisterContentProps {
 
 export const register = async (registerContent: RegisterContentProps) => {
   try {
-    const response = await apiClient.post('/api/users/register', {
+    const response = await apiClient.post('/api/users', {
       registerContent,
     });
     return response.data;
@@ -52,4 +51,17 @@ export const checkNicknameAvailability = async (nickName: string) => {
     );
     throw error;
   }
+};
+
+export const requestEmailCode = async (email: string) => {
+  const response = await apiClient.post('/api/auth/email-codes', { email });
+  return response.data;
+};
+
+export const verifyEmailCode = async (email: string, code: string) => {
+  const response = await apiClient.post('/api/auth/email-codes/verification', {
+    email,
+    code,
+  });
+  return response.data;
 };
