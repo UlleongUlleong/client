@@ -13,7 +13,8 @@ const BASE_URL = 'http://localhost:8080';
 function ChatLists() {
   const location = useLocation();
 
-  const { newChatRooms, sortName, sortValue, category } = location.state; //정렬 값
+  const { newChatRooms, sortName, sortValue, category, searchText } =
+    location.state; //정렬 값
   const [chatRooms, setChatRooms] = useState<IChatRoom[]>([]);
 
   useEffect(() => {
@@ -21,7 +22,6 @@ function ChatLists() {
   }, []);
 
   const loadChatRooms = async (sortType: string) => {
-    console.log(sortType);
     let requestApi = '';
     if (category) {
       console.log(category);
@@ -53,7 +53,7 @@ function ChatLists() {
 
   return (
     <MainContainer>
-      <SearchBar />
+      <SearchBar isMoodCategories={true} />
       <GridTopBar>
         <CategoryTitle>{sortName ? sortName : null}</CategoryTitle>
         <Dropdown

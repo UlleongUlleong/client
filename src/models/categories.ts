@@ -8,13 +8,13 @@ export const moodTypeCategories: ICategory[] = [
 ];
 
 export const alcoholTypeCategories: ICategory[] = [
-  { id: 7, name: '소주', type: 'alcohol' },
-  { id: 8, name: '맥주', type: 'alcohol' },
-  { id: 9, name: '와인', type: 'alcohol' },
-  { id: 10, name: '칵테일', type: 'alcohol' },
-  { id: 11, name: '하이볼', type: 'alcohol' },
-  { id: 12, name: '전통주', type: 'alcohol' },
-  { id: 13, name: '위스키', type: 'alcohol' },
+  { id: 1, name: '소주', type: 'alcohol' },
+  { id: 2, name: '맥주', type: 'alcohol' },
+  { id: 3, name: '와인', type: 'alcohol' },
+  { id: 4, name: '칵테일', type: 'alcohol' },
+  { id: 5, name: '하이볼', type: 'alcohol' },
+  { id: 6, name: '전통주', type: 'alcohol' },
+  { id: 7, name: '위스키', type: 'alcohol' },
 ];
 
 export interface CategoryType {

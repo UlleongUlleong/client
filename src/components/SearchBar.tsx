@@ -66,6 +66,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
           sortName: '검색 결과',
           sortValue: searchText,
           category: selectedCategories,
+          searchText: searchText,
         },
       });
     } else {
@@ -77,6 +78,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
           categoryName: name,
           sortValue: searchText,
           category: selectedCategories,
+          searchText: searchText,
         },
       });
     }

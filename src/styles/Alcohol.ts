@@ -5,7 +5,7 @@ export const CardContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   margin: 20px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 `;
 
 export const CardBottom = styled.div`
@@ -62,10 +62,9 @@ export const ChatDescription = styled.div`
 `;
 
 export const Star = styled.span`
-  font-family: 'Noto Sans KR', serif;
   font-size: 18px;
   color: #000000;
-  font-weight: 700;
+  font-weight: 800;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;

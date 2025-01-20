@@ -2,13 +2,15 @@ import React from 'react';
 import SearchBar from '../../components/SearchBar';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import { IAlcohol } from '../../models/alcohol';
-import Dropdown from '../../components/Dropdown';
+
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { GridTopBar } from './Home';
 import { sortReviewOptions } from '../../models/dropDownOption';
 import AlocholGird from '../../components/AlocholGrid';
 import { Category } from '../../styles/ChatRoomGrid';
 import { Link } from 'react-router-dom';
+import AlcoholEachCategory from './AlcoholEachCategory';
+import { useAlcoholsByCategory } from '../../hooks/getAlcoholsByCategory';
 
 export const dummyData: IAlcohol[] = [
   {
@@ -46,9 +48,33 @@ export const dummyData: IAlcohol[] = [
 ];
 
 function Reviews() {
+  const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
+
   const handleSort = (value: string) => {
     console.log(value);
   };
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {Array(7)
+          .fill(0)
+          .map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-4" />
+              <div className="grid grid-cols-2 gap-2">
+                {Array(4)
+                  .fill(0)
+                  .map((_, j) => (
+                    <div key={j} className="h-20 bg-gray-200 rounded" />
+                  ))}
+              </div>
+            </div>
+          ))}
+      </div>
+    );
+  }
+
+  if (isError) return <div>에러 발생</div>;
   return (
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
@@ -66,7 +92,15 @@ function Reviews() {
         </Category>
       </GridTopBar>
 
+      {/* 나중에 복구  {categoriesData.map(({ categoryName, alcoholsData }) => (
+        <AlcoholEachCategory
+          key={categoryName}
+          categoryName={categoryName}
+          alcoholsData={alcoholsData}
+        />
+      ))} */}
       <AlocholGird alcohols={dummyData} />
+
       <GridTopBar>
         <CategoryTitle>와인</CategoryTitle>
         <Category>

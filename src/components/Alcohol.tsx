@@ -17,6 +17,7 @@ function Alcohol({ alcol }: { alcol: IAlcohol }) {
   const gotoDetailPage = () => {
     navigate(`/alcohol/${alcol.id}`);
   };
+
   return (
     <CardContainer key={alcol.name} onClick={gotoDetailPage}>
       <AlcoholImage>
