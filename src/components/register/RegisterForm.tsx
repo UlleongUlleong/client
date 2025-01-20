@@ -40,7 +40,7 @@ const RegisterForm = ({
       setEmailAvailabilityMessage(response.message);
       console.log(response.message);
     } catch (error) {
-      setEmailAvailabilityMessage('이메일 중복 검사에 실패했습니다.');
+      setEmailAvailabilityMessage('');
     }
   };
   const openEmailVerificationWindow = () => {
@@ -134,12 +134,20 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={handleEmailCheck}
+            onClick={() => handleEmailCheck}
           >
             중복 검사
           </button>
         </div>
-        {/* 이메일 중복 검사 결과 띄우는 곳*/}
+        {
+          <div className="check-msg">
+            {emailAvailabilityMessage ? (
+              <span className="pass-msg">{emailAvailabilityMessage}</span>
+            ) : (
+              <span className="notpass-msg">{emailAvailabilityMessage}</span>
+            )}
+          </div>
+        }
         <input
           className="register"
           type="password"
