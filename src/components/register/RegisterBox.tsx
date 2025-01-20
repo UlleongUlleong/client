@@ -8,7 +8,7 @@ const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
+  const [nickName, setNickName] = useState<string>('');
   const [allChecked, setAllChecked] = useState<boolean>(false);
   const [checkedAge, setCheckedAge] = useState<boolean>(false);
   const [checkedUseInfo, setCheckedUseInfo] = useState<boolean>(false);
@@ -25,7 +25,7 @@ const RegisterBox = () => {
   };
 
   const handleRegister = () => {
-    if (!email || !password || !confirmPassword || !nickname) {
+    if (!email || !password || !confirmPassword || !nickName) {
       alert('필수 정보를 입력해주세요. (이메일, 비밀번호, 닉네임)');
       return;
     }
@@ -45,7 +45,7 @@ const RegisterBox = () => {
       email: email,
       password: password,
       reEnterPassword: confirmPassword,
-      nickName: nickname,
+      nickName: nickName,
       mood: null,
       mainAlcohol: null,
     };
@@ -69,8 +69,8 @@ const RegisterBox = () => {
           setPassword={setPassword}
           confirmPassword={confirmPassword}
           setConfirmPassword={setConfirmPassword}
-          nickname={nickname}
-          setNickname={setNickname}
+          nickName={nickName}
+          setNickName={setNickName}
           setIsEmailVerified={setIsEmailVerified}
         />
       </div>

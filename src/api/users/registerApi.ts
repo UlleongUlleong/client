@@ -1,4 +1,4 @@
-import { apiClientForForm, apiClientForJson } from '../apiClient';
+import { apiClient } from '../apiClient';
 import qs from 'qs';
 
 export const fetchData = async () => {};
@@ -14,10 +14,9 @@ interface RegisterContentProps {
 
 export const register = async (registerContent: RegisterContentProps) => {
   try {
-    const response = await apiClientForForm.post(
-      '/api/users/register',
-      qs.stringify(registerContent),
-    );
+    const response = await apiClient.post('/api/users/register', {
+      registerContent,
+    });
     return response.data;
   } catch (error: any) {
     console.log('error in registration', error.response?.data || error.message);
@@ -27,12 +26,30 @@ export const register = async (registerContent: RegisterContentProps) => {
 
 export const checkEmailAvailability = async (email: string) => {
   try {
-    const response = await apiClientForJson.get(
+    const response = await apiClient.get(
       `api/users/email/availability?email=${encodeURIComponent(email)}`,
     );
     return response.data;
   } catch (error: any) {
-    console.log('error in registration', error.response?.data || error.message);
+    console.log(
+      'error in registration/email',
+      error.response?.data || error.message,
+    );
+    throw error;
+  }
+};
+
+export const checkNicknameAvailability = async (nickName: string) => {
+  try {
+    const response = await apiClient.get(
+      `/api/users/nickname/availability?nickname=${encodeURIComponent(nickName)}`,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.log(
+      'error in registration/nickName',
+      error.response?.data || error.message,
+    );
     throw error;
   }
 };
