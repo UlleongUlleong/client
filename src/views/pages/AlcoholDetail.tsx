@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import DetailCard from '../../components/alcoholdetail/DetailCard';
 import ReviewCard from '../../components/alcoholdetail/ReviewCard';
 import ReviewModal from '../../components/alcoholdetail/ReviewModal';
+import SearchBar from '../../components/SearchBar';
 
 function AlcoholDetail() {
   const dummyData = {
@@ -26,7 +27,7 @@ function AlcoholDetail() {
 
   return (
     <AlcoholDetailStyle>
-      <div className="search-bar">검색바</div>
+      <div className="search-bar"><SearchBar /></div>
       <div className="content">
         <div className="alcohol-container">
           <h1>oo</h1>
@@ -59,8 +60,8 @@ const AlcoholDetailStyle = styled.div`
   overflow-y: auto;
 
   .search-bar {
-    font-size: 40px;
     text-align: center;
+    width : 100%;
     margin-bottom: 20px;
   }
 
