@@ -22,6 +22,7 @@ export const CustomToastContainer = styled(ToastContainer)`
 
     .Toastify__toast-icon {
       font-size: 1.2rem;
+      font-weight: bold;
       vertical-align: middle;
     }
 

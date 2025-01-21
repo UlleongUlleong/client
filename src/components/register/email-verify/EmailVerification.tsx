@@ -8,6 +8,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FiAlertCircle } from 'react-icons/fi';
+import { GoCheckCircle, GoAlert } from 'react-icons/go';
 
 const EmailVerificationTab = () => {
   const [verificationCode, setVerificationCode] = useState<string>('');
@@ -38,27 +39,25 @@ const EmailVerificationTab = () => {
     try {
       setTimeLeft(10); // 고치기
       setErrorMessage(null);
-      await requestEmailCode(email);
-      alert('인증코드가 전송되었습니다.');
+      const response = await requestEmailCode(email);
+      toast.success(response.message, { icon: <GoCheckCircle /> });
     } catch (error: any) {
-      toast.error(errorMessage, { icon: <FiAlertCircle /> });
-      setErrorMessage(
-        error.response?.data?.message || '인증코드 요청에 실패했습니다.',
-      );
+      toast.error(error.message, { icon: <GoAlert /> });
+      setErrorMessage(error.message || '인증코드 요청에 실패했습니다.');
     }
   };
 
   const handleVerifyCode = async () => {
+    if (!verificationCode)
+      toast.info('인증코드를 입력해주세요.', { icon: <GoAlert /> });
     try {
       setErrorMessage(null);
-      if (!verificationCode) throw new Error('인증코드를 입력해주세요.');
       const response = await verifyEmailCode(email, verificationCode);
-      alert(response.message || '이메일 인증이 완료되었습니다.');
+      toast.success('이메일 인증에 성공했습니다.', { icon: <GoCheckCircle /> });
       window.close();
     } catch (error: any) {
-      setErrorMessage(
-        error.response?.data?.message || '인증코드 확인에 실패했습니다.',
-      );
+      toast.error(error.message, { icon: <GoAlert /> });
+      setErrorMessage(error.message || '인증코드 확인에 실패했습니다.');
     }
   };
 

@@ -5,6 +5,8 @@ import {
   checkEmailAvailability,
   requestEmailCode,
 } from '../../../api/users/registerApi';
+import { toast } from 'react-toastify';
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
 
 const EmailDuplicateTest = () => {
   const location = useLocation();
@@ -48,9 +50,9 @@ const EmailDuplicateTest = () => {
   const handleRequestCode = async () => {
     try {
       const response = await requestEmailCode(email);
-      console.log(response);
+      // toast.success(response.message, { icon: <GoCheckCircle /> });
     } catch (error: any) {
-      console.log(error);
+      toast.error(error.message, { icon: <GoAlert /> });
     }
   };
 
