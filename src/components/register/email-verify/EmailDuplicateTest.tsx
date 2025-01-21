@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { checkEmailAvailability } from '../../../api/users/registerApi';
 
 const EmailDuplicateTest = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>('');
   const [emailAvailabilityMessage, setEmailAvailabilityMessage] = useState<
     string | null
   >(null);
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const emailFromQuery = queryParams.get('email') || '';
+    setEmail(emailFromQuery);
+  }, [location.search]);
 
   const handleEmailCheck = async () => {
-    if (!email) {
-      alert('이메일을 입력해주세요.');
-      return;
-    }
-
     try {
       const response = await checkEmailAvailability(email);
       setEmailAvailabilityMessage(response.message);
       setIsEmailError(false);
-      navigate('/email-verification');
     } catch (error: any) {
       console.log(error);
       setEmailAvailabilityMessage(error.message);
@@ -37,22 +38,28 @@ const EmailDuplicateTest = () => {
       <div className="verification-container">
         <h3>이메일 중복검사</h3>
         <form className="email-form">
-          <input
-            className="input-email"
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <input type="text" value={email} disabled />
           <button type="button" onClick={handleEmailCheck}>
             중복 검사
           </button>
         </form>
         {emailAvailabilityMessage && (
-          <div className="check-msg">
-            <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
-              {emailAvailabilityMessage}
-            </span>
-          </div>
+          <>
+            <div className="check-msg">
+              <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
+                {emailAvailabilityMessage}
+              </span>
+            </div>
+            <div className="verification-btn">
+              <button
+                className="verification-btn"
+                type="button"
+                onClick={() => navigate('/email-verification')}
+              >
+                이메일 인증하기
+              </button>
+            </div>
+          </>
         )}
       </div>
     </EmailDuplicateTestStyle>
@@ -68,6 +75,23 @@ const EmailDuplicateTestStyle = styled.div`
 
   .logo-img {
     width: 80px;
+  }
+
+  .check-msg {
+    display: flex;
+    justify-content: flex-end;
+
+    span {
+      font-size: 0.8rem;
+    }
+  }
+
+  .pass-msg {
+    color: #038b00;
+  }
+
+  .notpass-msg {
+    color: #e50808;
   }
 
   .verification-container {
@@ -103,6 +127,31 @@ const EmailDuplicateTestStyle = styled.div`
       &:disabled {
         background-color: #ccc;
         cursor: not-allowed;
+      }
+    }
+  }
+
+  .verification-btn {
+    width: 100%;
+    padding-top: 30px;
+
+    button {
+      background: black;
+      border-radius: 30px;
+      border: none;
+      width: 100%;
+      padding: 10px 0;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background: #333;
+      }
+
+      &:active {
+        background: #555;
       }
     }
   }

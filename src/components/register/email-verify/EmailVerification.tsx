@@ -6,6 +6,7 @@ import {
 } from '../../../api/users/registerApi';
 
 const EmailVerificationTab = () => {
+  const [email, setEmail] = useState<string>('');
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
@@ -72,24 +73,6 @@ const EmailVerificationTab = () => {
       </div>
       <div className="verification-container">
         <h3>이메일 인증</h3>
-        <form className="email-form">
-          <input
-            className="input-email"
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button type="button" onClick={handleEmailCheck}>
-            중복 검사
-          </button>
-        </form>
-        {emailAvailabilityMessage && (
-          <div className="check-msg">
-            <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
-              {emailAvailabilityMessage}
-            </span>
-          </div>
-        )}
         {isCodeSent && (
           <div>
             <div className="msg">
