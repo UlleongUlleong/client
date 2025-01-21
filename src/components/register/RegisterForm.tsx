@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {
-  checkEmailAvailability,
-  checkNicknameAvailability,
-} from '../../api/users/registerApi';
+import { validatePassword } from '../../utils/regitsterUtils';
+import { checkNicknameAvailability } from '../../api/users/registerApi';
 
 interface RegisterFormProps {
   email: string;
@@ -27,31 +25,22 @@ const RegisterForm = ({
   nickName,
   setNickName,
 }: RegisterFormProps) => {
-  const [emailAvailabilityMessage, setEmailAvailabilityMessage] = useState<
-    string | null
-  >(null);
   const [nickNameAvailabilityMessage, setnickNameAvailabilityMessage] =
     useState<string | null>(null);
 
-  const [isEmailError, setIsEmailError] = useState<boolean>(false);
   const [isNickNameError, setIsNickNameError] = useState<boolean>(false);
 
-  const handleEmailCheck = async () => {
-    if (!email) {
-      alert('이메일을 입력해주세요.');
-      return;
-    }
+  const openEmailVerificationWindow = () => {
+    const width = 400;
+    const height = 400;
+    const left = window.screenX + (window.innerWidth - width) / 2;
+    const top = window.screenY + (window.innerHeight - height) / 2;
 
-    try {
-      const response = await checkEmailAvailability(email);
-      setEmailAvailabilityMessage(response.message);
-      setIsEmailError(false);
-      // console.log(response.message);
-    } catch (error: any) {
-      console.log(error);
-      setEmailAvailabilityMessage(error.message);
-      setIsEmailError(true);
-    }
+    window.open(
+      `http://localhost:5173/email-duplication?email=${encodeURIComponent(email)}`,
+      'EmailDuplicationTest',
+      `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
+    );
   };
 
   const handleNicknameCheck = async () => {
@@ -74,35 +63,6 @@ const RegisterForm = ({
 
   const [passwordError, setPasswordError] = useState<string | null>();
 
-  const validatePassword = (password: string): string => {
-    const minLength = 8;
-    const maxLength = 20;
-    const alphabetRegex = /[a-zA-Z]/; // 알파벳 포함 여부
-    const specialCharRegex = /[!@$*&]/; // 특수문자 포함 여부
-    const numberRegex = /[0-9]/; // 숫자 포함 여부
-
-    if (password.length < minLength) {
-      return `비밀번호는 최소 ${minLength}자 이상이어야 합니다.`;
-    }
-
-    if (password.length > maxLength) {
-      return `비밀번호는 최대 ${maxLength}자 이하여야 합니다.`;
-    }
-
-    if (!alphabetRegex.test(password)) {
-      return '비밀번호에는 알파벳이 최소 1자 이상 포함되어야 합니다.';
-    }
-
-    if (!specialCharRegex.test(password)) {
-      return '비밀번호에는 특수 문자 (! * @ $ &) 중 하나 이상 포함되어야 합니다.';
-    }
-
-    if (!numberRegex.test(password)) {
-      return '비밀번호에는 숫자가 최소 1자 이상 포함되어야 합니다.';
-    }
-    return '';
-  };
-
   useEffect(() => {
     const errorMessage = validatePassword(password);
     setPasswordError(errorMessage !== '' ? errorMessage : null);
@@ -122,18 +82,11 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={handleEmailCheck}
+            onClick={openEmailVerificationWindow}
           >
-            중복 검사
+            이메일 인증
           </button>
         </div>
-        {emailAvailabilityMessage && (
-          <div className="check-msg">
-            <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
-              {emailAvailabilityMessage}
-            </span>
-          </div>
-        )}
         <input
           className="register"
           type="password"

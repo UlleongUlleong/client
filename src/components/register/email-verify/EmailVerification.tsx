@@ -10,7 +10,6 @@ const EmailVerificationTab = () => {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [email, setEmail] = useState<string>('');
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -29,18 +28,6 @@ const EmailVerificationTab = () => {
     };
   }, [timeLeft]);
 
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'sendEmail') {
-        const receivedEmail = event.data.email;
-        setEmail(receivedEmail);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -55,7 +42,7 @@ const EmailVerificationTab = () => {
       setErrorMessage(null);
       await requestEmailCode(email);
       setIsCodeSent(true);
-      setTimeLeft(600); // 타이머 시작 (10분)
+      setTimeLeft(600);
       alert('인증코드가 전송되었습니다.');
     } catch (error: any) {
       setErrorMessage(
@@ -69,8 +56,8 @@ const EmailVerificationTab = () => {
       setErrorMessage(null);
       if (!verificationCode) throw new Error('인증코드를 입력해주세요.');
       const response = await verifyEmailCode(email, verificationCode);
-      console.log(response);
       alert(response.message || '이메일 인증이 완료되었습니다.');
+      window.close();
     } catch (error: any) {
       setErrorMessage(
         error.response?.data?.message || '인증코드 확인에 실패했습니다.',
@@ -86,15 +73,23 @@ const EmailVerificationTab = () => {
       <div className="verification-container">
         <h3>이메일 인증</h3>
         <form className="email-form">
-          <input className="input-email" type="text" value={email} disabled />
-          <button
-            type="button"
-            onClick={handleRequestCode}
-            disabled={isCodeSent}
-          >
-            인증코드 요청
+          <input
+            className="input-email"
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <button type="button" onClick={handleEmailCheck}>
+            중복 검사
           </button>
         </form>
+        {emailAvailabilityMessage && (
+          <div className="check-msg">
+            <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
+              {emailAvailabilityMessage}
+            </span>
+          </div>
+        )}
         {isCodeSent && (
           <div>
             <div className="msg">
@@ -144,6 +139,23 @@ const StyledContainer = styled.div`
       margin-bottom: 10px;
       font-size: 1.2rem;
     }
+  }
+
+  .check-msg {
+    display: flex;
+    justify-content: flex-end;
+
+    span {
+      font-size: 0.8rem;
+    }
+  }
+
+  .pass-msg {
+    color: #038b00;
+  }
+
+  .notpass-msg {
+    color: #e50808;
   }
 
   .email-form {
