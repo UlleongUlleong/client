@@ -1,16 +1,24 @@
 import { styled } from 'styled-components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DetailCard from '../../components/alcoholdetail/DetailCard';
 import ReviewCard from '../../components/alcoholdetail/ReviewCard';
 import ReviewModal from '../../components/alcoholdetail/ReviewModal';
 import SearchBar from '../../components/SearchBar';
+import { useParams } from 'react-router-dom';
+import { getAlcoholDetail } from '../../api/alcoholApi';
+import { AlcoholDetailType, ReviewListType } from '../../models/alcohol';
 
 function AlcoholDetail() {
+  const { id } = useParams<{ id: string }>();
+  const [alcoholData, setAlcoholData] = useState<AlcoholDetailType | null>(
+    null,
+  );
+  const [reviewData, setReviewData] = useState<ReviewListType | null>(null);
   const dummyData = {
     id: 1,
-    imageSrc: 'https://picsum.photos/200',
-    title: '마루나 동백 양주',
-    rating: 4.7,
+    imageUrl: 'https://picsum.photos/200',
+    name: '마루나 동백 양주',
+    scoreAverage: 4.7,
     reviewCount: 7,
     interestCount: 113,
   };
@@ -25,9 +33,32 @@ function AlcoholDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
+  useEffect(() => {
+    const fetchAlcoholDetail = async () => {
+      if (!id) return;
+
+      try {
+        const response = await getAlcoholDetail(id);
+        if (response) {
+          setAlcoholData(response.data.alcoholInfo);
+          console.log(alcoholData);
+        }
+      } catch (error) {
+        console.log('getAlcoholDetail : ', error);
+      }
+    };
+    fetchAlcoholDetail();
+  }, [id]);
+
+  useEffect(() => {
+    console.log('Updated alcoholData:', alcoholData);
+  }, [alcoholData]);
+
   return (
     <AlcoholDetailStyle>
-      <div className="search-bar"><SearchBar /></div>
+      <div className="search-bar">
+        <SearchBar />
+      </div>
       <div className="content">
         <div className="alcohol-container">
           <h1>oo</h1>
@@ -61,7 +92,7 @@ const AlcoholDetailStyle = styled.div`
 
   .search-bar {
     text-align: center;
-    width : 100%;
+    width: 100%;
     margin-bottom: 20px;
   }
 

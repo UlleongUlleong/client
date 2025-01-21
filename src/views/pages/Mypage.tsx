@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import { FaCog, FaPlus, FaRegUserCircle } from 'react-icons/fa';
 import Slider from 'react-slick';
@@ -7,11 +7,14 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Card from '../../components/mypage/Card';
 import CategoryModal from '../../components/mypage/CategoryModal';
+import { ProfileType } from '../../models/profile';
+import { getProfile } from '../../api/profileApi';
 
 function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
@@ -32,6 +35,19 @@ function Mypage() {
       fileInputRef.current.click();
     }
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfile(data);
+      } catch (error) {
+        console.log('fetchProfile : ', error);
+      }
+    };
+    fetchProfile();
+    console.log(profile);
+  }, []);
 
   const likedCards = [
     {
@@ -157,20 +173,25 @@ function Mypage() {
               </div>
             </div>
             <div className="profile-details">
-              <h2 className="name">홍길동</h2>
+              <h2 className="name">{profile?.nickname || '이름 없음'}</h2>
               <div className="keywords">
                 <div className="keyword">
                   <span className="topLabel">나의 키워드</span>
                   <span className="label">주제 / 분위기: </span>
                   <span className="category-container">
-                    <span className="value">시끌시끌</span>
-                    <span className="value">시끌시끌</span>
-                    <span className="value">시끌시끌</span>
+                    {profile?.moodCategory.map((mood) => (
+                      <span key={mood.id} className="value">
+                        {mood.name}
+                      </span>
+                    ))}
                   </span>
                   <span className="label">주종: </span>
                   <span className="category-container">
-                    <span className="value">소주</span>
-                    <span className="value">맥주</span>
+                    {profile?.alcoholCategory.map((alcohol) => (
+                      <span key={alcohol.id} className="value">
+                        {alcohol.name}
+                      </span>
+                    ))}
                   </span>
                 </div>
               </div>

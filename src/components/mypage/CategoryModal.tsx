@@ -1,158 +1,168 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { FaPen } from 'react-icons/fa6';
-import { alcoholCategory, Category, moodsCategory, validNickname } from '../../api/categoryApi';
+import {
+  alcoholCategory,
+  Category,
+  moodsCategory,
+} from '../../api/categoryApi';
+import { modifyProfile, validNickname } from '../../api/profileApi';
 
 interface ModalProps {
-    closeModal: () => void;
+  closeModal: () => void;
 }
 
 function CategoryModal({ closeModal }: ModalProps) {
-    const [isEditing, setIsEditing] = useState(false);
-    const [name, setName] = useState('홍길동');
-    const [selectedMood, setSelectedMood] = useState<Set<number>>(new Set());
-    const [selectedAlcohol, setSelectedAlcohol] = useState<Set<number>>(new Set());
-    const [moodOptions, setMoodOptions] = useState<Category[]>([]);
-    const [alcoholOptions, setAlcoholOptions] = useState<Category[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [nickname, setNickname] = useState('홍길동');
+  const [selectedMood, setSelectedMood] = useState<Set<number>>(new Set());
+  const [selectedAlcohol, setSelectedAlcohol] = useState<Set<number>>(
+    new Set(),
+  );
+  const [moodOptions, setMoodOptions] = useState<Category[]>([]);
+  const [alcoholOptions, setAlcoholOptions] = useState<Category[]>([]);
+  const [isValidNickname, setIsValidNickname] = useState(true);
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const [moodsData, alcoholData] = await Promise.all([
-                    moodsCategory(),
-                    alcoholCategory(),
-                ])
-                setMoodOptions(moodsData);
-                setAlcoholOptions(alcoholData);
-            }
-            catch (error) {
-                console.log("fetchCategories error : ", error);
-            }
-        }
-        fetchCategories();
-    }, [])
-
-    const handleEditClick = () => {
-        setIsEditing(true);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const [moodsData, alcoholData] = await Promise.all([
+          moodsCategory(),
+          alcoholCategory(),
+        ]);
+        setMoodOptions(moodsData);
+        setAlcoholOptions(alcoholData);
+      } catch (error) {
+        console.log('fetchCategories error : ', error);
+      }
     };
+    fetchCategories();
+  }, []);
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setName(e.target.value);
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+  };
+
+  const handleBlur = async () => {
+    try {
+      const message = await validNickname(nickname);
+      alert(message);
+
+      if (message === '사용가능한 닉네임입니다.') {
+        setIsEditing(false);
+      } else {
+        setIsValidNickname(false);
+      }
+    } catch (error) {
+      console.log('유효성 검사 오류:', error);
+      alert('유효하지 않은 닉네임입니다. 다시 시도해주세요');
+      setIsValidNickname(false);
+    }
+  };
+
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      closeModal();
+    }
+  };
+
+  const handleMoodClick = (id: number) => {
+    setSelectedMood((prev) => {
+      const newMood = new Set(prev);
+      if (newMood.has(id)) {
+        newMood.delete(id);
+      } else {
+        newMood.add(id);
+      }
+      return newMood;
+    });
+  };
+
+  const handleAlcoholClick = (id: number) => {
+    setSelectedAlcohol((prev) => {
+      const newAlcohol = new Set(prev);
+      if (newAlcohol.has(id)) {
+        newAlcohol.delete(id);
+      } else {
+        newAlcohol.add(id);
+      }
+      return newAlcohol;
+    });
+  };
+
+  const handleSave = () => {
+    const moodValues = Array.from(selectedMood);
+    const alcoholValues = Array.from(selectedAlcohol);
+    const data = {
+      nickname,
+      moodCategory: moodValues,
+      alcoholCategory: alcoholValues,
     };
+    modifyProfile(data);
+    closeModal();
+  };
 
-    const handleBlur = async () => {
-        try {
-            const message = await validNickname(name);
-
-            // 유효성 검사 메시지 출력
-            alert(message);
-
-            // 메시지가 성공적인 경우에만 이름 변경
-            if (message === '사용가능한 닉네임입니다.') {
-                setIsEditing(false); // 닉네임 유효성 검사 성공 시 닉네임 변경
-            }
-        } catch (error) {
-            console.log("유효성 검사 오류:", error);
-            alert("유효성 검사에 실패했습니다.");
-        }
-    };
-
-    const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === e.currentTarget) {
-            closeModal();
-        }
-    };
-
-    const handleMoodClick = (id: number) => {
-        setSelectedMood((prev) => {
-            const newMood = new Set(prev);
-            if (newMood.has(id)) {
-                newMood.delete(id);
-            } else {
-                newMood.add(id);
-            }
-            return newMood;
-        });
-    };
-
-    const handleAlcoholClick = (id: number) => {
-        setSelectedAlcohol((prev) => {
-            const newAlcohol = new Set(prev);
-            if (newAlcohol.has(id)) {
-                newAlcohol.delete(id);
-            } else {
-                newAlcohol.add(id);
-            }
-            return newAlcohol;
-        });
-    };
-
-    const handleSave = () => {
-        const moodValues = Array.from(selectedMood);
-        const alcoholValues = Array.from(selectedAlcohol);
-        const data = {
-            name,
-            mood: moodValues,
-            alcohol: alcoholValues,
-        };
-        console.log(data);
-        closeModal();
-    };
-
-    return (
-        <CategoryModalStyle onClick={handleBackgroundClick}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <h2>
-                    {isEditing ? (
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={handleNameChange}
-                            onBlur={handleBlur}
-                            autoFocus
-                        />
-                    ) : (
-                        <>
-                            <span>{name}</span>
-                        </>
-                    )}
-                    <FaPen className="pen-icon" onClick={handleEditClick} />
-                </h2>
-                <div className="category-set">
-                    <span className="mood"> 주제 / 분위기</span>
-                    <span className="select">
-                        {moodOptions.map((mood) => (
-                            <span
-                                key={mood.id}
-                                className={`value ${selectedMood.has(mood.id) ? 'selected' : ''}`}
-                                onClick={() => handleMoodClick(mood.id)}
-                            >
-                                {mood.name}
-                            </span>
-                        ))}
-
-                    </span>
-                    <span className="alcohol"> 주종 </span>
-                    <span className="select">
-                        {alcoholOptions.map((alcohol) => (
-                            <span
-                                key={alcohol.id}
-                                className={`value ${selectedAlcohol.has(alcohol.id) ? 'selected' : ''}`}
-                                onClick={() => handleAlcoholClick(alcohol.id)}
-                            >
-                                {alcohol.name}
-                            </span>
-                        ))}
-                    </span>
-                </div>
-                <div className="button-container">
-                    <button onClick={handleSave} className="save-btn">
-                        저장
-                    </button>
-                </div>
-            </div>
-        </CategoryModalStyle>
-    );
+  return (
+    <CategoryModalStyle onClick={handleBackgroundClick}>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2>
+          {isEditing ? (
+            <input
+              type="text"
+              value={nickname}
+              onChange={handleNameChange}
+              onBlur={handleBlur}
+              autoFocus
+            />
+          ) : (
+            <>
+              <span>{nickname}</span>
+            </>
+          )}
+          <FaPen className="pen-icon" onClick={handleEditClick} />
+        </h2>
+        <div className="category-set">
+          <span className="mood"> 주제 / 분위기</span>
+          <span className="select">
+            {moodOptions.map((mood) => (
+              <span
+                key={mood.id}
+                className={`value ${selectedMood.has(mood.id) ? 'selected' : ''}`}
+                onClick={() => handleMoodClick(mood.id)}
+              >
+                {mood.name}
+              </span>
+            ))}
+          </span>
+          <span className="alcohol"> 주종 </span>
+          <span className="select">
+            {alcoholOptions.map((alcohol) => (
+              <span
+                key={alcohol.id}
+                className={`value ${selectedAlcohol.has(alcohol.id) ? 'selected' : ''}`}
+                onClick={() => handleAlcoholClick(alcohol.id)}
+              >
+                {alcohol.name}
+              </span>
+            ))}
+          </span>
+        </div>
+        <div className="button-container">
+          <button
+            onClick={handleSave}
+            className="save-btn"
+            disabled={isEditing || !isValidNickname}
+          >
+            저장
+          </button>
+        </div>
+      </div>
+    </CategoryModalStyle>
+  );
 }
 
 const CategoryModalStyle = styled.div`
@@ -238,6 +248,11 @@ const CategoryModalStyle = styled.div`
       border-radius: 20px;
       color: white;
       border: 1px solid #ddd;
+    }
+    .save-btn:disabled {
+      background-color: #ccc;
+      color: #888;
+      cursor: not-allowed;
     }
   }
 `;
