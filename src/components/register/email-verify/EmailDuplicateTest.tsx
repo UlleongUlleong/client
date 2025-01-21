@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { checkEmailAvailability } from '../../../api/users/registerApi';
+import {
+  checkEmailAvailability,
+  requestEmailCode,
+} from '../../../api/users/registerApi';
 
 const EmailDuplicateTest = () => {
   const location = useLocation();
@@ -12,6 +15,8 @@ const EmailDuplicateTest = () => {
     string | null
   >(null);
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
+
+  const [isDuplicatePassed, setIsDuplicatePassed] = useState<boolean>(true); // 고쳐야됨
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -24,12 +29,31 @@ const EmailDuplicateTest = () => {
       const response = await checkEmailAvailability(email);
       setEmailAvailabilityMessage(response.message);
       setIsEmailError(false);
+      setIsDuplicatePassed(true);
     } catch (error: any) {
       console.log(error);
       setEmailAvailabilityMessage(error.message);
       setIsEmailError(true);
+      setIsDuplicatePassed(false);
     }
   };
+
+  const handleButtonClicked = () => {
+    handleRequestCode();
+    navigate(`/email-verification?email=${encodeURIComponent(email)}`, {
+      state: { email },
+    });
+  };
+
+  const handleRequestCode = async () => {
+    try {
+      const response = await requestEmailCode(email);
+      console.log(response);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   return (
     <EmailDuplicateTestStyle>
       <div className="logo">
@@ -39,27 +63,31 @@ const EmailDuplicateTest = () => {
         <h3>이메일 중복검사</h3>
         <form className="email-form">
           <input type="text" value={email} disabled />
-          <button type="button" onClick={handleEmailCheck}>
+          <button
+            type="button"
+            onClick={handleEmailCheck}
+            disabled={isDuplicatePassed}
+          >
             중복 검사
           </button>
         </form>
         {emailAvailabilityMessage && (
-          <>
-            <div className="check-msg">
-              <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
-                {emailAvailabilityMessage}
-              </span>
-            </div>
-            <div className="verification-btn">
-              <button
-                className="verification-btn"
-                type="button"
-                onClick={() => navigate('/email-verification')}
-              >
-                이메일 인증하기
-              </button>
-            </div>
-          </>
+          <div className="check-msg">
+            <span className={isEmailError ? 'notpass-msg' : 'pass-msg'}>
+              {emailAvailabilityMessage}
+            </span>
+          </div>
+        )}
+        {isDuplicatePassed && (
+          <div className="verification-btn">
+            <button
+              className="verification-btn"
+              type="button"
+              onClick={handleButtonClicked}
+            >
+              이메일 인증하기
+            </button>
+          </div>
         )}
       </div>
     </EmailDuplicateTestStyle>

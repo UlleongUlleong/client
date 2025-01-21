@@ -1,18 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { formatTime } from '../../../utils/regitsterUtils';
 import {
   requestEmailCode,
   verifyEmailCode,
 } from '../../../api/users/registerApi';
+import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { FiAlertCircle } from 'react-icons/fi';
 
 const EmailVerificationTab = () => {
-  const [email, setEmail] = useState<string>('');
   const [verificationCode, setVerificationCode] = useState<string>('');
-  const [timeLeft, setTimeLeft] = useState<number>(0);
-  const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
+  const [timeLeft, setTimeLeft] = useState<number>(30);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const location = useLocation();
+  const email = location.state.email;
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -29,23 +34,14 @@ const EmailVerificationTab = () => {
     };
   }, [timeLeft]);
 
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-    return `${minutes.toString().padStart(2, '0')}:${seconds
-      .toString()
-      .padStart(2, '0')}`;
-  };
-
-  const handleRequestCode = async () => {
+  const handleResendCode = async () => {
     try {
-      setIsCodeSent(false);
+      setTimeLeft(10); // 고치기
       setErrorMessage(null);
       await requestEmailCode(email);
-      setIsCodeSent(true);
-      setTimeLeft(600);
       alert('인증코드가 전송되었습니다.');
     } catch (error: any) {
+      toast.error(errorMessage, { icon: <FiAlertCircle /> });
       setErrorMessage(
         error.response?.data?.message || '인증코드 요청에 실패했습니다.',
       );
@@ -73,31 +69,35 @@ const EmailVerificationTab = () => {
       </div>
       <div className="verification-container">
         <h3>이메일 인증</h3>
-        {isCodeSent && (
-          <div>
-            <div className="msg">
-              인증 메일이 {email} (으)로 전송되었습니다.
-            </div>
-            <form className="code-form">
-              <input
-                type="text"
-                maxLength={6}
-                value={verificationCode}
-                placeholder="인증번호 6자리를 입력해주세요."
-                onChange={(e) => setVerificationCode(e.target.value)}
-              />
-              <div className="count">{formatTime(timeLeft)}</div>
-              <button
-                className="register-btn"
-                type="button"
-                onClick={handleVerifyCode}
-              >
-                인증코드 확인
-              </button>
-            </form>
-          </div>
-        )}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="msg">인증 메일이 {email} (으)로 전송되었습니다.</div>
+        <form className="email-form">
+          <input
+            type="text"
+            value={verificationCode}
+            onChange={(e) => setVerificationCode(e.target.value)}
+            placeholder="인증번호 6자리를 입력해주세요."
+            maxLength={6}
+          />
+          <button
+            type="button"
+            onClick={handleResendCode}
+            disabled={timeLeft !== 0}
+          >
+            인증코드 재전송
+          </button>
+        </form>
+        <div>
+          <form className="code-form">
+            <div className="count">{formatTime(timeLeft)}</div>
+            <button
+              className="register-btn"
+              type="button"
+              onClick={handleVerifyCode}
+            >
+              확인
+            </button>
+          </form>
+        </div>
       </div>
     </StyledContainer>
   );

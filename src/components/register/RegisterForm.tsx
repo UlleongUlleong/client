@@ -43,6 +43,15 @@ const RegisterForm = ({
     );
   };
 
+  const handleEmailCheck = () => {
+    if (!email) {
+      alert('이메일을 입력해주세요');
+      return;
+    }
+
+    openEmailVerificationWindow();
+  };
+
   const handleNicknameCheck = async () => {
     if (!nickName) {
       alert('닉네임을 입력해주세요.');
@@ -82,7 +91,7 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={openEmailVerificationWindow}
+            onClick={handleEmailCheck}
           >
             이메일 인증
           </button>
