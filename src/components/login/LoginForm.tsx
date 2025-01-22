@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { login } from '../../api/users/registerApi';
+import { loginApi } from '../../api/users/loginApi';
 
 const LoginForm = () => {
   const [email, setEmail] = useState<string>('');
@@ -9,23 +9,26 @@ const LoginForm = () => {
   const [stayLoggedIn, setStayLoggedIn] = React.useState<boolean>(false);
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
 
     if (!email || !password) {
       alert('이메일과 비밀번호를 모두 입력해주세요.');
       return;
     }
 
-    // const loginContent = {
-    //   email: email,
-    //   password: password,
-    // };
-    // try {
-    //   const response = await login(email, password);
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    const loginContent = {
+      email: email,
+      password: password,
+    };
+
+    console.log(loginContent);
+
+    try {
+      const response = await loginApi(loginContent);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const openFindPassword = () => {
@@ -78,7 +81,7 @@ const LoginForm = () => {
           비밀번호 찾기
         </button>
       </div>
-      <button type="submit" onClick={handleLogin}>
+      <button type="button" onClick={handleLogin}>
         이메일로 로그인
       </button>
       <Link to="/register">
