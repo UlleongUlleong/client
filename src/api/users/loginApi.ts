@@ -22,7 +22,7 @@ interface oauthLoginContentProps {
 export const oauthLogin = async (oauthLoginContent: oauthLoginContentProps) => {
   try {
     const response = await apiClient.get(
-      `api/users/auth/${encodeURIComponent(oauthLoginContent.provider)}`,
+      `api/auth/${encodeURIComponent(oauthLoginContent.provider)}`,
     );
     return response.data;
   } catch (error: any) {

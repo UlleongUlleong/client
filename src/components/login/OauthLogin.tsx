@@ -1,10 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
+import { oauthLogin } from '../../api/users/loginApi';
+import { toast } from 'react-toastify';
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
 
 const OauthLogin = () => {
-  const handleOauthLogin = (provider: string) => {
+  const handleOauthLogin = async (provider: string) => {
     // 백엔드 api 호출
+    try {
+      const response = await oauthLogin({ provider });
+      toast.success(response.message, { icon: <GoCheckCircle /> });
+    } catch (error: any) {
+      toast.error(error.message, { icon: <GoAlert /> });
+    }
   };
+
   return (
     <OauthLoginStyle>
       <div className="oauth-container">
