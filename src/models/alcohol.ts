@@ -9,5 +9,6 @@ export interface IAlcohol {
   scoreAverage: number;
   reviewCount: number;
   price: number;
+  interestCount: number;
   alcoholCategory: alcoholCategory;
 }

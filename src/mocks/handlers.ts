@@ -24,6 +24,7 @@ function generateDummyData(count: number, category: number) {
     type: `${cat.name}`,
     price: 20000 + (currentId - 1) * 500,
     reviewCount: Math.floor(Math.random() * 100),
+    interestCount: Math.floor(Math.random() * 100),
   }));
 }
 // 전체 카테고리 더미 데이터
@@ -35,6 +36,10 @@ alcoholTypeCategories.forEach((category) => {
 });
 
 const wineData = generateDummyData(30, 1);
+const reviews = wineData.sort((a, b) => b.reviewCount - a.reviewCount);
+const love = wineData.sort((a, b) => b.interestCount - a.interestCount);
+const score = wineData.sort((a, b) => b.scoreAverage - a.scoreAverage);
+
 export const handlers = [
   http.all('*', async () => {
     await delay(100);
@@ -94,24 +99,20 @@ export const handlers = [
       }
 
       // 정렬 적용
-      if (sort > 8) {
+      if (sort) {
         switch (sort) {
           case 0:
-            filteredData.sort((a, b) => a.name.localeCompare(b.name));
-            break;
-          case 1:
-            // filteredData.sort((a, b) => b.score - a.score);
+            wineData.sort((a, b) => a.name.localeCompare(b.name));
             break;
           case 2:
-            filteredData.sort((a, b) => b.reviewCount - a.reviewCount);
+            filteredData = reviews;
             break;
           case 3:
-            filteredData.sort((a, b) => b.scoreAverage - a.scoreAverage);
+            filteredData = score;
             break;
           case 4:
-            // filteredData.sort((a, b) => b.interestCount - a.interestCount);
+            filteredData = love;
             break;
-          // recent는 이미 ID 순으로 정렬되어 있다고 가정
         }
       }
 

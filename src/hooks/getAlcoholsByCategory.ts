@@ -52,7 +52,7 @@ export const useAlcoholsQuery = (
   keyword?: string,
 ) => {
   return useInfiniteQuery({
-    queryKey: [categoryId, limit],
+    queryKey: [categoryId, sort, keyword],
     queryFn: ({ pageParam = 0 }) =>
       fetchAlcohols({
         categoryId,
