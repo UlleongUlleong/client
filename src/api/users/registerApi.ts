@@ -5,10 +5,10 @@ export const fetchData = async () => {};
 interface RegisterContentProps {
   email: string;
   password: string;
-  reEnterPassword: string;
+  confirmPassword: string;
   nickName: string;
-  mood: number[] | null;
-  mainAlcohol: number[] | null;
+  moodCategory: number[] | null;
+  alcoholCategory: number[] | null;
 }
 
 export const register = async (registerContent: RegisterContentProps) => {

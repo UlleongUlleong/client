@@ -12,6 +12,7 @@ interface RegisterFormProps {
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
   nickName: string;
   setNickName: React.Dispatch<React.SetStateAction<string>>;
+  isEmailVerified: boolean;
   setIsEmailVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -24,6 +25,7 @@ const RegisterForm = ({
   setConfirmPassword,
   nickName,
   setNickName,
+  isEmailVerified,
   setIsEmailVerified,
 }: RegisterFormProps) => {
   useEffect(() => {

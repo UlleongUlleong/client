@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
 import { register } from '../../api/users/registerApi';
-import { toast } from 'react-toastify';
 
 const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
@@ -14,6 +13,9 @@ const RegisterBox = () => {
   const [checkedAge, setCheckedAge] = useState<boolean>(false);
   const [checkedUseInfo, setCheckedUseInfo] = useState<boolean>(false);
   const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
+
+  const [moods, setMoods] = useState<number[]>([]);
+  const [alcohols, setAlcohols] = useState<number[]>([]);
 
   useEffect(() => {
     setAllChecked(checkedAge && checkedUseInfo);
@@ -28,6 +30,10 @@ const RegisterBox = () => {
   useEffect(() => {
     console.log('이메일 인증 성공여부: ', isEmailVerified);
   }, [isEmailVerified]);
+
+  useEffect(() => {
+    console.log(moods, alcohols);
+  }, [moods, alcohols]);
 
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !nickName) {
@@ -49,15 +55,21 @@ const RegisterBox = () => {
     const registerContent = {
       email: email,
       password: password,
-      reEnterPassword: confirmPassword,
+      confirmPassword: confirmPassword,
       nickName: nickName,
-      mood: null,
-      mainAlcohol: null,
+      moodCategory: moods,
+      alcoholCategory: alcohols,
     };
 
-    const response = await register(registerContent);
-    console.log(response);
-    alert('회원가입이 완료되었습니다');
+    console.log(registerContent);
+
+    try {
+      const response = await register(registerContent);
+      console.log(response);
+      alert('회원가입이 완료되었습니다');
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   return (
@@ -76,11 +88,18 @@ const RegisterBox = () => {
           setConfirmPassword={setConfirmPassword}
           nickName={nickName}
           setNickName={setNickName}
+          isEmailVerified={isEmailVerified}
           setIsEmailVerified={setIsEmailVerified}
         />
       </div>
       <div className="keywords-group">
-        <SelectKeywords title="register" />
+        <SelectKeywords
+          title="register"
+          moods={moods}
+          setMoods={setMoods}
+          alcohols={alcohols}
+          setAlcohols={setAlcohols}
+        />
       </div>
       <div className="check-form">
         <div className="check-group">

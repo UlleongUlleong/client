@@ -4,20 +4,27 @@ import KeywordButton from './keywords/KeywordButton';
 
 interface SelectKeywordsProps {
   title: string;
+  moods: number[];
+  setMoods: React.Dispatch<React.SetStateAction<number[]>>;
+  alcohols: number[];
+  setAlcohols: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-const SelectKeywords = ({ title }: SelectKeywordsProps) => {
+const SelectKeywords = ({
+  title,
+  moods,
+  setMoods,
+  alcohols,
+  setAlcohols,
+}: SelectKeywordsProps) => {
   const headTitle =
     title === 'register' ? '관심 키워드를 선택해주세요.(선택)' : '키워드 선택';
 
   const buttonSize = title === 'register' ? 'small' : 'large';
 
-  const [moods, setMoods] = useState<number[]>([]);
-  const [alcohols, setAlcohols] = useState<number[]>([]);
-
-  useEffect(() => {
-    console.log(moods, alcohols);
-  }, [moods, alcohols]);
+  // useEffect(() => {
+  //   console.log(moods, alcohols);
+  // }, [moods, alcohols]);
 
   const handleKeywordClick = (id: number, type: 'mood' | 'alcohol') => {
     if (type === 'mood') {
