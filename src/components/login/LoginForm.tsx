@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { loginApi } from '../../api/users/loginApi';
+import { toast } from 'react-toastify';
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
 
 const LoginForm = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [stayLoggedIn, setStayLoggedIn] = React.useState<boolean>(false);
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e: React.FormEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     if (!email || !password) {
       alert('이메일과 비밀번호를 모두 입력해주세요.');
@@ -21,13 +25,15 @@ const LoginForm = () => {
       password: password,
     };
 
-    console.log(loginContent);
-
     try {
       const response = await loginApi(loginContent);
-      console.log(response);
-    } catch (error) {
+      toast.success(response.message, { icon: <GoCheckCircle /> });
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    } catch (error: any) {
       console.log(error);
+      toast.error(error.message, { icon: <GoAlert /> });
     }
   };
 
@@ -38,12 +44,11 @@ const LoginForm = () => {
     const top = window.screenY + (window.innerHeight - height) / 2;
 
     const win = window.open(
-      `http://localhost:5173/find-password`, // 인증 URL
+      `http://localhost:5173/find-password`,
       'FindPassword',
       `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
     );
 
-    // 팝업 창 크기를 고정
     win?.addEventListener('resize', () => {
       win?.resizeTo(400, 400);
     });

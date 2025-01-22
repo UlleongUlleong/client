@@ -61,8 +61,6 @@ const RegisterBox = () => {
       alcoholCategory: alcohols,
     };
 
-    console.log(registerContent);
-
     try {
       const response = await register(registerContent);
       console.log(response);
