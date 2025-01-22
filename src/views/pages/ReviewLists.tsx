@@ -1,33 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import Dropdown from '../../components/Dropdown';
 import { sortReviewOptions } from '../../models/dropDownOption';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import SearchBar from '../../components/SearchBar';
 import AlocholGrid from '../../components/AlocholGrid';
 import { GridTopBar } from './Home';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
-import { IAlcohol } from '../../models/alcohol';
+
 import { useInView } from 'react-intersection-observer';
 import { useAlcoholsQuery } from '../../hooks/getAlcoholsByCategory';
 import { Loading } from '../../styles/Home';
-import { dummyData } from './Reviews';
-
-interface LocationState {
-  alcoholsData: IAlcohol[];
-  categoryName: string;
-  sort: string;
-}
+import { categoryForIndex } from '../../models/categories';
 
 function ReviewLists() {
-  const location = useLocation();
-  const {
-    alcoholsData: initialAlcohols,
-    categoryName,
-    sort: initialSort,
-  } = location.state as LocationState;
-
-  const [sort, setSort] = useState(initialSort);
+  const { id } = useParams();
+  const categoryId = Number(id) || 0;
+  const [sort, setSort] = useState('scoreAverage');
   const { ref, inView } = useInView();
   const {
     data,
@@ -37,23 +26,26 @@ function ReviewLists() {
     isFetchingNextPage,
     isError,
     error,
-  } = useAlcoholsQuery(categoryName);
-  console.log('data 있나요: ', data);
+  } = useAlcoholsQuery(categoryId, 5, sort);
+  const categoryName = categoryForIndex[categoryId];
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
   const handleSort = (value: string) => {
     setSort(value);
   };
-
+  if (status === 'pending') {
+    return <Loading />;
+  }
   if (status === 'error') {
     return <p>Error: {error.message}</p>;
   }
-  const allAlcohols =
-    data?.pages.flatMap((page) => page[categoryName]) ?? initialAlcohols;
+
+  const allAlcohols = data?.pages.flatMap((page) => page.data);
   return (
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />

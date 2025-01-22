@@ -22,12 +22,12 @@ import {
   ICategory,
   moodTypeCategories,
   alcoholTypeCategories,
+  categoryForFetch,
 } from '../models/categories.ts';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 import { dummyChatRooms } from './ChatRoom.tsx';
 import { dummyData } from '../views/pages/Reviews.tsx';
-import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -70,12 +70,17 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
         },
       });
     } else {
-      console.log(selectedCategories[0].name);
       const name = selectedCategories[0].name;
-      navigate('/alcohol-list', {
+      let categoryId = 0;
+      categoryForFetch.map((category) => {
+        if (category.name === name) {
+          categoryId = category.id;
+        }
+      });
+      navigate('/alcohol-lists', {
         state: {
           alcoholsData: dummyData,
-          categoryName: name,
+          categoryName: categoryId,
           sortValue: searchText,
           category: selectedCategories,
           searchText: searchText,

@@ -1,7 +1,13 @@
+interface alcoholCategory {
+  id: number;
+  name: string;
+}
 export interface IAlcohol {
   id: number;
   name: string;
-  image: string;
-  star: number;
-  reviewers: number;
+  imageUrl: string;
+  scoreAverage: number;
+  reviewCount: number;
+  price: number;
+  alcoholCategory: alcoholCategory;
 }

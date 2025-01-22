@@ -34,7 +34,7 @@ const Index = () => {
       element: <MakeChat />,
     },
     {
-      path: '/alcohol-list',
+      path: '/alcohol-lists/:id',
       element: <ReviewLists />,
     },
     {

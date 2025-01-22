@@ -1,48 +1,67 @@
-import { useQueries, useInfiniteQuery } from '@tanstack/react-query';
-import { fetchAlcohols, fetchAlcoholsByCategory } from '../api/alcohol';
+import {
+  useInfiniteQuery,
+  useQueries,
+  UseQueryResult,
+} from '@tanstack/react-query';
+import {
+  fetchAlcohols,
+  fetchAlcoholsTop10,
+  fetchEachAlcoholsByCategory,
+  FetchEachAlcoholsResponse,
+} from '../api/alcohol';
+import { categoryForFetch } from '../models/categories';
 
 export const useAlcoholsByCategory = () => {
-  const categories = [
-    '소주',
-    '맥주',
-    '와인',
-    '칵테일',
-    '하이볼',
-    '전통주',
-    '위스키',
-  ];
+  const queries = useQueries({
+    queries: [
+      {
+        queryKey: ['alcohols', 0],
+        queryFn: () => fetchAlcoholsTop10(10),
+        staleTime: 5 * 60 * 1000,
+      },
+      ...categoryForFetch.slice(1).map((category) => ({
+        queryKey: ['alcohols', category.id],
+        queryFn: () => fetchEachAlcoholsByCategory(category.id, 10),
+        staleTime: 5 * 60 * 1000,
+      })),
+    ],
+  }) as UseQueryResult<FetchEachAlcoholsResponse, Error>[];
 
-  const results = useQueries({
-    queries: categories.map((category) => ({
-      queryKey: ['alcohols', category],
-      queryFn: () => fetchAlcoholsByCategory(category),
-    })),
-  });
+  const isLoading = queries.some((query) => query.isLoading);
+  const isError = queries.some((query) => query.isError);
 
-  const categoriesData = categories.map((category, index) => ({
-    categoryName: category,
-    alcoholsData: results[index].data || [],
-    isLoading: results[index].isLoading,
-    isError: results[index].isError,
-  }));
+  const categoriesData = queries.reduce<
+    Record<number, FetchEachAlcoholsResponse>
+  >((acc, result, index) => {
+    const data = result.data;
+    acc[index] = data;
+
+    return acc;
+  }, {});
+
   return {
     categoriesData,
-    isLoading: results.some((result) => result.isLoading),
-    isError: results.some((result) => result.isError),
+    isLoading,
+    isError,
   };
 };
-
-export const useAlcoholsQuery = (category: string, sort?: string) => {
+export const useAlcoholsQuery = (
+  categoryId: number,
+  limit: number,
+  sort?: string,
+  keyword?: string,
+) => {
   return useInfiniteQuery({
-    queryKey: [category],
-    queryFn: ({ pageParam }) =>
+    queryKey: [categoryId, limit],
+    queryFn: ({ pageParam = 0 }) =>
       fetchAlcohols({
-        category,
+        categoryId,
         sort,
         cursor: pageParam,
-        limit: 4,
+        limit,
+        keyword,
       }),
-    getNextPageParam: (lastPage, pages) => pages.length * 4,
+    getNextPageParam: (lastPage, pages) => lastPage.cursor,
     initialPageParam: 0,
   });
 };

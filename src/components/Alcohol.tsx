@@ -12,25 +12,31 @@ import {
   Reviewer,
 } from '../styles/Alcohol';
 import { useNavigate } from 'react-router-dom';
-function Alcohol({ alcol }: { alcol: IAlcohol }) {
+function Alcohol({ alcol: alcohol }: { alcol: IAlcohol }) {
   const navigate = useNavigate();
   const gotoDetailPage = () => {
-    navigate(`/alcohol/${alcol.id}`);
+    navigate(`/alcohol/${alcohol.id}`);
   };
+  const { imageUrl, name, reviewCount, scoreAverage } = alcohol;
 
   return (
-    <CardContainer key={alcol.name} onClick={gotoDetailPage}>
+    <CardContainer key={alcohol.name} onClick={gotoDetailPage}>
       <AlcoholImage>
-        <img src={alcol.image} alt={alcol.name} />
+        {
+          <img
+            src={imageUrl ? imageUrl : '../assets/images/default-image.png'}
+            alt={name}
+          />
+        }
       </AlcoholImage>
       <CardBottom>
         <ChatTitleBox>
-          <Title>{alcol.name}</Title>
+          <Title>{name}</Title>
         </ChatTitleBox>
         <ChatDescription>
           <Star>★★★★☆</Star>
-          <Reviewer>{alcol.reviewers}명의 평가</Reviewer>
-          <ReviewPoint>{alcol.star}</ReviewPoint>
+          <Reviewer>{reviewCount}명의 평가</Reviewer>
+          <ReviewPoint>{scoreAverage}</ReviewPoint>
         </ChatDescription>
       </CardBottom>
     </CardContainer>
