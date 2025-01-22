@@ -24,7 +24,23 @@ const RegisterForm = ({
   setConfirmPassword,
   nickName,
   setNickName,
+  setIsEmailVerified,
 }: RegisterFormProps) => {
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'EMAIL_VERIFIED' && event.data.status) {
+        setIsEmailVerified(true);
+        alert('이메일 인증이 완료되었습니다.');
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [setIsEmailVerified]);
+
   const [nickNameAvailabilityMessage, setnickNameAvailabilityMessage] =
     useState<string | null>(null);
 
@@ -36,11 +52,15 @@ const RegisterForm = ({
     const left = window.screenX + (window.innerWidth - width) / 2;
     const top = window.screenY + (window.innerHeight - height) / 2;
 
-    window.open(
+    const newWindow = window.open(
       `http://localhost:5173/email-duplication?email=${encodeURIComponent(email)}`,
       'EmailDuplicationTest',
       `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
     );
+
+    if (!newWindow) {
+      console.error('새 창을 열 수 없습니다. 팝업 차단 설정을 확인하세요.');
+    }
   };
 
   const handleEmailCheck = () => {
@@ -62,7 +82,6 @@ const RegisterForm = ({
       const response = await checkNicknameAvailability(nickName);
       setnickNameAvailabilityMessage(response.message);
       setIsNickNameError(false);
-      // console.log(response.status);
     } catch (error: any) {
       console.log(error);
       setnickNameAvailabilityMessage(error.message);

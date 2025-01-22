@@ -6,7 +6,7 @@ import {
   requestEmailCode,
 } from '../../../api/users/registerApi';
 import { toast } from 'react-toastify';
-import { GoAlert, GoCheckCircle } from 'react-icons/go';
+import { GoAlert } from 'react-icons/go';
 
 const EmailDuplicateTest = () => {
   const location = useLocation();
@@ -18,7 +18,7 @@ const EmailDuplicateTest = () => {
   >(null);
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
 
-  const [isDuplicatePassed, setIsDuplicatePassed] = useState<boolean>(true); // 고쳐야됨
+  const [isDuplicatePassed, setIsDuplicatePassed] = useState<boolean>(false);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);

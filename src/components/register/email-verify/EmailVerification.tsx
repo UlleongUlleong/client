@@ -7,7 +7,6 @@ import {
 } from '../../../api/users/registerApi';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FiAlertCircle } from 'react-icons/fi';
 import { GoCheckCircle, GoAlert } from 'react-icons/go';
 
 const EmailVerificationTab = () => {
@@ -37,7 +36,7 @@ const EmailVerificationTab = () => {
 
   const handleResendCode = async () => {
     try {
-      setTimeLeft(10); // 고치기
+      setTimeLeft(30); // 고치기
       setErrorMessage(null);
       const response = await requestEmailCode(email);
       toast.success(response.message, { icon: <GoCheckCircle /> });
@@ -48,13 +47,26 @@ const EmailVerificationTab = () => {
   };
 
   const handleVerifyCode = async () => {
-    if (!verificationCode)
+    if (!verificationCode) {
       toast.info('인증코드를 입력해주세요.', { icon: <GoAlert /> });
+      return;
+    }
+
     try {
       setErrorMessage(null);
       const response = await verifyEmailCode(email, verificationCode);
-      toast.success('이메일 인증에 성공했습니다.', { icon: <GoCheckCircle /> });
-      window.close();
+      toast.success(response.message, { icon: <GoCheckCircle /> });
+
+      if (window.opener) {
+        window.opener.postMessage(
+          { type: 'EMAIL_VERIFIED', status: true },
+          '*',
+        );
+      }
+
+      setTimeout(() => {
+        window.close();
+      }, 1000); // 약간의 딜레이 후 창 닫기
     } catch (error: any) {
       toast.error(error.message, { icon: <GoAlert /> });
       setErrorMessage(error.message || '인증코드 확인에 실패했습니다.');

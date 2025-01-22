@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
 import { register } from '../../api/users/registerApi';
+import { toast } from 'react-toastify';
 
 const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
@@ -24,15 +25,19 @@ const RegisterBox = () => {
     setCheckedUseInfo(isChecked);
   };
 
-  const handleEmailVerification = () => {
+  useEffect(() => {
+    console.log('이메일 인증 성공여부: ', isEmailVerified);
+  }, [isEmailVerified]);
+
+  const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !nickName) {
       alert('필수 정보를 입력해주세요. (이메일, 비밀번호, 닉네임)');
       return;
     }
-    // if (!isEmailVerified) {
-    //   alert('이메일 인증을 완료해주세요.');
-    //   return;
-    // }
+    if (!isEmailVerified) {
+      alert('이메일 인증을 완료해주세요.');
+      return;
+    }
     if (password !== confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');
     }
@@ -41,20 +46,18 @@ const RegisterBox = () => {
       return;
     }
 
-    openEmailVerificationWindow();
+    const registerContent = {
+      email: email,
+      password: password,
+      reEnterPassword: confirmPassword,
+      nickName: nickName,
+      mood: null,
+      mainAlcohol: null,
+    };
 
-    // const registerContent = {
-    //   email: email,
-    //   password: password,
-    //   reEnterPassword: confirmPassword,
-    //   nickName: nickName,
-    //   mood: null,
-    //   mainAlcohol: null,
-    // };
-
-    // const result = register(registerContent);
-    // console.log(result);
-    // alert('회원가입이 완료되었습니다');
+    const response = await register(registerContent);
+    console.log(response);
+    alert('회원가입이 완료되었습니다');
   };
 
   return (
@@ -110,8 +113,8 @@ const RegisterBox = () => {
         </div>
       </div>
       <div className="register-btn">
-        <button type="button" onClick={handleEmailVerification}>
-          {isEmailVerified ? '회원가입하기' : '이메일 인증하기'}
+        <button type="button" onClick={handleRegister}>
+          회원가입 하기
         </button>
       </div>
     </RegisterBoxStyle>
