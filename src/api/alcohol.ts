@@ -36,7 +36,6 @@ export const fetchAlcohols = async ({
   limit,
 }: FetchAlcoholsParams): Promise<FetchAlcoholsResponse> => {
   const sortId = sortData.indexOf(sort);
-  console.log(sortId, 'sortId');
   try {
     const response = await api.get('/alcohol/search', {
       params: {

@@ -63,6 +63,10 @@ export const handlers = [
         isNaN(cursor),
         'sort',
         sort,
+        'limit',
+        limit,
+        'searchText',
+        keyword,
       );
 
       if (category && isNaN(cursor)) {
@@ -102,7 +106,7 @@ export const handlers = [
       if (sort) {
         switch (sort) {
           case 0:
-            wineData.sort((a, b) => a.name.localeCompare(b.name));
+            filteredData = wineData;
             break;
           case 2:
             filteredData = reviews;

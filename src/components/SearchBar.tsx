@@ -28,6 +28,7 @@ import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 import { dummyChatRooms } from './ChatRoom.tsx';
 import { dummyData } from '../views/pages/Reviews.tsx';
+import { useAlcoholsQuery } from '../hooks/getAlcoholsByCategory.ts';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -70,20 +71,16 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
         },
       });
     } else {
+      const categoryId = selectedCategories[0].id;
+      const sort = 'name';
+      useAlcoholsQuery(categoryId, 5, sort, searchText);
       const name = selectedCategories[0].name;
-      let categoryId = 0;
-      categoryForFetch.map((category) => {
-        if (category.name === name) {
-          categoryId = category.id;
-        }
-      });
+
       navigate('/alcohol-lists', {
         state: {
-          alcoholsData: dummyData,
-          categoryName: categoryId,
-          sortValue: searchText,
-          category: selectedCategories,
-          searchText: searchText,
+          sort: sort,
+          categoryId: categoryId,
+          searchText,
         },
       });
     }

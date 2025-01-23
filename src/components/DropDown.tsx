@@ -87,11 +87,17 @@ const Dropdown: React.FC<DropdownProps> = ({
   sortOptions,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(sortOptions[0]);
+  const [selectedOption, setSelectedOption] = useState(() => {
+    const savedOption = localStorage.getItem('selectedOption');
+    return savedOption
+      ? sortOptions.find((option) => option.value === savedOption)
+      : sortOptions[0];
+  });
 
   const handleSelect = (option: (typeof sortOptions)[0]) => {
     setSelectedOption(option);
     setIsOpen(false);
+    localStorage.setItem('selectedOption', option.value);
     onSelect(option.value);
   };
 

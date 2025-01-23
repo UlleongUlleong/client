@@ -61,7 +61,8 @@ export const useAlcoholsQuery = (
         limit,
         keyword,
       }),
-    getNextPageParam: (lastPage, pages) => lastPage.cursor,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.data.length === limit ? lastPage.cursor : undefined,
     initialPageParam: 0,
   });
 };

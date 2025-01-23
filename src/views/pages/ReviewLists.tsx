@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Dropdown from '../../components/Dropdown';
 import { sortReviewOptions } from '../../models/dropDownOption';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import SearchBar from '../../components/SearchBar';
 import AlocholGrid from '../../components/AlocholGrid';
@@ -15,20 +15,21 @@ import { categoryForIndex } from '../../models/categories';
 import { IAlcohol } from '../../models/alcohol';
 
 function ReviewLists() {
-  const [sort, setSort] = useState('scoreAverage');
-  const [cursor, setCursor] = useState(0);
+  const [sort, setSort] = useState('name');
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   const { id } = useParams();
-  const categoryId = Number(id) || 0;
-  const { ref, inView } = useInView();
 
-  const fetchData = async () => {
-    try {
-      const response = await useAlcoholsQuery(categoryId, cursor, sort);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //검색 시 location state로 넘어와서 관리
+  const location = useLocation();
+  const searchState = location.state as {
+    categoryId?: number;
+    searchText?: string;
+    sort?: string;
+  } | null;
+  //
+  const categoryId = id ? Number(id) : searchState?.categoryId;
+  const searchText = searchState?.searchText;
+  const { ref, inView } = useInView();
   const {
     data,
     status,
@@ -50,7 +51,6 @@ function ReviewLists() {
 
   const handleSort = (value: string) => {
     setSort(value);
-    setCursor(0);
     setAlcoholsData([]);
   };
   if (status === 'pending') {
