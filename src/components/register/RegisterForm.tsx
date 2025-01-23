@@ -10,8 +10,8 @@ interface RegisterFormProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   confirmPassword: string;
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
-  nickName: string;
-  setNickName: React.Dispatch<React.SetStateAction<string>>;
+  nickname: string;
+  setNickname: React.Dispatch<React.SetStateAction<string>>;
   isEmailVerified: boolean;
   setIsEmailVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,8 +23,8 @@ const RegisterForm = ({
   setPassword,
   confirmPassword,
   setConfirmPassword,
-  nickName,
-  setNickName,
+  nickname,
+  setNickname,
   isEmailVerified,
   setIsEmailVerified,
 }: RegisterFormProps) => {
@@ -43,10 +43,10 @@ const RegisterForm = ({
     };
   }, [setIsEmailVerified]);
 
-  const [nickNameAvailabilityMessage, setnickNameAvailabilityMessage] =
+  const [nicknameAvailabilityMessage, setnicknameAvailabilityMessage] =
     useState<string | null>(null);
 
-  const [isNickNameError, setIsNickNameError] = useState<boolean>(false);
+  const [isNicknameError, setIsNicknameError] = useState<boolean>(false);
 
   const openEmailVerificationWindow = () => {
     const width = 400;
@@ -75,19 +75,19 @@ const RegisterForm = ({
   };
 
   const handleNicknameCheck = async () => {
-    if (!nickName) {
+    if (!nickname) {
       alert('닉네임을 입력해주세요.');
       return;
     }
 
     try {
-      const response = await checkNicknameAvailability(nickName);
-      setnickNameAvailabilityMessage(response.message);
-      setIsNickNameError(false);
+      const response = await checkNicknameAvailability(nickname);
+      setnicknameAvailabilityMessage(response.message);
+      setIsNicknameError(false);
     } catch (error: any) {
       console.log(error);
-      setnickNameAvailabilityMessage(error.message);
-      setIsNickNameError(true);
+      setnicknameAvailabilityMessage(error.message);
+      setIsNicknameError(true);
     }
   };
 
@@ -156,8 +156,8 @@ const RegisterForm = ({
             className="register-email"
             type="text"
             placeholder="사용하실 닉네임을 입력해주세요"
-            value={nickName}
-            onChange={(e) => setNickName(e.target.value)}
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
           />
           <button
             className="duplicatetest-btn"
@@ -167,10 +167,10 @@ const RegisterForm = ({
             중복 검사
           </button>
         </div>
-        {nickNameAvailabilityMessage && (
+        {nicknameAvailabilityMessage && (
           <div className="check-msg">
-            <span className={isNickNameError ? 'notpass-msg' : 'pass-msg'}>
-              {nickNameAvailabilityMessage}
+            <span className={isNicknameError ? 'notpass-msg' : 'pass-msg'}>
+              {nicknameAvailabilityMessage}
             </span>
           </div>
         )}

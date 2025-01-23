@@ -6,16 +6,14 @@ interface RegisterContentProps {
   email: string;
   password: string;
   confirmPassword: string;
-  nickName: string;
+  nickname: string;
   moodCategory: number[] | null;
   alcoholCategory: number[] | null;
 }
 
 export const register = async (registerContent: RegisterContentProps) => {
   try {
-    const response = await apiClient.post('/api/users', {
-      registerContent,
-    });
+    const response = await apiClient.post('/api/users', registerContent);
     return response.data;
   } catch (error: any) {
     console.log('error in registration', error.response?.data || error.message);
