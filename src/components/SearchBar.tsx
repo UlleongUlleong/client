@@ -59,7 +59,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const handleSearch = () => {
     //api 호출하고 그 값을 results에에 넘겨주면 될 것 같습니다.
     if (isMoodCategories) {
-      navigate('/chat-lists', {
+      navigate('/chat-lists/results', {
         state: {
           chatRooms: dummyChatRooms,
           sortName: '검색 결과',
@@ -71,7 +71,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
     } else {
       const categoryId = selectedCategories[0].id;
       const sort = 'name';
-      navigate('/alcohol-lists', {
+      navigate('/alcohol-lists/results', {
         state: {
           sort: sort,
           categoryId: categoryId,

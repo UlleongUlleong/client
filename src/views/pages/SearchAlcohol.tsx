@@ -13,13 +13,12 @@ import { Dropdown } from '../../styles/SearchBar';
 import Spinner from '../../assets/Spinner.gif';
 import { GridTopBar } from './Home';
 import { useState, useEffect } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { IAlcohol } from '../../models/alcohol';
 
 function SearchAlcohol() {
   const [sort, setSort] = useState('name');
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
-  const { id } = useParams();
   //검색 시 location state로 넘어와서 관리
   const location = useLocation();
   const searchState = location.state as {
@@ -28,8 +27,9 @@ function SearchAlcohol() {
     sort?: string;
   } | null;
   //
-  const categoryId = id ? Number(id) : searchState?.categoryId;
   const searchText = searchState?.searchText;
+  const categoryId = searchState?.categoryId;
+  const limit = 5;
   const { ref, inView } = useInView();
   const {
     data,
@@ -39,7 +39,7 @@ function SearchAlcohol() {
     isFetchingNextPage,
     isError,
     error,
-  } = useAlcoholsQuery(categoryId, 5, sort);
+  } = useAlcoholsQuery(categoryId, limit, sort, searchText);
 
   const categoryName = categoryForIndex[categoryId];
 
@@ -77,7 +77,7 @@ function SearchAlcohol() {
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
       <GridTopBar>
-        <CategoryTitle>{categoryName}</CategoryTitle>
+        <CategoryTitle>{categoryName} 검색결과</CategoryTitle>
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
       <AlcoholGrid alcohols={alcoholsData} />

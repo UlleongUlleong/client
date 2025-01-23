@@ -35,7 +35,7 @@ const Index = () => {
       element: <ReviewLists />,
     },
     {
-      path: '/results',
+      path: '/alcohol-lists/results',
       element: <SearchAlcohol />,
     },
     {
