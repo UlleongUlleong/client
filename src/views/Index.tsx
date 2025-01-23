@@ -30,13 +30,14 @@ const Index = () => {
       element: <Reviews />,
     },
     {
-      path: '/rooms',
-      element: <MakeChat />,
-    },
-    {
       path: '/alcohol-lists/:id',
       element: <ReviewLists />,
     },
+    {
+      path: '/rooms',
+      element: <MakeChat />,
+    },
+
     {
       path: '/login',
       element: <Login />,

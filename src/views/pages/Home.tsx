@@ -3,15 +3,15 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
 import Dropdown from '../../components/Dropdown.tsx';
-import ChatRoom from '../../components/ChatRoom.tsx';
+import ChatRoom from '../../components/chatRoom/ChatRoom.tsx';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 import {
   StyleChatRoomsGrid,
   Category,
   CategoryTitle,
 } from '../../styles/ChatRoomGrid.ts';
-import { dummyChatRooms } from '../../components/ChatRoom.tsx';
-import ChatRoomGrid from '../../components/ChatRoomGrid.tsx';
+import { dummyChatRooms } from '../../components/chatRoom/ChatRoom.tsx';
+import ChatRoomGrid from '../../components/chatRoom/ChatRoomGrid.tsx';
 import {
   MainContainer,
   StyledSlider,

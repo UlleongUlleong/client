@@ -46,7 +46,6 @@ export const fetchAlcohols = async ({
         limit,
       },
     });
-    console.log(response, 'rseponse');
     return response.data;
   } catch (error) {
     console.error(error);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from 'lucide-react';
+
 import PersonIcon from '@mui/icons-material/Person';
 import {
   ChatRoomContainer,
@@ -9,7 +9,7 @@ import {
   ChatDescription,
   Text,
   ChatRoomParty,
-} from '../styles/chatRoom.ts';
+} from '../../styles/ChatRoom';
 import { useNavigate } from 'react-router-dom';
 export interface IChatRoom {
   id: number;

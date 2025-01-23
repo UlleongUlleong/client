@@ -132,27 +132,35 @@ export const handlers = [
         filteredData = filteredData.slice(startIdx, startIdx + limit);
         newCursor = filteredData.length
           ? filteredData[filteredData.length - 1].id
-          : cursor;
-        console.log('cursor값 response');
+          : null; // 데이터가 없을 경우 null로 종료를 명시
+
+        console.log('cursor값 response', newCursor !== cursor);
         return new HttpResponse(
           JSON.stringify({
             data: filteredData,
             status: 'success',
             message: '성공',
-            cursor: newCursor,
+            meta: {
+              nextCursor: newCursor,
+              hasNext: newCursor !== cursor,
+            },
           }),
         );
       }
       if (isNaN(cursor)) {
         // offset과 limit 적용
-        console.log('limit response');
         filteredData = filteredData.slice(offset, offset + limit);
         return new HttpResponse(
           JSON.stringify({
             data: filteredData,
             status: 'success',
             message: '성공',
-            offset: offset + limit,
+            meta: {
+              total: 6,
+              pageSize: limit,
+              page: offset + limit,
+              totalPages: 2,
+            },
           }),
         );
       }

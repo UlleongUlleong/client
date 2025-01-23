@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MainContainer } from '../../styles/Home';
 import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
-import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
+import ChatRoom, { dummyChatRooms } from '../../components/chatRoom/ChatRoom';
 import SearchBar from '../../components/SearchBar';
 import Dropdown from '../../components/Dropdown';
-import { IChatRoom } from '../../components/ChatRoom';
+import { IChatRoom } from '../../components/chatRoom/ChatRoom';
 import { GridTopBar } from './Home';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 

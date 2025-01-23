@@ -7,18 +7,16 @@ import SearchBar from '../../components/SearchBar';
 import AlocholGrid from '../../components/AlocholGrid';
 import { GridTopBar } from './Home';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
-
 import { useInView } from 'react-intersection-observer';
 import { useAlcoholsQuery } from '../../hooks/getAlcoholsByCategory';
 import { Loading } from '../../styles/Home';
 import { categoryForIndex } from '../../models/categories';
 import { IAlcohol } from '../../models/alcohol';
-
+import Spinner from '../../assets/Spinner.gif';
 function ReviewLists() {
   const [sort, setSort] = useState('name');
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   const { id } = useParams();
-
   //검색 시 location state로 넘어와서 관리
   const location = useLocation();
   const searchState = location.state as {
@@ -43,18 +41,30 @@ function ReviewLists() {
   const categoryName = categoryForIndex[categoryId];
 
   useEffect(() => {
-    if (inView && hasNextPage) {
+    if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
-      setAlcoholsData(data?.pages.flatMap((page) => page.data));
     }
-  }, [inView, hasNextPage, fetchNextPage, sort]);
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    if (data) {
+      const mergedData = data.pages.flatMap((page) => page.data);
+      setAlcoholsData(mergedData);
+    }
+  }, [data]);
 
   const handleSort = (value: string) => {
-    setSort(value);
-    setAlcoholsData([]);
+    if (value !== sort) {
+      setSort(value);
+      setAlcoholsData([]);
+    }
   };
   if (status === 'pending') {
-    return <Loading />;
+    return (
+      <Loading>
+        <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
+      </Loading>
+    );
   }
   if (status === 'error') {
     return <p>Error: {error.message}</p>;
