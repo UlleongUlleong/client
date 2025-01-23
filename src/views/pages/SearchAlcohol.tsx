@@ -9,7 +9,7 @@ import { useInView } from 'react-intersection-observer';
 import { useAlcoholsQuery } from '../../hooks/getAlcoholsByCategory';
 import { Loading } from '../../styles/Home';
 import { categoryForIndex } from '../../models/categories';
-import { Dropdown } from '../../styles/SearchBar';
+import Dropdown from '../../components/Dropdown';
 import Spinner from '../../assets/Spinner.gif';
 import { GridTopBar } from './Home';
 import { useState, useEffect } from 'react';
