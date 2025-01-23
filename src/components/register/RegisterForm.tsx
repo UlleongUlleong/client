@@ -25,7 +25,6 @@ const RegisterForm = ({
   setConfirmPassword,
   nickname,
   setNickname,
-  isEmailVerified,
   setIsEmailVerified,
 }: RegisterFormProps) => {
   useEffect(() => {
@@ -84,9 +83,13 @@ const RegisterForm = ({
       setnicknameAvailabilityMessage(response.message);
       setIsNicknameError(false);
     } catch (error: any) {
-      console.log(error);
-      setnicknameAvailabilityMessage(error.message);
       setIsNicknameError(true);
+
+      if (error.response) {
+        setnicknameAvailabilityMessage(error.response.data.message);
+      } else {
+        setnicknameAvailabilityMessage('정의되지 않은 오류');
+      }
     }
   };
 

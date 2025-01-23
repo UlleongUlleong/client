@@ -11,7 +11,7 @@ import { GoCheckCircle, GoAlert } from 'react-icons/go';
 
 const EmailVerificationTab = () => {
   const [verificationCode, setVerificationCode] = useState<string>('');
-  const [timeLeft, setTimeLeft] = useState<number>(30);
+  const [timeLeft, setTimeLeft] = useState<number>(600);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -41,8 +41,14 @@ const EmailVerificationTab = () => {
       const response = await requestEmailCode(email);
       toast.success(response.message, { icon: <GoCheckCircle /> });
     } catch (error: any) {
-      toast.error(error.message, { icon: <GoAlert /> });
-      setErrorMessage(error.message || '인증코드 요청에 실패했습니다.');
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage(
+          '인증코드 요청에 실패했습니다 잠시후에 다시 시도해주세요',
+        );
+      }
+      toast.error(errorMessage, { icon: <GoAlert /> });
     }
   };
 
@@ -68,8 +74,12 @@ const EmailVerificationTab = () => {
         window.close();
       }, 1000); // 약간의 딜레이 후 창 닫기
     } catch (error: any) {
-      toast.error(error.message, { icon: <GoAlert /> });
-      setErrorMessage(error.message || '인증코드 확인에 실패했습니다.');
+      if (error.response) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage('인증요청이 실패했습니다 잠시후에 다시 시도해주세요');
+      }
+      toast.error(errorMessage, { icon: <GoAlert /> });
     }
   };
 

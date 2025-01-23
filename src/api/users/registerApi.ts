@@ -1,7 +1,5 @@
 import { apiClient } from '../apiClient';
 
-export const fetchData = async () => {};
-
 interface RegisterContentProps {
   email: string;
   password: string;
@@ -44,7 +42,7 @@ export const checkNicknameAvailability = async (nickname: string) => {
     return response.data;
   } catch (error: any) {
     console.log(
-      'error in registration/nickName',
+      'error in registration/nickname',
       error.response?.data || error.message,
     );
     throw error;

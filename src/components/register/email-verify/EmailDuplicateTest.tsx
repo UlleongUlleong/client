@@ -33,10 +33,14 @@ const EmailDuplicateTest = () => {
       setIsEmailError(false);
       setIsDuplicatePassed(true);
     } catch (error: any) {
-      console.log(error);
-      setEmailAvailabilityMessage(error.message);
       setIsEmailError(true);
       setIsDuplicatePassed(false);
+
+      if (error.response) {
+        setEmailAvailabilityMessage(error.response.data.message);
+      } else {
+        setEmailAvailabilityMessage('정의되지 않은 오류');
+      }
     }
   };
 
