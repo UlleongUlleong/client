@@ -36,10 +36,10 @@ export const checkEmailAvailability = async (email: string) => {
   }
 };
 
-export const checkNicknameAvailability = async (nickName: string) => {
+export const checkNicknameAvailability = async (nickname: string) => {
   try {
     const response = await apiClient.get(
-      `/api/users/nickname/availability?nickname=${encodeURIComponent(nickName)}`,
+      `/api/users/nickname/availability?nickname=${encodeURIComponent(nickname)}`,
     );
     return response.data;
   } catch (error: any) {
