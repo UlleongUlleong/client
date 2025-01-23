@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
 import { register } from '../../api/users/registerApi';
+import { toast } from 'react-toastify';
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
@@ -17,6 +20,8 @@ const RegisterBox = () => {
   const [moods, setMoods] = useState<number[]>([]);
   const [alcohols, setAlcohols] = useState<number[]>([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setAllChecked(checkedAge && checkedUseInfo);
   }, [checkedAge, checkedUseInfo]);
@@ -26,14 +31,6 @@ const RegisterBox = () => {
     setCheckedAge(isChecked);
     setCheckedUseInfo(isChecked);
   };
-
-  useEffect(() => {
-    console.log('이메일 인증 성공여부: ', isEmailVerified);
-  }, [isEmailVerified]);
-
-  useEffect(() => {
-    console.log(moods, alcohols);
-  }, [moods, alcohols]);
 
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !nickname) {
@@ -63,10 +60,10 @@ const RegisterBox = () => {
 
     try {
       const response = await register(registerContent);
-      console.log(response);
-      alert('회원가입이 완료되었습니다');
+      toast.success(response.message, { icon: <GoCheckCircle /> });
+      navigate('/');
     } catch (error: any) {
-      console.log(error);
+      toast.error(error.message, { icon: <GoAlert /> });
     }
   };
 

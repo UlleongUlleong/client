@@ -32,7 +32,6 @@ const RegisterForm = ({
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === 'EMAIL_VERIFIED' && event.data.status) {
         setIsEmailVerified(true);
-        alert('이메일 인증이 완료되었습니다.');
       }
     };
 
