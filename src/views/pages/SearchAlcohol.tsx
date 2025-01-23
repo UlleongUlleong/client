@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import Dropdown from '../../components/Dropdown';
-import { sortReviewOptions } from '../../models/dropDownOption';
-import { useLocation, useParams } from 'react-router-dom';
+import React from 'react';
+
 import { ReviewsMainContainer } from '../../styles/Reviews';
+import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import SearchBar from '../../components/SearchBar';
 import AlcoholGrid from '../../components/AlcoholGrid';
-import { GridTopBar } from './Home';
-import { CategoryTitle } from '../../styles/ChatRoomGrid';
+import { sortReviewOptions } from '../../models/dropDownOption';
 import { useInView } from 'react-intersection-observer';
 import { useAlcoholsQuery } from '../../hooks/getAlcoholsByCategory';
 import { Loading } from '../../styles/Home';
 import { categoryForIndex } from '../../models/categories';
-import { IAlcohol } from '../../models/alcohol';
+import { Dropdown } from '../../styles/SearchBar';
 import Spinner from '../../assets/Spinner.gif';
+import { GridTopBar } from './Home';
+import { useState, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { IAlcohol } from '../../models/alcohol';
 
-function ReviewLists() {
+function SearchAlcohol() {
   const [sort, setSort] = useState('name');
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   const { id } = useParams();
@@ -85,4 +87,5 @@ function ReviewLists() {
     </ReviewsMainContainer>
   );
 }
-export default ReviewLists;
+
+export default SearchAlcohol;

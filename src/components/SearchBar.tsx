@@ -71,7 +71,6 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
     } else {
       const categoryId = selectedCategories[0].id;
       const sort = 'name';
-      useAlcoholsQuery(categoryId, 5, sort, searchText);
       navigate('/alcohol-lists', {
         state: {
           sort: sort,

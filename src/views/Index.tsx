@@ -14,6 +14,7 @@ import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
 import Reviews from './pages/Reviews';
 import ReviewLists from './pages/ReviewLists';
+import SearchAlcohol from './pages/SearchAlcohol';
 
 const Index = () => {
   const routeLists = [
@@ -32,6 +33,10 @@ const Index = () => {
     {
       path: '/alcohol-lists/:id',
       element: <ReviewLists />,
+    },
+    {
+      path: '/results',
+      element: <SearchAlcohol />,
     },
     {
       path: '/rooms',
