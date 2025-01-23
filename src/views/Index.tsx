@@ -54,6 +54,11 @@ const Index = () => {
       noNav: true,
     },
     {
+      path: '/find-password',
+      element: <FindPassword />,
+      noNav: true,
+    },
+    {
       path: '/profile',
       element: <Mypage />,
     },

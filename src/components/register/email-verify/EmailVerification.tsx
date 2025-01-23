@@ -66,7 +66,7 @@ const EmailVerificationTab = () => {
 
       setTimeout(() => {
         window.close();
-      }, 1000); // 약간의 딜레이 후 창 닫기
+      }, 1000);
     } catch (error: any) {
       toast.error(error.message, { icon: <GoAlert /> });
       setErrorMessage(error.message || '인증코드 확인에 실패했습니다.');

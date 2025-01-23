@@ -39,7 +39,7 @@ const LoginForm = () => {
 
   const openFindPassword = () => {
     const width = 400;
-    const height = 300;
+    const height = 350;
     const left = window.screenX + (window.innerWidth - width) / 2;
     const top = window.screenY + (window.innerHeight - height) / 2;
 

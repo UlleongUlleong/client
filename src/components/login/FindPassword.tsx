@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 const FindPassword = () => {
@@ -6,21 +8,33 @@ const FindPassword = () => {
 
   const handleSendTempPassword = () => {
     if (!email) {
-      alert('이메일을 입력해주세요');
+      toast.info('이메일을 입력해주세요.', { icon: <GoAlert /> });
       return;
     }
 
-    window.opener.postMessage(
-      { type: 'FindPassword', email },
-      window.location.origin,
-    );
-    alert('입력하신 이메일로 임시 비밀번호가 전송되었습니다.');
-    window.close();
+    try {
+      window.opener.postMessage(
+        { type: 'FindPassword', email },
+        window.location.origin,
+      );
+      toast.success('입력하신 이메일로 임시 비밀번호가 전송되었습니다.', {
+        icon: <GoCheckCircle />,
+      });
+      setTimeout(() => {
+        window.close();
+      }, 1000);
+    } catch (error: any) {
+      toast.error(error.message, { icon: <GoAlert /> });
+    }
   };
 
   return (
     <FindPasswordStyle>
-      <div className="findpassword-container">
+      <div className="logo">
+        <img className="logo-img" src="src/assets/images/logo.png" alt="Logo" />
+      </div>
+      <div className="find-password-container">
+        <h3>임시 비밀번호 발급</h3>
         <div className="msg">입력하신 이메일로 임시 비밀번호가 전송됩니다.</div>
         <form className="email-form">
           <input
@@ -28,6 +42,7 @@ const FindPassword = () => {
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일을 입력해주세요."
           />
           <button
             className="send-email-btn"
@@ -44,10 +59,24 @@ const FindPassword = () => {
 
 const FindPasswordStyle = styled.div`
   width: 100%;
-  height: 70%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  padding: 30px 0;
+
+  .find-password-container {
+    width: 80%;
+    padding: 20px 0;
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+  }
+
+  .logo-img {
+    width: 80px;
+  }
 
   .email-form {
     display: flex;
@@ -83,6 +112,7 @@ const FindPasswordStyle = styled.div`
     text-align: left;
     font-size: 0.9rem;
     padding: 15px 0;
+    color: #555;
   }
 `;
 

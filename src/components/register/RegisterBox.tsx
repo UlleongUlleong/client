@@ -56,7 +56,7 @@ const RegisterBox = () => {
       email: email,
       password: password,
       confirmPassword: confirmPassword,
-      nickName: nickName,
+      nickname: nickName,
       moodCategory: moods,
       alcoholCategory: alcohols,
     };

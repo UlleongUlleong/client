@@ -30,3 +30,13 @@ export const oauthLogin = async (oauthLoginContent: oauthLoginContentProps) => {
     throw error;
   }
 };
+
+export const findPassword = async () => {
+  try {
+    const response = await apiClient.get(`api/auth/${encodeURIComponent('')}`);
+    return response.data;
+  } catch (error: any) {
+    console.log('error in login', error.response?.data || error.message);
+    throw error;
+  }
+};
