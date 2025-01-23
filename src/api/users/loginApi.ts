@@ -7,7 +7,7 @@ interface LoginContentProps {
 
 export const loginApi = async (loginContent: LoginContentProps) => {
   try {
-    const response = await apiClient.post('api/auth/login', loginContent);
+    const response = await apiClient.post('/api/auth/login', loginContent);
     return response.data;
   } catch (error: any) {
     console.log('error in login', error.response?.data || error.message);
@@ -21,8 +21,8 @@ interface oauthLoginContentProps {
 
 export const oauthLogin = async (oauthLoginContent: oauthLoginContentProps) => {
   try {
-    const response = await apiClient.get(
-      `api/auth/${encodeURIComponent(oauthLoginContent.provider)}`,
+    const response = await apiClient.post(
+      `/api/users/oauth-login/${encodeURIComponent(oauthLoginContent.provider)}`,
     );
     return response.data;
   } catch (error: any) {
@@ -33,7 +33,7 @@ export const oauthLogin = async (oauthLoginContent: oauthLoginContentProps) => {
 
 export const findPassword = async () => {
   try {
-    const response = await apiClient.get(`api/auth/${encodeURIComponent('')}`);
+    const response = await apiClient.get(`/api/auth/${encodeURIComponent('')}`);
     return response.data;
   } catch (error: any) {
     console.log('error in login', error.response?.data || error.message);
