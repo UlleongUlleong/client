@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ChatRoom, { dummyChatRooms } from './ChatRoom';
+import React, { useEffect, useState } from 'react';
+import ChatRoom from './ChatRoom';
 import { IChatRoom } from '../../models/chatRoom';
 import { StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
 import Spinner from '../../assets/Spinner.gif';
-import { LastItemContainer, Loading } from '../../styles/Home';
-import { useChatRoomsByMainPage } from '../../hooks/getChatroom';
+import { useChatRoomsWithCursor } from '../../hooks/getChatroom';
 import { useInView } from 'react-intersection-observer';
 import { LoadingMain } from '../../views/pages/Reviews';
 import { ICategory } from '../../models/categories';
 import Dropdown from '../../components/Dropdown.tsx';
 import { GridTopBar } from '../../views/pages/Home';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
-import { useNavigate } from 'react-router-dom';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
@@ -32,7 +30,7 @@ function ChatRoomGrid() {
     isFetchingNextPage,
     error,
     isError,
-  } = useChatRoomsByMainPage(user_category, 6, sortChatRooms);
+  } = useChatRoomsWithCursor(user_category, 6, sortChatRooms);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

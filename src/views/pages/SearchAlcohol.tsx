@@ -26,7 +26,7 @@ function SearchAlcohol() {
     searchText?: string;
     sort?: string;
   } | null;
-  //
+
   const searchText = searchState?.searchText;
   const categoryId = searchState?.categoryId;
   const limit = 5;

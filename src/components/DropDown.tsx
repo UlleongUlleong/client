@@ -21,10 +21,10 @@ const Dropdown: React.FC<DropdownProps> = ({
   sortOptions,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const pageKey = `selectedOption_${window.location.pathname}`;
   const [selectedOption, setSelectedOption] = useState(() => {
     const defaultOption = sortOptions[0];
-    const savedOption = localStorage.getItem('selectedOption');
+    const savedOption = localStorage.getItem(pageKey);
     return savedOption
       ? sortOptions.find((option) => option.value === savedOption) ||
           defaultOption
@@ -34,7 +34,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const handleSelect = (option: (typeof sortOptions)[0]) => {
     setSelectedOption(option);
     setIsOpen(false);
-    localStorage.setItem('selectedOption', option.value);
+    localStorage.setItem(pageKey, option.value);
     onSelect(option.value);
   };
 

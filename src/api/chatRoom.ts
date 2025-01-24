@@ -8,6 +8,7 @@ export interface FetchCursorParams {
   cursor?: number;
   limit?: number;
   keyword?: string;
+  searchText?: string;
 }
 interface paginationCursor {
   hasNext: boolean;
@@ -44,6 +45,7 @@ export const fetchChatRoomsCursor = async ({
   alcoholCategory,
   cursor,
   limit,
+  searchText,
 }: FetchCursorParams): Promise<FetchCursorResponse> => {
   const sortId = chatRoomSort.indexOf(sort);
   try {
@@ -54,6 +56,7 @@ export const fetchChatRoomsCursor = async ({
         alcoholCategory,
         cursor,
         limit,
+        keyword: searchText,
       },
     });
     return response.data;

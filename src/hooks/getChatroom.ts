@@ -16,10 +16,11 @@ import {
   ICategory,
 } from '../models/categories';
 
-export const useChatRoomsByMainPage = (
+export const useChatRoomsWithCursor = (
   userCategory: ICategory[],
   limit: number,
   sort: string,
+  searchText?: string,
 ) => {
   const moodCategory = userCategory
     .filter((category) => category.type === 'mood')
@@ -32,7 +33,7 @@ export const useChatRoomsByMainPage = (
     .join(',');
 
   return useInfiniteQuery({
-    queryKey: ['chatrooms', sort, moodCategory, alcoholCategory],
+    queryKey: ['chatrooms', sort, moodCategory, alcoholCategory, searchText],
     queryFn: ({ pageParam = 0 }) =>
       fetchChatRoomsCursor({
         sort,
@@ -40,6 +41,7 @@ export const useChatRoomsByMainPage = (
         alcoholCategory,
         cursor: pageParam,
         limit,
+        searchText,
       }),
     getNextPageParam: (lastPage, pages) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,

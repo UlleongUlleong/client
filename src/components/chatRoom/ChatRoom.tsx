@@ -12,6 +12,7 @@ import {
 } from '../../styles/ChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { IChatRoom } from '../../models/chatRoom';
+import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions';
 export interface Theme {
   id: number;
   url: string;
@@ -76,7 +77,11 @@ function ChatRoom({ room }: { room: IChatRoom }) {
         <div className="number">{isFull ? FULL : partyNumber}</div>
       </ChatRoomParty>
       <ChatImage>
-        <img src={`/chatTheme/${room.theme}`} alt={room.theme} />
+        {room.theme ? (
+          <img src={`/assets/image/chatTheme/${room.theme}`} alt={room.theme} />
+        ) : (
+          <img src="/assets/image/default-image.png" alt="default-image" />
+        )}
       </ChatImage>
       <ChatTitleBox>
         <Title>{room.name}</Title>

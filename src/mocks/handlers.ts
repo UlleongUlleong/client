@@ -94,16 +94,39 @@ export const handlers = [
         limit,
         keyword,
       );
+      console.log(keyword);
+      if (keyword) {
+        let searchData = generateDummyRoomData(30, '시끌시끌');
+        searchData = searchData.filter((item) =>
+          item.name.toLowerCase().includes(keyword.toLowerCase()),
+        );
+        const cursorIndex = searchData.findIndex((item) => item.id === cursor);
+        const startIdx = cursorIndex + 1;
+        searchData = searchData.slice(startIdx, startIdx + limit);
+        const newCursor = searchData.length
+          ? searchData[searchData.length - 1].id
+          : null; // 데이터가 없을 경우 null로 종료를 명시
+        JSON.stringify({
+          status: 'success',
+          message: '성공',
+          data: searchData,
+          pagination: {
+            nextCursor: newCursor,
+            hasNext: newCursor !== cursor,
+          },
+        });
+      }
 
       if (moodCategory == null && !isNaN(cursor)) {
         let recent = generateDummyRoomData(30, '최신 순');
-        console.log('recent', recent);
         const cursorIndex = recent.findIndex((item) => item.id === cursor);
         const startIdx = cursorIndex + 1;
         recent = recent.slice(startIdx, startIdx + limit);
         const newCursor = recent.length ? recent[recent.length - 1].id : null; // 데이터가 없을 경우 null로 종료를 명시
         return new HttpResponse(
           JSON.stringify({
+            status: 'success',
+            message: '성공',
             data: recent,
             pagination: {
               nextCursor: newCursor,
