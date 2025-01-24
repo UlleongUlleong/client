@@ -22,7 +22,7 @@ export interface FetchAlcoholsResponse {
 export interface FetchEachAlcoholsResponse {
   id: number;
   name: string;
-  alcohols: IAlcohol[];
+  alcohols: { data: IAlcohol[] };
 }
 
 export const fetchAlcohols = async ({

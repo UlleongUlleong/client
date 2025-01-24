@@ -67,23 +67,17 @@ export const fetchChatRoomsCursor = async ({
 };
 
 export const fetchChatRoomsOffset = async ({
-  sort,
-  moodCategory,
-  alcoholCategory,
   page,
   pageSize,
 }: FetchOffsetParams): Promise<FetchOffsetResponse> => {
-  const sortId = chatRoomSort.indexOf(sort);
   try {
     const response = await api.get('/chat/rooms/offset', {
       params: {
-        sort: sortId,
-        moodCategory,
-        alcoholCategory,
         page,
         pageSize,
       },
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);

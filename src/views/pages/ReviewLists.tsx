@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Dropdown from '../../components/Dropdown';
 import { sortReviewOptions } from '../../models/dropDownOption';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import SearchBar from '../../components/SearchBar';
 import AlcoholGrid from '../../components/AlcoholGrid';

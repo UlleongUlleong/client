@@ -1,11 +1,13 @@
 import {
   useInfiniteQuery,
   useQueries,
+  useQuery,
   UseQueryResult,
 } from '@tanstack/react-query';
 
 import {
   fetchChatRoomsCursor,
+  fetchChatRoomsOffset,
   FetchCursorParams,
   FetchCursorResponse,
 } from '../api/chatRoom';
@@ -46,6 +48,24 @@ export const useChatRoomsWithCursor = (
     getNextPageParam: (lastPage, pages) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
     initialPageParam: 0,
+  });
+};
+
+export const useChatRoomWithOffset = (page: number, pageSize: number) => {
+  return useInfiniteQuery({
+    queryKey: ['chatrooms', page, pageSize],
+    queryFn: ({ pageParam = 1 }) =>
+      fetchChatRoomsOffset({ page: pageParam, pageSize }),
+    getNextPageParam: (lastPage) =>
+      Number(lastPage.pagination.page) < Number(lastPage.pagination.totalPages)
+        ? Number(lastPage.pagination.page) + 1
+        : undefined,
+    getPreviousPageParam: (firstPage) => {
+      return Number(firstPage.pagination.page) > 1
+        ? Number(firstPage.pagination.page) - 1
+        : undefined;
+    },
+    initialPageParam: page,
   });
 };
 

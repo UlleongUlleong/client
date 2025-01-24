@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
+import Spinner from '../../assets/Spinner.gif';
 import ChatRoom from '../../components/chatRoom/ChatRoom.tsx';
 
 import {
@@ -20,6 +20,7 @@ import {
 
 import SearchBar from '../../components/SearchBar.tsx';
 import styled from 'styled-components';
+import { useFetchRecentChatRooms } from '../../hooks/getChatroom.ts';
 
 export const GridTopBar = styled.div`
   height: 50px;
@@ -28,12 +29,22 @@ export const GridTopBar = styled.div`
 
 function Home() {
   const navigate = useNavigate();
+  const [recentChat, setRecentChat] = useState();
+
+  const { data, status, error } = useFetchRecentChatRooms(10);
+  const mergedData = data?.pages?.flatMap((page) => page.data) || [];
+
+  const navigateToMakeRoom = () => {
+    navigate('/rooms');
+  };
+
   const settings = {
     dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 6,
     slidesToScroll: 6,
+
     responsive: [
       {
         breakpoint: 2220,
@@ -73,10 +84,6 @@ function Home() {
     ],
   };
 
-  const navigateToMakeRoom = () => {
-    navigate('/rooms');
-  };
-
   return (
     <MainContainer>
       <SearchBar isMoodCategories={true} />
@@ -91,11 +98,15 @@ function Home() {
       </GridTopBar>
 
       <StyledSlider {...settings}>
-        {dummyChatRooms.map((room) => (
-          <StyleChatRoomsGrid key={room.id}>
-            <ChatRoom key={room.id} room={room}></ChatRoom>
-          </StyleChatRoomsGrid>
-        ))}
+        {status === 'pending' ? (
+          <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
+        ) : (
+          mergedData.map((room) => (
+            <StyleChatRoomsGrid key={room.id}>
+              <ChatRoom key={room.id} room={room}></ChatRoom>
+            </StyleChatRoomsGrid>
+          ))
+        )}
       </StyledSlider>
 
       <MakeChatRoomButton onClick={navigateToMakeRoom}>

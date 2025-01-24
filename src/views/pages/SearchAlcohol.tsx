@@ -65,13 +65,13 @@ function SearchAlcohol() {
   };
   if (status === 'pending') {
     return (
-      <Loading>
+      <LoadingMain>
         <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
-      </Loading>
+      </LoadingMain>
     );
   }
   if (status === 'error') {
-    return <p>Error: {error.message}</p>;
+    return <LoadingMain>Error: {error.message}</LoadingMain>;
   }
 
   return (
@@ -90,7 +90,7 @@ function SearchAlcohol() {
       )}
 
       {isFetchingNextPage && <Loading />}
-      {isError && <div>{error}</div>}
+      {isError && <LoadingMain>{error}</LoadingMain>}
       {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
     </ReviewsMainContainer>
   );

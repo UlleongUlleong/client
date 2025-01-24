@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MainContainer } from '../../styles/Home';
 import SearchBar from '../../components/SearchBar';
-import ChatRoom, { dummyChatRooms } from '../../components/chatRoom/ChatRoom';
+import ChatRoom from '../../components/chatRoom/ChatRoom';
 import { GridTopBar } from './Home';
 import { useLocation } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
@@ -77,7 +77,7 @@ function ChatSearchList() {
             <ChatRoom key={room.id} room={room} />
           ))
         )}
-        {isError && <div>{error}</div>}
+        {isError && <LoadingMain>{error}</LoadingMain>}
         {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
       </StyleChatRoomsGrid>
     </MainContainer>
