@@ -13,6 +13,8 @@ import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
 import Reviews from './pages/Reviews';
+import ReviewLists from './pages/ReviewLists';
+import SearchAlcohol from './pages/SearchAlcohol';
 
 const Index = () => {
   const routeLists = [
@@ -21,17 +23,26 @@ const Index = () => {
       element: <Home />,
     },
     {
-      path: '/chatlist',
+      path: '/chat-lists',
       element: <ChatLists />,
     },
     {
       path: '/reviews',
-      element: <Reviews></Reviews>,
+      element: <Reviews />,
+    },
+    {
+      path: '/alcohol-lists/:id',
+      element: <ReviewLists />,
+    },
+    {
+      path: '/alcohol-lists/results',
+      element: <SearchAlcohol />,
     },
     {
       path: '/rooms',
       element: <MakeChat />,
     },
+
     {
       path: '/login',
       element: <Login />,

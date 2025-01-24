@@ -19,18 +19,18 @@ import {
   IconButton,
 } from '../styles/SearchBar.ts';
 import {
-  alcoholTypeCategories,
-  moodTypeCategories,
   ICategory,
+  moodTypeCategories,
+  alcoholTypeCategories,
 } from '../models/categories.ts';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
-import { dummyChatRooms } from './ChatRoom.tsx';
-
 interface searchBarProps {
   isMoodCategories: boolean;
 }
 
+//isMoodCategories가 true면 moodTypeCategories도 보여주고
+// false면 alcoholTypeCategories만 사용한다.
 const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
@@ -39,22 +39,52 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
 
   const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {
-      const isSelected = prev.some((cat) => cat.id === category.id);
-      if (isSelected) {
-        return prev.filter((cat) => cat.id !== category.id);
+      //단일 선택
+      if (!isMoodCategories) {
+        if (prev.some((cat) => cat.id === category.id)) {
+          return [];
+        }
+        return [category];
+      } else {
+        //다중 선택
+        const isSelected = prev.some((cat) => cat.name === category.name);
+        if (isSelected) {
+          return prev.filter((cat) => cat.name !== category.name);
+        }
+        return [...prev, category];
       }
-      return [...prev, category];
     });
   };
 
   const handleSearch = () => {
-    navigate('/chatlist', {
-      state: {
-        chatRoom: dummyChatRooms,
-        sort: '검색 결과',
-        category: selectedCategories,
-      },
-    });
+    const alcoholCategories = selectedCategories.filter(
+      (category) => category.type === 'alcohol',
+    );
+    const alcoholCategoryId = alcoholCategories.map((category) => category.id);
+    const moodCategories = selectedCategories.filter(
+      (category) => category.type === 'mood',
+    );
+    const sort = 'name';
+    const moodCategoryId = moodCategories.map((category) => category.id);
+    if (isMoodCategories) {
+      navigate('/chat-lists/results', {
+        state: {
+          sort: sort,
+          moodCategoryId,
+          alcoholCategoryId,
+          searchText: searchText,
+        },
+      });
+    } else {
+      const categoryId = selectedCategories[0].id;
+      navigate('/alcohol-lists/results', {
+        state: {
+          sort: sort,
+          categoryId: categoryId,
+          searchText,
+        },
+      });
+    }
   };
 
   const handleConfirm = () => {
@@ -90,7 +120,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
           {/* 선택된 태그 섹션 */}
           <SelectedTagsSection>
             {selectedCategories.map((cat) => (
-              <CategoryTag key={cat.id} onClick={() => toggleCategory(cat)}>
+              <CategoryTag key={cat.name} onClick={() => toggleCategory(cat)}>
                 {cat.name}
                 <DeleteIcon>×</DeleteIcon>
               </CategoryTag>
@@ -105,13 +135,13 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
                 <CategoryGrid>
                   {moodTypeCategories.map((category) => (
                     <CategoryItem
-                      key={category.id}
+                      key={category.name}
                       onClick={() => toggleCategory(category)}
                     >
                       <input
                         type="checkbox"
                         checked={selectedCategories.some(
-                          (cat) => cat.id === category.id,
+                          (cat) => cat.name === category.name,
                         )}
                         readOnly
                       />
@@ -129,13 +159,13 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
             <CategoryGrid>
               {alcoholTypeCategories.map((category) => (
                 <CategoryItem
-                  key={category.id}
+                  key={category.name}
                   onClick={() => toggleCategory(category)}
                 >
                   <input
                     type="checkbox"
                     checked={selectedCategories.some(
-                      (cat) => cat.id === category.id,
+                      (cat) => cat.name === category.name,
                     )}
                     readOnly
                   />

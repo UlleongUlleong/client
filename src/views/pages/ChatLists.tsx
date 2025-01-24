@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { MainContainer } from '../../styles/Home';
 import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
-import ChatRoom, { dummyChatRooms } from '../../components/ChatRoom';
+import ChatRoom, { dummyChatRooms } from '../../components/chatRoom/ChatRoom';
 import SearchBar from '../../components/SearchBar';
 import Dropdown from '../../components/Dropdown';
+import { IChatRoom } from '../../components/chatRoom/ChatRoom';
+import { GridTopBar } from './Home';
+import { sortChatRoomOptions } from '../../models/dropDownOption';
+
 const BASE_URL = 'http://localhost:8080';
-
-import { IChatRoom } from '../../components/ChatRoom';
-
-interface ICategory {
-  id: number;
-  name: string;
-  type: string;
-}
-
 function ChatLists() {
   const location = useLocation();
 
-  const { newChatRooms, sort, category } = location.state; //정렬 값
+  const { newChatRooms, sortName, sortValue, category, searchText } =
+    location.state; //정렬 값
   const [chatRooms, setChatRooms] = useState<IChatRoom[]>([]);
 
   useEffect(() => {
@@ -26,7 +22,6 @@ function ChatLists() {
   }, []);
 
   const loadChatRooms = async (sortType: string) => {
-    console.log(sortType);
     let requestApi = '';
     if (category) {
       console.log(category);
@@ -36,8 +31,8 @@ function ChatLists() {
     if (newChatRooms) {
       setChatRooms(newChatRooms);
     }
-    if (sort) {
-      requestApi = `${BASE_URL}/api/chatrooms?&sort=${sort}`;
+    if (sortValue) {
+      requestApi = `${BASE_URL}/api/chatrooms?&sort=${sortValue}`;
     }
     try {
       // const response = await fetch(
@@ -55,11 +50,18 @@ function ChatLists() {
       console.error(error);
     }
   };
+
   return (
     <MainContainer>
-      <SearchBar />
-      <CategoryTitle>{sort ? sort : null}</CategoryTitle>
-      <Dropdown onSelect={loadChatRooms}></Dropdown>
+      <SearchBar isMoodCategories={true} />
+      <GridTopBar>
+        <CategoryTitle>{sortName ? sortName : null}</CategoryTitle>
+        <Dropdown
+          onSelect={loadChatRooms}
+          sortOptions={sortChatRoomOptions}
+        ></Dropdown>
+      </GridTopBar>
+
       <StyleChatRoomsGrid>
         {dummyChatRooms.map((rooms, index) => {
           return <ChatRoom room={rooms} key={index} />;

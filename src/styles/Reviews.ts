@@ -5,3 +5,5 @@ export const ReviewsMainContainer = styled.div`
   position: relative;
   overflow-y: auto;
 `;
+
+export const wholeLoading = styled.div``;

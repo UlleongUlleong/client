@@ -13,3 +13,12 @@ export type theme = {
   id: string;
   url: string;
 };
+
+export interface IChatRoom {
+  id: number;
+  name: string;
+  description: string;
+  theme: string;
+  maxParticipants: number;
+  participants: number;
+}
