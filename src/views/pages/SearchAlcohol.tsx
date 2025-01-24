@@ -15,6 +15,7 @@ import { GridTopBar } from './Home';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IAlcohol } from '../../models/alcohol';
+import { LoadingMain } from './Reviews';
 
 function SearchAlcohol() {
   const [sort, setSort] = useState('name');
@@ -80,7 +81,14 @@ function SearchAlcohol() {
         <CategoryTitle>{categoryName} 검색결과</CategoryTitle>
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
-      <AlcoholGrid alcohols={alcoholsData} />
+      {alcoholsData.length === 0 ? (
+        <LoadingMain style={{ textAlign: 'center' }}>
+          검색 결과가 없습니다.
+        </LoadingMain>
+      ) : (
+        <AlcoholGrid alcohols={alcoholsData} />
+      )}
+
       {isFetchingNextPage && <Loading />}
       {isError && <div>{error}</div>}
       {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
