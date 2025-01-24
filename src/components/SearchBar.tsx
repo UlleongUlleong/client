@@ -26,7 +26,6 @@ import {
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 import { dummyChatRooms } from './chatRoom/ChatRoom.tsx';
-import { useAlcoholsQuery } from '../hooks/getAlcoholsByCategory.ts';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -46,13 +45,14 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
           return [];
         }
         return [category];
+      } else {
+        //다중 선택
+        const isSelected = prev.some((cat) => cat.name === category.name);
+        if (isSelected) {
+          return prev.filter((cat) => cat.name !== category.name);
+        }
+        return [...prev, category];
       }
-      //다중 선택
-      const isSelected = prev.some((cat) => cat.id === category.id);
-      if (isSelected) {
-        return prev.filter((cat) => cat.id !== category.id);
-      }
-      return [...prev, category];
     });
   };
 
@@ -114,7 +114,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
           {/* 선택된 태그 섹션 */}
           <SelectedTagsSection>
             {selectedCategories.map((cat) => (
-              <CategoryTag key={cat.id} onClick={() => toggleCategory(cat)}>
+              <CategoryTag key={cat.name} onClick={() => toggleCategory(cat)}>
                 {cat.name}
                 <DeleteIcon>×</DeleteIcon>
               </CategoryTag>
@@ -129,13 +129,13 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
                 <CategoryGrid>
                   {moodTypeCategories.map((category) => (
                     <CategoryItem
-                      key={category.id}
+                      key={category.name}
                       onClick={() => toggleCategory(category)}
                     >
                       <input
                         type="checkbox"
                         checked={selectedCategories.some(
-                          (cat) => cat.id === category.id,
+                          (cat) => cat.name === category.name,
                         )}
                         readOnly
                       />
@@ -153,13 +153,13 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
             <CategoryGrid>
               {alcoholTypeCategories.map((category) => (
                 <CategoryItem
-                  key={category.id}
+                  key={category.name}
                   onClick={() => toggleCategory(category)}
                 >
                   <input
                     type="checkbox"
                     checked={selectedCategories.some(
-                      (cat) => cat.id === category.id,
+                      (cat) => cat.name === category.name,
                     )}
                     readOnly
                   />

@@ -13,6 +13,7 @@ import { Loading } from '../../styles/Home';
 import { categoryForIndex } from '../../models/categories';
 import { IAlcohol } from '../../models/alcohol';
 import Spinner from '../../assets/Spinner.gif';
+import { LoadingMain } from './Reviews';
 
 function ReviewLists() {
   const [sort, setSort] = useState('name');
@@ -62,9 +63,9 @@ function ReviewLists() {
   };
   if (status === 'pending') {
     return (
-      <Loading>
+      <LoadingMain>
         <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
-      </Loading>
+      </LoadingMain>
     );
   }
   if (status === 'error') {

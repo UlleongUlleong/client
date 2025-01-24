@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,11 +23,11 @@ import styled from 'styled-components';
 
 export const GridTopBar = styled.div`
   height: 50px;
-
   justify-content: space-between;
 `;
 
 function Home() {
+  const [sortChatRooms, setSortChatRooms] = useState('최신 순');
   const navigate = useNavigate();
   const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
   const user_category = ['소주', '맥주', '시끌시끌'];
@@ -84,23 +84,7 @@ function Home() {
   useEffect(() => {}, [featuredRooms]);
 
   const handleSort = (value: string) => {
-    if (value === '생성일 순') {
-      featuredRooms.sort((a, b) => {
-        return a.createdAt > b.createdAt
-          ? -1
-          : a.createdAt < b.createdAt
-            ? 1
-            : 0;
-      });
-    } else if (value === '참여자 순') {
-      featuredRooms.sort((a, b) => {
-        return a.maxParticipants > b.maxParticipants
-          ? -1
-          : a.maxParticipants < b.maxParticipants
-            ? 1
-            : 0;
-      });
-    }
+    setSortChatRooms(value);
   };
 
   return (

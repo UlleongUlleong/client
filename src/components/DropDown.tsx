@@ -21,11 +21,14 @@ const Dropdown: React.FC<DropdownProps> = ({
   sortOptions,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
   const [selectedOption, setSelectedOption] = useState(() => {
+    const defaultOption = sortOptions[0];
     const savedOption = localStorage.getItem('selectedOption');
     return savedOption
-      ? sortOptions.find((option) => option.value === savedOption)
-      : sortOptions[0];
+      ? sortOptions.find((option) => option.value === savedOption) ||
+          defaultOption
+      : defaultOption;
   });
 
   const handleSelect = (option: (typeof sortOptions)[0]) => {
@@ -36,7 +39,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   const filteredOptions = sortOptions.filter(
-    (option) => option.value !== selectedOption.value,
+    (option) => option.value !== selectedOption?.value,
   );
 
   return (

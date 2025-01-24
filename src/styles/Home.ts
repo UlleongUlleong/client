@@ -83,6 +83,7 @@ export const Loading = styled.div`
   align-items: center;
   margin: 0;
 `;
+
 export const LastItemContainer = styled.div`
   font-family: 'Noto Sans KR', serif;
   margin: 0 auto;
