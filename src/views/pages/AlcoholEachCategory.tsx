@@ -4,6 +4,7 @@ import { GridTopBar } from './Home';
 import { Category, CategoryTitle } from '../../styles/ChatRoomGrid';
 import { Link, useParams } from 'react-router-dom';
 import AlocholGird from '../../components/AlcoholGrid';
+
 interface AlcoholEachCategoryProps {
   alcoholsData: IAlcohol[];
   categoryName: string;
@@ -25,6 +26,7 @@ function AlcoholEachCategory({
           </Link>
         </Category>
       </GridTopBar>
+
       <AlocholGird alcohols={alcoholsData} />
     </>
   );
