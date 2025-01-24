@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
-  const [sortChatRooms, setSortChatRooms] = useState('참여자 순');
+  const [sortChatRooms, setSortChatRooms] = useState('participantCount');
 
   const user_category: ICategory[] = [
     { id: 1, name: '혼술', type: 'mood' },
@@ -31,7 +31,8 @@ function ChatRoomGrid() {
     hasNextPage,
     isFetchingNextPage,
     error,
-  } = useChatRoomsByMainPage(user_category, 6);
+    isError,
+  } = useChatRoomsByMainPage(user_category, 6, sortChatRooms);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -47,6 +48,7 @@ function ChatRoomGrid() {
   }, [data]);
   const handleSort = (value: string) => {
     setSortChatRooms(value);
+    setChatRoomData([]);
   };
   if (status === 'pending') {
     return (
@@ -73,6 +75,7 @@ function ChatRoomGrid() {
         {chatRoomData.map((room: IChatRoom) => {
           return <ChatRoom key={room.id} room={room} />;
         })}
+        {isError && <div>{error}</div>}
         {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
       </StyleChatRoomsGrid>
     </>

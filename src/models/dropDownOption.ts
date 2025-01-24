@@ -11,7 +11,6 @@ export const sortReviewOptions = [
 ];
 
 export const sortChatRoomOptions = [
-  { value: 'name', label: '이름 순' },
   { value: 'createdAt', label: '생성일 순' },
   { value: 'participantCount', label: '참여자 순' },
 ];

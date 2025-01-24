@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Spinner from '../../assets/Spinner.gif';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 
 import ChatRoom from '../../components/chatRoom/ChatRoom.tsx';
@@ -21,9 +20,6 @@ import {
 
 import SearchBar from '../../components/SearchBar.tsx';
 import styled from 'styled-components';
-import { useChatRoomsByMainPage } from '../../hooks/getChatroom.ts';
-import { ICategory } from '../../models/categories.ts';
-import { IChatRoom } from '../../models/chatRoom.ts';
 
 export const GridTopBar = styled.div`
   height: 50px;
@@ -32,8 +28,6 @@ export const GridTopBar = styled.div`
 
 function Home() {
   const navigate = useNavigate();
-  const [sortChatRooms, setSortChatRooms] = useState('참여자 순');
-
   const settings = {
     dots: true,
     infinite: false,
@@ -90,11 +84,7 @@ function Home() {
       <GridTopBar>
         <CategoryTitle>최신 순</CategoryTitle>
         <Category>
-          <Link
-            to="/chat-lists"
-            className="more"
-            state={{ newChatRoom: dummyChatRooms, sort: '최신 순' }}
-          >
+          <Link to="/chat-lists" className="more">
             더보기
           </Link>
         </Category>
@@ -108,11 +98,11 @@ function Home() {
         ))}
       </StyledSlider>
 
-      {/* 사용자 선택 카테고리  */}
-
       <MakeChatRoomButton onClick={navigateToMakeRoom}>
         방 만들기
       </MakeChatRoomButton>
+
+      {/* 사용자 추천 순 채팅방 무한 스크롤 */}
       <ChatRoomGrid />
     </MainContainer>
   );

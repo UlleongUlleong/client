@@ -23,6 +23,7 @@ interface data {
   price: number;
   reviewCount: number;
 }
+
 function generateDummyRoomData(count: number, category: string) {
   let currentId = 0;
   const maxMember = Math.floor(Math.random() * 10);
@@ -37,17 +38,17 @@ function generateDummyRoomData(count: number, category: string) {
 }
 
 function generateDummyData(count: number, category: number) {
-  let currentId = 0;
+  let curr = 0;
   const cat = categoryForFetch.find((cat) => cat.id === category);
   return Array.from({ length: count }, () => ({
-    id: ++currentId,
-    name: `${cat.name}${currentId}`,
+    id: ++curr,
+    name: `${cat.name}${curr}`,
     imageUrl:
       'https://wineall.co.kr/web/product/big/202204/e0b9cfb8b7e703a4e086f6c2a7f72e28.png',
 
     scoreAverage: parseFloat((Math.random() * 5).toFixed(1)),
     type: `${cat.name}`,
-    price: 20000 + (currentId - 1) * 500,
+    price: 20000 + (curr - 1) * 500,
     reviewCount: Math.floor(Math.random() * 100),
     interestCount: Math.floor(Math.random() * 100),
   }));
@@ -80,25 +81,52 @@ export const handlers = [
       const cursor = parseInt(url.searchParams.get('cursor'));
       const limit = parseInt(url.searchParams.get('limit') || '6');
       const keyword = url.searchParams.get('keyword');
-      console.log(moodCategory, alcoholCategory, sort, cursor, limit, keyword);
+      console.log(
+        'moodCategory:',
+        moodCategory,
+        'alcohol: ',
+        alcoholCategory,
+        'sort: ',
+        sort,
+        'cursor: ',
+        cursor,
+        'limit:',
+        limit,
+        keyword,
+      );
 
-      const moodCategoryIds = moodCategory
-        ? moodCategory.split(',').map((id) => parseInt(id, 10))
-        : [];
+      if (moodCategory == null && !isNaN(cursor)) {
+        let recent = generateDummyRoomData(30, '최신 순');
+        console.log('recent', recent);
+        const cursorIndex = recent.findIndex((item) => item.id === cursor);
+        const startIdx = cursorIndex + 1;
+        recent = recent.slice(startIdx, startIdx + limit);
+        const newCursor = recent.length ? recent[recent.length - 1].id : null; // 데이터가 없을 경우 null로 종료를 명시
+        return new HttpResponse(
+          JSON.stringify({
+            data: recent,
+            pagination: {
+              nextCursor: newCursor,
+              hasNext: newCursor !== cursor,
+            },
+          }),
+        );
+      }
       let filteredData = [];
+      if (moodCategory != null) {
+        const moodCategoryIds = moodCategory
+          ? moodCategory.split(',').map((id) => parseInt(id, 10))
+          : [];
 
-      // cursor가 있는 경우 cursor 이후의 데이터만 반환
-      filteredData = generateDummyRoomData(30, '혼술');
-
-      if (moodCategoryIds) {
-        console.log('moodCategoryIds', moodCategoryIds);
         moodCategoryIds.forEach((categoryId) => {
           const name = moodList[categoryId - 1];
-          const dummyData = generateDummyRoomData(20, name);
-          console.log('dummyData', dummyData);
+          const dummyData = generateDummyRoomData(10, name);
+
           // 각 categoryId에 대해 호출
           filteredData.push(...dummyData); // 반환된 데이터를 filteredData에 추가
         });
+      } else {
+        filteredData = generateDummyRoomData(30, '최신 순');
       }
 
       if (keyword) {
@@ -110,10 +138,11 @@ export const handlers = [
       if (sort) {
         switch (sort) {
           case 0:
+            filteredData = generateDummyRoomData(30, '인기');
             break;
           case 1:
             filteredData = filteredData.sort(
-              (a, b) => b.maxParticipants - a.maxParticipants,
+              (a, b) => b.participantCount - a.participantCount,
             );
             break;
           case 2:
@@ -123,6 +152,7 @@ export const handlers = [
       }
       let startIdx = 0;
       let newCursor = 0;
+
       if (!isNaN(cursor)) {
         const cursorIndex = filteredData.findIndex(
           (item) => item.id === cursor,

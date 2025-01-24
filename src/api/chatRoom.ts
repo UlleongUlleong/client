@@ -46,7 +46,6 @@ export const fetchChatRoomsCursor = async ({
   limit,
 }: FetchCursorParams): Promise<FetchCursorResponse> => {
   const sortId = chatRoomSort.indexOf(sort);
-
   try {
     const response = await api.get('/chat/rooms/cursor', {
       params: {
@@ -57,7 +56,6 @@ export const fetchChatRoomsCursor = async ({
         limit,
       },
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);

@@ -19,6 +19,7 @@ import {
 export const useChatRoomsByMainPage = (
   userCategory: ICategory[],
   limit: number,
+  sort: string,
 ) => {
   const moodCategory = userCategory
     .filter((category) => category.type === 'mood')
@@ -30,7 +31,6 @@ export const useChatRoomsByMainPage = (
     .map((category) => category.id)
     .join(',');
 
-  const sort = 'createdAt';
   return useInfiniteQuery({
     queryKey: ['chatrooms', sort, moodCategory, alcoholCategory],
     queryFn: ({ pageParam = 0 }) =>
@@ -42,6 +42,21 @@ export const useChatRoomsByMainPage = (
         limit,
       }),
     getNextPageParam: (lastPage, pages) =>
+      lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
+    initialPageParam: 0,
+  });
+};
+
+export const useFetchRecentChatRooms = (limit: number) => {
+  return useInfiniteQuery({
+    queryKey: ['chatrooms', 'createdAt'],
+    queryFn: ({ pageParam = 0 }) =>
+      fetchChatRoomsCursor({
+        sort: 'createdAt',
+        cursor: pageParam,
+        limit,
+      }),
+    getNextPageParam: (lastPage) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
     initialPageParam: 0,
   });

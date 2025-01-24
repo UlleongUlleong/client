@@ -15,6 +15,7 @@ import AlcoholDetail from './pages/AlcoholDetail';
 import Reviews from './pages/Reviews';
 import ReviewLists from './pages/ReviewLists';
 import SearchAlcohol from './pages/SearchAlcohol';
+import ChatSearchList from './pages/ChatSearchList';
 
 const Index = () => {
   const routeLists = [
@@ -25,6 +26,10 @@ const Index = () => {
     {
       path: '/chat-lists',
       element: <ChatLists />,
+    },
+    {
+      path: '/chat-lists/results',
+      element: <ChatSearchList />,
     },
     {
       path: '/reviews',
