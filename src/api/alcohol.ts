@@ -33,6 +33,14 @@ export const fetchAlcohols = async ({
   limit,
 }: FetchAlcoholsParams): Promise<FetchAlcoholsResponse> => {
   try {
+    const params: FetchAlcoholsParams = {};
+
+    if (categoryId !== undefined) params.categoryId = categoryId;
+    if (keyword !== undefined) params.keyword = keyword;
+    if (sort !== undefined) params.sort = sort;
+    if (cursor !== undefined) params.cursor = cursor;
+    if (limit !== undefined) params.limit = limit;
+
     const response = await api.get('/alcohol', {
       params: {
         category: categoryId,

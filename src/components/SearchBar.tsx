@@ -57,14 +57,6 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   };
 
   const handleSearch = () => {
-    // const alcoholCategories = selectedCategories.filter(
-    //   (category) => category.type === 'alcohol',
-    // );
-    // const alcoholCategoryId = alcoholCategories.map((category) => category.id);
-    // const moodCategories = selectedCategories.filter(
-    //   (category) => category.type === 'mood',
-    // );
-    // const moodCategoryId = moodCategories.map((category) => category.id);
     if (isMoodCategories) {
       navigate('/chat-lists/results', {
         state: {
@@ -73,7 +65,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
         },
       });
     } else {
-      const categoryId = selectedCategories[0].id;
+      const categoryId = selectedCategories[0]?.id || 0;
       navigate('/alcohol-lists/results', {
         state: {
           sort: 'name',

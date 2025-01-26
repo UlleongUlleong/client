@@ -31,7 +31,7 @@ function SearchAlcohol() {
 
   const searchText = searchState?.searchText;
   const categoryId = searchState?.categoryId;
-  const limit = 5;
+  const limit = 6;
   const { ref, inView } = useInView();
   const {
     data,
@@ -43,7 +43,12 @@ function SearchAlcohol() {
     error,
   } = useAlcoholsQuery(categoryId, limit, sort, searchText);
 
-  const categoryName = categoryForIndex[categoryId];
+  let categoryName = '';
+  if (categoryId === 0) {
+    categoryName = '전체';
+  } else {
+    categoryName = categoryForIndex[categoryId];
+  }
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

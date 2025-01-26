@@ -5,7 +5,6 @@ import {
 } from '@tanstack/react-query';
 import {
   fetchAlcohols,
-  fetchAlcoholsTop10,
   fetchEachAlcoholsByCategory,
   FetchEachAlcoholsResponse,
 } from '../api/alcohol';
@@ -42,7 +41,7 @@ export const useAlcoholsByCategory = () => {
 };
 
 export const useAlcoholsQuery = (
-  categoryId: number,
+  categoryId: number = 0,
   limit: number,
   sort?: string,
   keyword?: string,
