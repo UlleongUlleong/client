@@ -8,6 +8,7 @@ export const MainContainer = styled.div`
 `;
 
 export const StyledSlider = styled(Slider)`
+  font-family: 'Noto Sans KR', sans-serif;
   justify-content: center;
   align-items: center;
   margin: 0 auto;

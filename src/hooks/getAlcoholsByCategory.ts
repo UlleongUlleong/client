@@ -14,12 +14,7 @@ import { categoryForFetch } from '../models/categories';
 export const useAlcoholsByCategory = () => {
   const queries = useQueries({
     queries: [
-      {
-        queryKey: ['alcohols', 0],
-        queryFn: () => fetchAlcoholsTop10(10),
-        staleTime: 5 * 60 * 1000,
-      },
-      ...categoryForFetch.slice(1).map((category) => ({
+      ...categoryForFetch.map((category) => ({
         queryKey: ['alcohols', category.id],
         queryFn: () => fetchEachAlcoholsByCategory(category.id, 10),
         staleTime: 5 * 60 * 1000,

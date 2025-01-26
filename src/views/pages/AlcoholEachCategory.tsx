@@ -2,8 +2,8 @@ import React from 'react';
 import { IAlcohol } from '../../models/alcohol';
 import { GridTopBar } from './Home';
 import { Category, CategoryTitle } from '../../styles/ChatRoomGrid';
-import { Link, useParams } from 'react-router-dom';
-import AlocholGird from '../../components/AlcoholGrid';
+import { Link } from 'react-router-dom';
+import AlcoholSlider from '../../components/AlcoholSlider';
 
 interface AlcoholEachCategoryProps {
   alcoholsData: IAlcohol[];
@@ -27,7 +27,7 @@ function AlcoholEachCategory({
         </Category>
       </GridTopBar>
 
-      <AlocholGird alcohols={alcoholsData} />
+      <AlcoholSlider alcohols={alcoholsData} />
     </>
   );
 }

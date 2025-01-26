@@ -82,9 +82,15 @@ function SearchAlcohol() {
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
       {alcoholsData.length === 0 ? (
-        <LoadingMain style={{ textAlign: 'center' }}>
+        <div
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Noto Sans KR',
+            color: 'gray',
+          }}
+        >
           검색 결과가 없습니다.
-        </LoadingMain>
+        </div>
       ) : (
         <AlcoholGrid alcohols={alcoholsData} />
       )}

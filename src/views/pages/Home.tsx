@@ -97,17 +97,30 @@ function Home() {
         </Category>
       </GridTopBar>
 
-      <StyledSlider {...settings}>
+      <>
         {status === 'pending' ? (
           <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
+        ) : mergedData.length === 0 ? (
+          // mergedData가 비어 있는 경우
+          <div
+            style={{
+              color: 'gray',
+              fontFamily: 'Noto Sans KR',
+              textAlign: 'center',
+            }}
+          >
+            채팅방이 없습니다
+          </div>
         ) : (
-          mergedData.map((room) => (
-            <StyleChatRoomsGrid key={room.id}>
-              <ChatRoom key={room.id} room={room}></ChatRoom>
-            </StyleChatRoomsGrid>
-          ))
+          <StyledSlider {...settings}>
+            {mergedData.map((room) => (
+              <StyleChatRoomsGrid key={room.id}>
+                <ChatRoom key={room.id} room={room} />
+              </StyleChatRoomsGrid>
+            ))}
+          </StyledSlider>
         )}
-      </StyledSlider>
+      </>
 
       <MakeChatRoomButton onClick={navigateToMakeRoom}>
         방 만들기

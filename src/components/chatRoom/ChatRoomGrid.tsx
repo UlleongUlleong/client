@@ -69,13 +69,27 @@ function ChatRoomGrid() {
         )}
         <Dropdown onSelect={handleSort} sortOptions={sortChatRoomOptions} />
       </GridTopBar>
-      <StyleChatRoomsGrid>
-        {chatRoomData.map((room: IChatRoom) => {
-          return <ChatRoom key={room.id} room={room} />;
-        })}
-        {isError && <div>{error}</div>}
-        {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
-      </StyleChatRoomsGrid>
+
+      {chatRoomData.length === 0 ? (
+        <div
+          style={{
+            textAlign: 'center',
+            fontFamily: 'Noto Sans KR',
+            color: 'gray',
+          }}
+        >
+          채팅방이 없습니다.
+        </div>
+      ) : (
+        <StyleChatRoomsGrid>
+          {chatRoomData.map((room: IChatRoom) => (
+            <ChatRoom key={room.id} room={room} />
+          ))}
+        </StyleChatRoomsGrid>
+      )}
+
+      {isError && <div>{error}</div>}
+      {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
     </>
   );
 }

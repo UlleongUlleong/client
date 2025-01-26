@@ -69,9 +69,15 @@ function ChatSearchList() {
       </GridTopBar>
       <StyleChatRoomsGrid>
         {chatRoomData.length === 0 ? (
-          <LoadingMain style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              fontFamily: 'Noto Sans KR',
+              color: 'gray',
+            }}
+          >
             검색 결과가 없습니다.
-          </LoadingMain>
+          </div>
         ) : (
           chatRoomData.map((room: IChatRoom) => (
             <ChatRoom key={room.id} room={room} />

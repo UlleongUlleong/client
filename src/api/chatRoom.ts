@@ -47,11 +47,10 @@ export const fetchChatRoomsCursor = async ({
   limit,
   searchText,
 }: FetchCursorParams): Promise<FetchCursorResponse> => {
-  const sortId = chatRoomSort.indexOf(sort);
   try {
     const response = await api.get('/chat/rooms/cursor', {
       params: {
-        sort: sortId,
+        sort,
         moodCategory,
         alcoholCategory,
         cursor,
@@ -59,10 +58,15 @@ export const fetchChatRoomsCursor = async ({
         keyword: searchText,
       },
     });
+    if (response.status !== 200) {
+      throw new Error('채팅방을 불러오는데 실패했습니다.');
+    }
     return response.data;
   } catch (error) {
     console.error(error);
-    throw new Error('채팅방을 불러오는데 실패했습니다.');
+    throw new Error(
+      '채팅방을 불러올 때 에러가 발생했습니다. 다시 시도해주세요.',
+    );
   }
 };
 
@@ -77,9 +81,14 @@ export const fetchChatRoomsOffset = async ({
         pageSize,
       },
     });
-    console.log(response.data);
+    if (response.status !== 200) {
+      throw new Error('채팅방을 불러오는데 실패했습니다.');
+    }
     return response.data;
   } catch (error) {
     console.error(error);
+    throw new Error(
+      '채팅방을 불러올 때 에러가 발생했습니다. 다시 시도해주세요.',
+    );
   }
 };

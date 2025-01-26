@@ -24,7 +24,7 @@ function Alcohol({ alcol: alcohol }: { alcol: IAlcohol }) {
       <AlcoholImage>
         {
           <img
-            src={imageUrl ? imageUrl : '../assets/images/default-image.png'}
+            src={imageUrl ? imageUrl : '/assets/image/default-image.png'}
             alt={name}
           />
         }

@@ -32,13 +32,12 @@ export const fetchAlcohols = async ({
   cursor,
   limit,
 }: FetchAlcoholsParams): Promise<FetchAlcoholsResponse> => {
-  const sortId = sortData.indexOf(sort);
   try {
-    const response = await api.get('/alcohol/search', {
+    const response = await api.get('/alcohol', {
       params: {
         category: categoryId,
         keyword,
-        sort: sortId,
+        sort,
         cursor,
         limit,
       },
@@ -53,7 +52,7 @@ export const fetchAlcoholsTop10 = async (
   limit: number,
 ): Promise<FetchEachAlcoholsResponse> => {
   try {
-    const response = await api.get('/alcohol/search', {
+    const response = await api.get('/alcohol', {
       params: { limit, sort: 'star', category: 0 },
     });
 
@@ -74,7 +73,7 @@ export const fetchEachAlcoholsByCategory = async (
   limit: number,
 ): Promise<FetchEachAlcoholsResponse> => {
   try {
-    const response = await api.get('/alcohol/search', {
+    const response = await api.get('/alcohol', {
       params: { category, limit },
     });
 
