@@ -6,7 +6,6 @@ import SearchBar from '../../components/SearchBar';
 import Dropdown from '../../components/Dropdown';
 import { IChatRoom } from '../../models/chatRoom';
 import { GridTopBar } from './Home';
-import { sortChatRoomOptions } from '../../models/dropDownOption';
 import { useInView } from 'react-intersection-observer';
 import { useFetchRecentChatRooms } from '../../hooks/getChatroom';
 import { LoadingMain } from './Reviews';

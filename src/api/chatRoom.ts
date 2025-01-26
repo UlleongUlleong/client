@@ -48,16 +48,16 @@ export const fetchChatRoomsCursor = async ({
   searchText,
 }: FetchCursorParams): Promise<FetchCursorResponse> => {
   try {
-    const response = await api.get('/chat/rooms/cursor', {
-      params: {
-        sort,
-        moodCategory,
-        alcoholCategory,
-        cursor,
-        limit,
-        keyword: searchText,
-      },
-    });
+    const params: Partial<FetchCursorParams> = {
+      ...(sort && { sort }),
+      ...(moodCategory && { moodCategory }),
+      ...(alcoholCategory && { alcoholCategory }),
+      ...(cursor && { cursor }),
+      ...(limit && { limit }),
+      ...(searchText && { keyword: searchText }),
+    };
+
+    const response = await api.get('/chat/rooms/cursor', { params });
     if (response.status !== 200) {
       throw new Error('채팅방을 불러오는데 실패했습니다.');
     }

@@ -33,22 +33,16 @@ export const fetchAlcohols = async ({
   limit,
 }: FetchAlcoholsParams): Promise<FetchAlcoholsResponse> => {
   try {
-    const params: FetchAlcoholsParams = {};
-
-    if (categoryId !== undefined) params.categoryId = categoryId;
-    if (keyword !== undefined) params.keyword = keyword;
-    if (sort !== undefined) params.sort = sort;
-    if (cursor !== undefined) params.cursor = cursor;
-    if (limit !== undefined) params.limit = limit;
+    const params: Partial<FetchAlcoholsParams> = {
+      ...(categoryId !== undefined && { categoryId }),
+      ...(keyword !== undefined && { keyword }),
+      ...(sort !== undefined && { sort }),
+      ...(cursor !== undefined && { cursor }),
+      ...(limit !== undefined && { limit }),
+    };
 
     const response = await api.get('/alcohol', {
-      params: {
-        category: categoryId,
-        keyword,
-        sort,
-        cursor,
-        limit,
-      },
+      params,
     });
     if (response.status !== 200) {
       throw new Error('fetchAlcohols response가 정상적이지 않습니다.');
@@ -95,6 +89,6 @@ export const fetchEachAlcoholsByCategory = async (
     };
   } catch (error) {
     console.error(error);
-    throw new Error('술 카테고리 api 오류'); // // React Query will handle the error
+    throw new Error('술 카테고리 api 오류');
   }
 };

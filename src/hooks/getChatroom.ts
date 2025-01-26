@@ -22,6 +22,7 @@ export const useChatRoomsWithCursor = (
 
   return useInfiniteQuery({
     queryKey: ['chatrooms', sort, moodCategory, alcoholCategory, searchText],
+
     queryFn: ({ pageParam }) =>
       fetchChatRoomsCursor({
         sort,
