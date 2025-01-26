@@ -1,23 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { GoTriangleLeft, GoTriangleRight } from 'react-icons/go';
 
 const SelectTheme = () => {
+  const [img, setImg] = useState<number>(1);
+
+  const handleClickButton = (direction: 'left' | 'right') => {
+    if (direction === 'left') {
+      setImg((prev) => prev - 1);
+    } else {
+      setImg((prev) => prev + 1);
+    }
+  };
+
   return (
     <SelectThemeStyle>
       <div className="container">
         <div className="title">테마 선택</div>
         <div className="theme">
           <div className="btn">
-            <button onClick={() => {}}>
+            <button onClick={() => handleClickButton('left')}>
               <GoTriangleLeft />
             </button>
           </div>
           <div>
-            <img src="src/assets/images/theme-sample1.png" />
+            <img src={`src/assets/images/theme-sample${img}.png`} />
           </div>
           <div className="btn">
-            <button onClick={() => {}}>
+            <button onClick={() => handleClickButton('right')}>
               <GoTriangleRight />
             </button>
           </div>
