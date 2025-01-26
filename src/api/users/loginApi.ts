@@ -1,5 +1,3 @@
-import React from 'react';
-import { toast } from 'react-toastify';
 import { apiClient } from '../apiClient';
 
 interface LoginContentProps {
@@ -45,21 +43,17 @@ export const oauthLogin = async (oauthLoginContent: OauthLoginContentProps) => {
   window.location.href = `https://ulleong-idbiv.run.goorm.site/api/auth/${provider}`;
 };
 
-export const findPassword = async () => {
+interface findPasswordProps {
+  email: string;
+}
+
+export const findPassword = async (email: findPasswordProps) => {
   try {
-    const response = await apiClient.get(`/api/auth/${encodeURIComponent('')}`);
+    const response = await apiClient.post('/api/auth/email-password', email);
+    console.log(response);
     return response.data;
   } catch (error: any) {
     console.log('error in login', error.response?.data || error.message);
     throw error;
-  }
-};
-
-export const testApi = async () => {
-  try {
-    const res = await apiClient.get('/api/auth/test');
-    console.log(res.data);
-  } catch (err) {
-    console.log(err);
   }
 };

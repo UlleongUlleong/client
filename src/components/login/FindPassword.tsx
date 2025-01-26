@@ -2,22 +2,25 @@ import React, { useState } from 'react';
 import { GoAlert, GoCheckCircle } from 'react-icons/go';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { findPassword } from '../../api/users/loginApi';
+import { isValidEmail } from '../../utils/regitsterUtils';
 
 const FindPassword = () => {
   const [email, setEmail] = useState<string>('');
 
-  const handleSendTempPassword = () => {
-    if (!email) {
-      toast.info('이메일을 입력해주세요.', { icon: <GoAlert /> });
+  const handleSendTempPassword = async () => {
+    if (!isValidEmail(email)) {
+      toast.error('이메일 형식이 아닙니다.', { icon: <GoAlert /> });
       return;
     }
 
     try {
+      const response = await findPassword({ email });
       window.opener.postMessage(
         { type: 'FindPassword', email },
         window.location.origin,
       );
-      toast.success('입력하신 이메일로 임시 비밀번호가 전송되었습니다.', {
+      toast.success(response.message, {
         icon: <GoCheckCircle />,
       });
       setTimeout(() => {
@@ -48,6 +51,7 @@ const FindPassword = () => {
             className="send-email-btn"
             type="button"
             onClick={handleSendTempPassword}
+            disabled={!email}
           >
             메일 보내기
           </button>
@@ -101,6 +105,11 @@ const FindPasswordStyle = styled.div`
       font-weight: bold;
       padding: 8px;
       cursor: pointer;
+
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
     }
   }
 

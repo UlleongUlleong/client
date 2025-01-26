@@ -14,7 +14,6 @@ import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
 import FindPassword from '../components/login/FindPassword';
 import EmailDuplicateTest from '../components/register/email-verify/EmailDuplicateTest';
-import OauthCallback from './pages/OauthCallback';
 
 const Index = () => {
   const routeLists = [
