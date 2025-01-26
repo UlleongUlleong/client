@@ -10,7 +10,6 @@ import {
   Category,
   CategoryTitle,
 } from '../../styles/ChatRoomGrid.ts';
-import { dummyChatRooms } from '../../components/chatRoom/ChatRoom.tsx';
 import ChatRoomGrid from '../../components/chatRoom/ChatRoomGrid.tsx';
 import {
   MainContainer,
@@ -22,6 +21,7 @@ import SearchBar from '../../components/SearchBar.tsx';
 import styled from 'styled-components';
 import { useFetchRecentChatRooms } from '../../hooks/getChatroom.ts';
 import { NoResults } from '../../styles/Alcohol.ts';
+import { LoadingMain } from './Reviews.tsx';
 
 export const GridTopBar = styled.div`
   height: 50px;
@@ -30,8 +30,6 @@ export const GridTopBar = styled.div`
 
 function Home() {
   const navigate = useNavigate();
-  const [recentChat, setRecentChat] = useState();
-
   const { data, status, error } = useFetchRecentChatRooms(10);
   const mergedData = data?.pages?.flatMap((page) => page.data) || [];
 
@@ -97,10 +95,11 @@ function Home() {
           </Link>
         </Category>
       </GridTopBar>
-
       <>
         {status === 'pending' ? (
-          <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
+          <LoadingMain>
+            <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
+          </LoadingMain>
         ) : mergedData.length === 0 ? (
           // mergedData가 비어 있는 경우
           <NoResults>채팅방이 없습니다</NoResults>

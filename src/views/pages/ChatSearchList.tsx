@@ -16,7 +16,11 @@ import { IChatRoom } from '../../models/chatRoom.ts';
 import { NoResults } from '../../styles/Alcohol.ts';
 function ChatSearchList() {
   const location = useLocation();
-  const [sort, setSort] = useState('participantCount');
+  const [sortChatRooms, setSortChatRooms] = useState(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    return savedOption || 'participantCount';
+  });
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
   const { ref, inView } = useInView();
   const { selectedCategories, searchText } = location.state as {
@@ -32,7 +36,16 @@ function ChatSearchList() {
     isFetchingNextPage,
     error,
     isError,
-  } = useChatRoomsWithCursor(selectedCategories, 6, sort, searchText);
+  } = useChatRoomsWithCursor(selectedCategories, 6, sortChatRooms, searchText);
+
+  //초기 렌더링 시, 저장한 정렬 옵션 가져오기
+  useEffect(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    if (savedOption) {
+      setSortChatRooms(savedOption);
+    }
+  }, []);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -48,8 +61,10 @@ function ChatSearchList() {
   }, [data]);
 
   const handleSort = (value: string) => {
-    setSort(value);
+    setSortChatRooms(value);
     setChatRoomData([]);
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    localStorage.setItem(pageKey, value);
   };
   if (status === 'pending') {
     return (

@@ -1,22 +1,8 @@
-import {
-  useInfiniteQuery,
-  useQueries,
-  useQuery,
-  UseQueryResult,
-} from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
-import {
-  fetchChatRoomsCursor,
-  fetchChatRoomsOffset,
-  FetchCursorParams,
-  FetchCursorResponse,
-} from '../api/chatRoom';
+import { fetchChatRoomsCursor, fetchChatRoomsOffset } from '../api/chatRoom';
 
-import {
-  moodTypeCategories,
-  alcoholTypeCategories,
-  ICategory,
-} from '../models/categories';
+import { ICategory } from '../models/categories';
 
 export const useChatRoomsWithCursor = (
   userCategory: ICategory[],
@@ -36,25 +22,25 @@ export const useChatRoomsWithCursor = (
 
   return useInfiniteQuery({
     queryKey: ['chatrooms', sort, moodCategory, alcoholCategory, searchText],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: ({ pageParam }) =>
       fetchChatRoomsCursor({
         sort,
         ...(moodCategory && { moodCategory }),
         ...(alcoholCategory && { alcoholCategory }),
-        cursor: pageParam,
+        cursor: pageParam || undefined,
         limit,
         searchText,
       }),
     getNextPageParam: (lastPage, pages) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
-    initialPageParam: 0,
+    initialPageParam: undefined,
   });
 };
 
 export const useChatRoomWithOffset = (page: number, pageSize: number) => {
   return useInfiniteQuery({
     queryKey: ['chatrooms', page, pageSize],
-    queryFn: ({ pageParam = 1 }) =>
+    queryFn: ({ pageParam }) =>
       fetchChatRoomsOffset({ page: pageParam, pageSize }),
     getNextPageParam: (lastPage) =>
       Number(lastPage.pagination.page) < Number(lastPage.pagination.totalPages)
@@ -65,21 +51,21 @@ export const useChatRoomWithOffset = (page: number, pageSize: number) => {
         ? Number(firstPage.pagination.page) - 1
         : undefined;
     },
-    initialPageParam: page,
+    initialPageParam: 1,
   });
 };
 
 export const useFetchRecentChatRooms = (limit: number) => {
   return useInfiniteQuery({
     queryKey: ['chatrooms', 'createdAt'],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: ({ pageParam }) =>
       fetchChatRoomsCursor({
         sort: 'createdAt',
-        cursor: pageParam,
+        cursor: pageParam || undefined,
         limit,
       }),
     getNextPageParam: (lastPage) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
-    initialPageParam: 0,
+    initialPageParam: undefined,
   });
 };

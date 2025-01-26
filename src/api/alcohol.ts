@@ -50,9 +50,13 @@ export const fetchAlcohols = async ({
         limit,
       },
     });
+    if (response.status !== 200) {
+      throw new Error('fetchAlcohols response가 정상적이지 않습니다.');
+    }
     return response.data;
   } catch (error) {
     console.error(error);
+    throw new Error(' fetchAlcohols 오류');
   }
 };
 
@@ -72,7 +76,6 @@ export const fetchAlcoholsTop10 = async (
   } catch (error) {
     console.error(error);
     throw new Error('alcohol Top10오류');
-    // React Query will handle the error
   }
 };
 

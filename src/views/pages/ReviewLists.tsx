@@ -16,7 +16,11 @@ import Spinner from '../../assets/Spinner.gif';
 import { LoadingMain } from './Reviews';
 
 function ReviewLists() {
-  const [sort, setSort] = useState('name');
+  const [sort, setSort] = useState(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    return savedOption || 'name';
+  });
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   const { id } = useParams();
   //검색 시 location state로 넘어와서 관리
@@ -47,10 +51,19 @@ function ReviewLists() {
     }
   }, [data]);
 
+  useEffect(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    if (savedOption) {
+      setSort(savedOption);
+    }
+  }, []); //초기 렌더링
   const handleSort = (value: string) => {
     if (value !== sort) {
       setSort(value);
       setAlcoholsData([]);
+      const pageKey = `selectedOption_${window.location.pathname}`;
+      localStorage.setItem(pageKey, value);
     }
   };
   if (status === 'pending') {

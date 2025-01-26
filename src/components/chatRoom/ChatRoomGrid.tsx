@@ -14,14 +14,20 @@ import { sortChatRoomOptions } from '../../models/dropDownOption';
 import { NoResults } from '../../styles/Alcohol.ts';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
-  const [sortChatRooms, setSortChatRooms] = useState('participantCount');
+  const [sortChatRooms, setSortChatRooms] = useState(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    return savedOption || 'participantCount';
+  });
 
+  //유저가 선택한 카테고리 머지 후 수정
   const user_category: ICategory[] = [
     { id: 1, name: '혼술', type: 'mood' },
     { id: 2, name: '반주', type: 'mood' },
     { id: 4, name: '칵테일', type: 'alcohol' },
     { id: 5, name: '전통주', type: 'alcohol' },
   ];
+
   const { ref, inView } = useInView();
   const {
     data,
@@ -48,6 +54,8 @@ function ChatRoomGrid() {
   const handleSort = (value: string) => {
     setSortChatRooms(value);
     setChatRoomData([]);
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    localStorage.setItem(pageKey, value);
   };
   if (status === 'pending') {
     return (
@@ -78,11 +86,11 @@ function ChatRoomGrid() {
           {chatRoomData.map((room: IChatRoom) => (
             <ChatRoom key={room.id} room={room} />
           ))}
+          {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
         </StyleChatRoomsGrid>
       )}
 
       {isError && <div>{error}</div>}
-      {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
     </>
   );
 }

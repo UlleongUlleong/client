@@ -16,10 +16,6 @@ export const CardBottom = styled.div`
 export const AlcoholImage = styled.div`
   margin: 0 auto;
   height: 250px;
-  @media (max-width: 468px) {
-    height: 225px;
-    width: 150px;
-  }
 
   img {
     width: 100%;
@@ -34,10 +30,6 @@ export const ChatTitleBox = styled.div`
   margin: 0 auto;
   height: 20px;
   text-align: left;
-
-  @media (max-width: 468px) {
-    width: 210px;
-  }
 `;
 
 export const Title = styled.span`
@@ -55,10 +47,6 @@ export const Title = styled.span`
 export const ChatDescription = styled.div`
   margin: 0 auto;
   width: 100%;
-
-  @media (max-width: 468px) {
-    width: 210px;
-  }
 `;
 
 export const Star = styled.span`

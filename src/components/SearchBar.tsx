@@ -36,7 +36,8 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
-
+  //로그인 여부 머지 후 수정
+  const userIsLoggedIn = false;
   const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {
       //단일 선택
@@ -68,7 +69,6 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
       const categoryId = selectedCategories[0]?.id || 0;
       navigate('/alcohol-lists/results', {
         state: {
-          sort: 'name',
           categoryId: categoryId,
           searchText,
         },
@@ -82,6 +82,9 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
 
   const navigateToLogin = () => {
     navigate('/login');
+  };
+  const navigateToLogout = () => {
+    navigate('/logout');
   };
 
   return (
@@ -167,7 +170,11 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
         </Dropdown>
       </Container>
 
-      <LoginButton onClick={navigateToLogin}>로그인</LoginButton>
+      {userIsLoggedIn ? (
+        <LoginButton onClick={navigateToLogout}>로그아웃</LoginButton>
+      ) : (
+        <LoginButton onClick={navigateToLogin}>로그인</LoginButton>
+      )}
     </TopBar>
   );
 };

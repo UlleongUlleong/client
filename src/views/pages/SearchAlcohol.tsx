@@ -19,14 +19,17 @@ import { LoadingMain } from './Reviews';
 import { NoResults } from '../../styles/Alcohol';
 
 function SearchAlcohol() {
-  const [sort, setSort] = useState('name');
+  const [sort, setSort] = useState(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    return savedOption || 'name';
+  });
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   //검색 시 location state로 넘어와서 관리
   const location = useLocation();
   const searchState = location.state as {
     categoryId?: number;
     searchText?: string;
-    sort?: string;
   } | null;
 
   const searchText = searchState?.searchText;
@@ -49,7 +52,13 @@ function SearchAlcohol() {
   } else {
     categoryName = categoryForIndex[categoryId];
   }
-
+  useEffect(() => {
+    const pageKey = `selectedOption_${window.location.pathname}`;
+    const savedOption = localStorage.getItem(pageKey);
+    if (savedOption) {
+      setSort(savedOption);
+    }
+  }, []);
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -67,6 +76,8 @@ function SearchAlcohol() {
     if (value !== sort) {
       setSort(value);
       setAlcoholsData([]);
+      const pageKey = `selectedOption_${window.location.pathname}`;
+      localStorage.setItem(pageKey, value);
     }
   };
   if (status === 'pending') {

@@ -23,40 +23,6 @@ export interface AlcoholCategory {
   name: string;
 }
 
-export const dummyChatRooms: IChatRoom[] = [
-  {
-    id: 1,
-    name: '혼술',
-    description: '혼 술 같이 하실 분... 3명은 소주 마십니다.',
-    theme: 'theme01.jpg',
-    maxParticipants: 4,
-    participants: 3,
-  },
-  {
-    id: 2,
-    name: '혼술',
-    description: '혼 술 같이 하실 분... 3명은 소주 마십니다.',
-    theme: 'theme02.jpg',
-    maxParticipants: 5,
-    participants: 5,
-  },
-  {
-    id: 3,
-    name: '혼술',
-    description: '혼 술 같이 하실 분... 3명은 소주 마십니다.',
-    theme: 'theme02.jpg',
-    maxParticipants: 5,
-    participants: 3,
-  },
-  {
-    id: 4,
-    name: '혼술',
-    description: '혼 술 같이 하실 분... 3명은 소주 마십니다.',
-    theme: 'theme02.jpg',
-    maxParticipants: 5,
-    participants: 3,
-  },
-];
 function ChatRoom({ room }: { room: IChatRoom }) {
   const partyNumber = room.participants;
   const isFull = partyNumber === room.maxParticipants;

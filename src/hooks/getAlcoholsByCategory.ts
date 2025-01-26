@@ -47,8 +47,8 @@ export const useAlcoholsQuery = (
   keyword?: string,
 ) => {
   return useInfiniteQuery({
-    queryKey: [categoryId, sort, keyword],
-    queryFn: ({ pageParam = 0 }) =>
+    queryKey: ['alcohols', categoryId, sort, keyword],
+    queryFn: ({ pageParam }) =>
       fetchAlcohols({
         categoryId,
         sort,

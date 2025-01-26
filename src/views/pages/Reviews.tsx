@@ -6,6 +6,7 @@ import { useAlcoholsByCategory } from '../../hooks/getAlcoholsByCategory';
 import { categoryForFetch } from '../../models/categories';
 import Spinner from '../../assets/Spinner.gif';
 import styled from 'styled-components';
+import { NoResults } from '../../styles/Alcohol';
 
 export const LoadingMain = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ function Reviews() {
         <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
       </LoadingMain>
     );
-  if (isError) return <div>에러 발생</div>;
+  if (isError) return <NoResults>에러 발생</NoResults>;
   return (
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
