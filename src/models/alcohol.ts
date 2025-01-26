@@ -1,22 +1,37 @@
 import { Category } from '../api/categoryApi';
 
-export interface ReviewListType {
-  imageUrl?: string;
-  nickName: string;
-  comment: string;
+export interface ReviewType {
+  id: number;
   score: number;
+  comment: string;
+  alcoholId: number;
+  alcohol: {
+    imageUrl: string;
+    name: string;
+  };
+}
+
+export interface AlcoholReviewType {
+  id: number;
+  score: number;
+  comment: string;
+  user: {
+    nickname: string;
+    imageUrl: string;
+  };
 }
 
 export interface AlcoholDetailType {
-  id: number;
+  id?: number;
   name: string;
   alcoholCategory: Category[];
   scoreAverage: number;
   reviewCount: number;
   imageUrl?: string;
-}
-
-export interface AlcoholDetailType {
-  alcoholInfo: AlcoholDetailType;
-  reviews: ReviewListType[];
+  price: number;
+  origin: string;
+  interestCount: number;
+  abv: number;
+  volume: number;
+  description: string;
 }

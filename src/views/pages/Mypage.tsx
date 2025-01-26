@@ -7,14 +7,24 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Card from '../../components/mypage/Card';
 import CategoryModal from '../../components/mypage/CategoryModal';
-import { ProfileType } from '../../models/profile';
-import { getProfile } from '../../api/profileApi';
+import {
+  LikeAlcoholType,
+  ProfileType,
+  ReviewAlcoholType,
+} from '../../models/profile';
+import {
+  getInterestAlcohol,
+  getProfile,
+  getReviewAlcohol,
+} from '../../api/profileApi';
 
 function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [likeAlcohol, setLikeAlcohol] = useState<LikeAlcoholType[]>([]);
+  const [reviewAlcohol, setReviewAlcohol] = useState<ReviewAlcoholType[]>([]);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
@@ -45,79 +55,30 @@ function Mypage() {
         console.log('fetchProfile : ', error);
       }
     };
+    const fetchInterestAlcohol = async () => {
+      try {
+        const data = await getInterestAlcohol();
+        setLikeAlcohol(data.data);
+      } catch (error) {
+        console.log('fetchInterestAlcohol:', error);
+      }
+    };
+    const fetchReviewAlcohol = async () => {
+      try {
+        const data = await getReviewAlcohol();
+        setReviewAlcohol(data.data);
+      } catch (error) {
+        console.log('fetchReviewAlcohol:', error);
+      }
+    };
     fetchProfile();
-    console.log(profile);
+    fetchInterestAlcohol();
+    fetchReviewAlcohol();
   }, []);
-
-  const likedCards = [
-    {
-      id: 1,
-      imageSrc: 'https://picsum.photos/200',
-      title: '마루나 동백 양주',
-      description: 4.5,
-    },
-    {
-      id: 2,
-      imageSrc: 'https://picsum.photos/200',
-      title: '서울 100리 18',
-      description: 3.6,
-    },
-    {
-      id: 3,
-      imageSrc: 'https://picsum.photos/200',
-      title: '극락',
-      description: 4.0,
-    },
-    {
-      id: 4,
-      imageSrc: 'https://picsum.photos/200',
-      title: '디아블로 카베르네 소비뇽',
-      description: 2.8,
-    },
-    {
-      id: 5,
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 3.9,
-    },
-  ];
-
-  const reviewedCards = [
-    {
-      id: 1,
-      imageSrc: 'https://picsum.photos/200',
-      title: '마루나 동백 양주',
-      description: 4.5,
-    },
-    {
-      id: 2,
-      imageSrc: 'https://picsum.photos/200',
-      title: '서울 100리 18',
-      description: 3.6,
-    },
-    {
-      id: 3,
-      imageSrc: 'https://picsum.photos/200',
-      title: '극락',
-      description: 4.0,
-    },
-    {
-      id: 4,
-      imageSrc: 'https://picsum.photos/200',
-      title: '디아블로 카베르네 소비뇽',
-      description: 2.8,
-    },
-    {
-      id: 5,
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 3.9,
-    },
-  ];
 
   const sliderSettings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
@@ -127,21 +88,18 @@ function Mypage() {
         breakpoint: 1280,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 1,
         },
       },
       {
         breakpoint: 880,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 1,
         },
       },
       {
         breakpoint: 600,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1,
         },
       },
     ],
@@ -219,19 +177,19 @@ function Mypage() {
         <div className="liked">
           <div className="title">
             <h1>좋아하는 술</h1>
-            <Link className="link" to="/profile/like">
+            <Link className="link" to="/profile/like" state={{ likeAlcohol }}>
               전체 보기
             </Link>
           </div>
           <div className="container">
             <Slider {...sliderSettings}>
-              {likedCards.map((card) => (
+              {likeAlcohol.map((card) => (
                 <Card
                   key={card.id}
                   id={card.id}
-                  imageSrc={card.imageSrc}
-                  title={card.title}
-                  description={card.description}
+                  imageUrl={card.imageUrl}
+                  name={card.name}
+                  scoreAverage={card.scoreAverage}
                 />
               ))}
             </Slider>
@@ -240,25 +198,35 @@ function Mypage() {
         <div className="review">
           <div className="title">
             <h1>리뷰한 술</h1>
-            <Link className="link" to="/profile/review">
+            <Link
+              className="link"
+              to="/profile/review"
+              state={{ reviewAlcohol }}
+            >
               전체 보기
             </Link>
           </div>
           <div className="container">
             <Slider {...sliderSettings}>
-              {reviewedCards.map((card) => (
+              {reviewAlcohol.map((card) => (
                 <Card
                   key={card.id}
                   id={card.id}
-                  imageSrc={card.imageSrc}
-                  title={card.title}
-                  description={card.description}
+                  imageUrl={card.alcohol.imageUrl}
+                  name={card.alcohol.name}
+                  scoreAverage={card.score}
                 />
               ))}
             </Slider>
           </div>
         </div>
-        {isModalOpen && <CategoryModal closeModal={toggleModal} />}
+        {isModalOpen && profile && (
+          <CategoryModal
+            closeModal={toggleModal}
+            onUpdateComplete={() => window.location.reload()}
+            profile={profile}
+          />
+        )}
       </MypageStyle>
       ;
     </>

@@ -1,24 +1,30 @@
 import { styled } from 'styled-components';
 import React from 'react';
+import { ReviewAlcoholType } from '../../models/profile';
+import { useNavigate } from 'react-router-dom';
 
-interface ICardProps {
-  imageSrc: string;
-  title: string;
-  description: number;
-  review: string;
-}
-
-function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
-  const fullStars = Math.floor(description);
+function ProfileReviewCard({
+  id,
+  score,
+  comment,
+  alcoholId,
+  alcohol,
+}: ReviewAlcoholType) {
+  const { imageUrl, name } = alcohol;
+  const fullStars = Math.floor(score);
   const emptyStars = 5 - fullStars;
+  const navigate = useNavigate();
 
+  const handleCardClick = () => {
+    navigate(`/alcohol/${alcoholId.toString()}`);
+  };
   return (
-    <ProfileCardStyle>
+    <ProfileReviewCardStyle onClick={handleCardClick}>
       <div className="cardImage">
-        <img src={imageSrc} alt={title} />
+        <img src={imageUrl} alt={name} />
       </div>
       <div className="cardContent">
-        <div className="cardTitle">{title}</div>
+        <div className="cardTitle">{name}</div>
         <div className="cardStars">
           <div className="stars">
             {Array(fullStars)
@@ -36,15 +42,15 @@ function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
                 </div>
               ))}
           </div>
-          <div className="rating">{description.toFixed(1)}</div>
+          <div className="rating">{score.toFixed(1)}</div>
         </div>
-        <div className="review">{review}</div>
+        <div className="review">{comment}</div>
       </div>
-    </ProfileCardStyle>
+    </ProfileReviewCardStyle>
   );
 }
 
-const ProfileCardStyle = styled.div`
+const ProfileReviewCardStyle = styled.div`
   display: flex;
   width: 100%;
   max-width: 600px;
@@ -171,4 +177,4 @@ const ProfileCardStyle = styled.div`
   }
 `;
 
-export default ProfileCard;
+export default ProfileReviewCard;

@@ -7,14 +7,17 @@ import {
   moodsCategory,
 } from '../../api/categoryApi';
 import { modifyProfile, validNickname } from '../../api/profileApi';
+import { ProfileType } from '../../models/profile';
 
 interface ModalProps {
   closeModal: () => void;
+  onUpdateComplete: () => void;
+  profile: ProfileType;
 }
 
-function CategoryModal({ closeModal }: ModalProps) {
+function CategoryModal({ closeModal, onUpdateComplete, profile }: ModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [nickname, setNickname] = useState('홍길동');
+  const [nickname, setNickname] = useState(profile.nickname);
   const [selectedMood, setSelectedMood] = useState<Set<number>>(new Set());
   const [selectedAlcohol, setSelectedAlcohol] = useState<Set<number>>(
     new Set(),
@@ -94,17 +97,36 @@ function CategoryModal({ closeModal }: ModalProps) {
     });
   };
 
-  const handleSave = () => {
-    const moodValues = Array.from(selectedMood);
-    const alcoholValues = Array.from(selectedAlcohol);
-    const data = {
-      nickname,
-      moodCategory: moodValues,
-      alcoholCategory: alcoholValues,
-    };
-    modifyProfile(data);
-    closeModal();
+  const handleSave = async () => {
+    try {
+      const moodValues = Array.from(selectedMood);
+      const alcoholValues = Array.from(selectedAlcohol);
+      const data = {
+        nickname,
+        moodCategory: moodValues,
+        alcoholCategory: alcoholValues,
+      };
+
+      await modifyProfile(data);
+      onUpdateComplete();
+    } catch (error) {
+      console.error('회원 정보 수정 실패:', error);
+      alert('회원 정보를 저장하는 데 실패했습니다. 다시 시도해주세요.');
+    }
   };
+
+  useEffect(() => {
+    if (profile.moodCategory) {
+      setSelectedMood(
+        new Set(profile.moodCategory.map((category) => category.id)),
+      );
+    }
+    if (profile.alcoholCategory) {
+      setSelectedAlcohol(
+        new Set(profile.alcoholCategory.map((category) => category.id)),
+      );
+    }
+  }, [profile]);
 
   return (
     <CategoryModalStyle onClick={handleBackgroundClick}>

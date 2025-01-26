@@ -1,50 +1,61 @@
 import { styled } from 'styled-components';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaRegBookmark, FaRegStar } from 'react-icons/fa';
+import { AlcoholDetailType } from '../../models/alcohol';
+import { handleBookmark } from '../../api/alcoholApi';
 
-interface DetailCardProps {
-  id: number;
-  imageUrl: string;
-  name: string;
-  scoreAverage: number;
-  reviewCount: number;
-  interestCount: number;
+interface DetailCardProps extends AlcoholDetailType {
   toggleModal: () => void;
+  clickedBookmark: boolean;
+  setClickedBookmark: React.Dispatch<React.SetStateAction<boolean>>;
+  isMyReview: boolean;
 }
 
 function DetailCard({
-  imageUrl,
+  id,
   name,
   scoreAverage,
   reviewCount,
   interestCount,
+  clickedBookmark,
+  setClickedBookmark,
+  isMyReview,
   toggleModal,
 }: DetailCardProps) {
-  const [isStarClicked, setisStarClicked] = useState(false);
-  const [isBookmarkClicked, setisBookmarkClicked] = useState(false);
-
-  const handleStarClick = () => {
-    setisStarClicked(!isStarClicked);
-  };
   const handleBookmarkClick = () => {
-    setisBookmarkClicked(!isBookmarkClicked);
+    const fetchHandleBookmark = async () => {
+      if (!id) return;
+      try {
+        await handleBookmark(id.toString());
+        window.location.reload();
+      } catch (error) {
+        console.log('handleBookmarkClick :', error);
+      }
+    };
+    fetchHandleBookmark();
   };
 
   return (
     <DetailCardStyle>
       <div className="cardImage">
-        <img src={imageUrl} alt={name} />
+        <img src={'https://picsum.photos/200'} alt={name} />
       </div>
       <div className="cardTitle">{name}</div>
       <div
-        className={`rating ${isStarClicked ? 'active' : ''}`}
-        onClick={toggleModal}
+        className={`rating ${isMyReview ? '' : 'active'}`}
+        onClick={() => {
+          if (isMyReview) {
+            toggleModal();
+          } else {
+            alert('리뷰를 이미 작성하셨습니다.');
+          }
+        }}
       >
         <FaRegStar />
         {scoreAverage}점({reviewCount}명)
       </div>
       <div
-        className={`bookmark ${isBookmarkClicked ? 'active' : ''}`}
+        className={`bookmark ${clickedBookmark ? 'active' : ''}`}
         onClick={handleBookmarkClick}
       >
         <FaRegBookmark />
@@ -105,7 +116,7 @@ const DetailCardStyle = styled.div`
 
   .rating.active svg,
   .bookmark.active svg {
-    color: #ff9500; /* Star 색깔: 금색 */
+    color: #ff9500;
   }
 `;
 

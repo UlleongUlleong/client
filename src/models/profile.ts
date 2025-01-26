@@ -12,3 +12,18 @@ export interface ModifyProfile {
   moodCategory: number[];
   alcoholCategory: number[];
 }
+
+export interface LikeAlcoholType {
+  id: number;
+  name: string;
+  scoreAverage: number;
+  imageUrl: string;
+}
+
+export interface ReviewAlcoholType {
+  id: number;
+  score: number;
+  comment: string;
+  alcoholId: number;
+  alcohol: { name: string; imageUrl: string };
+}

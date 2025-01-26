@@ -54,3 +54,39 @@ export const modifyProfile = async (data: ModifyProfile) => {
     console.log('modifyProfile : ', error);
   }
 };
+
+export const getInterestAlcohol = async () => {
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
+  try {
+    const response = await apiClient.get(`api/users/interest`, {
+      params: {
+        limit: 1000,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log('getInterestAlcohol :', error);
+  }
+};
+
+export const getReviewAlcohol = async () => {
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
+  try {
+    const response = await apiClient.get(`api/users/reviews`, {
+      params: {
+        limit: 1000,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log('getReviewAlcohol :', error);
+  }
+};
