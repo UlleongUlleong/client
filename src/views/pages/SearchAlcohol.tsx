@@ -16,6 +16,7 @@ import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IAlcohol } from '../../models/alcohol';
 import { LoadingMain } from './Reviews';
+import { NoResults } from '../../styles/Alcohol';
 
 function SearchAlcohol() {
   const [sort, setSort] = useState('name');
@@ -82,15 +83,7 @@ function SearchAlcohol() {
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
       {alcoholsData.length === 0 ? (
-        <div
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Noto Sans KR',
-            color: 'gray',
-          }}
-        >
-          검색 결과가 없습니다.
-        </div>
+        <NoResults>검색 결과가 없습니다.</NoResults>
       ) : (
         <AlcoholGrid alcohols={alcoholsData} />
       )}

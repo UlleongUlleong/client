@@ -21,6 +21,7 @@ import {
 import SearchBar from '../../components/SearchBar.tsx';
 import styled from 'styled-components';
 import { useFetchRecentChatRooms } from '../../hooks/getChatroom.ts';
+import { NoResults } from '../../styles/Alcohol.ts';
 
 export const GridTopBar = styled.div`
   height: 50px;
@@ -102,15 +103,7 @@ function Home() {
           <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
         ) : mergedData.length === 0 ? (
           // mergedData가 비어 있는 경우
-          <div
-            style={{
-              color: 'gray',
-              fontFamily: 'Noto Sans KR',
-              textAlign: 'center',
-            }}
-          >
-            채팅방이 없습니다
-          </div>
+          <NoResults>채팅방이 없습니다</NoResults>
         ) : (
           <StyledSlider {...settings}>
             {mergedData.map((room) => (

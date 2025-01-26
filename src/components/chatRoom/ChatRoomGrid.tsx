@@ -11,6 +11,7 @@ import Dropdown from '../../components/Dropdown.tsx';
 import { GridTopBar } from '../../views/pages/Home';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
+import { NoResults } from '../../styles/Alcohol.ts';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
   const [sortChatRooms, setSortChatRooms] = useState('participantCount');
@@ -71,15 +72,7 @@ function ChatRoomGrid() {
       </GridTopBar>
 
       {chatRoomData.length === 0 ? (
-        <div
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Noto Sans KR',
-            color: 'gray',
-          }}
-        >
-          채팅방이 없습니다.
-        </div>
+        <NoResults>채팅방이 없습니다.</NoResults>
       ) : (
         <StyleChatRoomsGrid>
           {chatRoomData.map((room: IChatRoom) => (

@@ -39,8 +39,8 @@ export const useChatRoomsWithCursor = (
     queryFn: ({ pageParam = 0 }) =>
       fetchChatRoomsCursor({
         sort,
-        moodCategory,
-        alcoholCategory,
+        ...(moodCategory && { moodCategory }),
+        ...(alcoholCategory && { alcoholCategory }),
         cursor: pageParam,
         limit,
         searchText,

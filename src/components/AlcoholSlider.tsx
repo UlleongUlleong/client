@@ -6,6 +6,7 @@ import Slider from 'react-slick';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { NoResults } from '../styles/Alcohol';
 const NewSlider = styled(Slider)`
   font-family: 'Noto Sans KR', sans-serif;
   position: relative;
@@ -134,15 +135,7 @@ function AlcoholSlider({ alcohols }: { alcohols: IAlcohol[] }) {
   return (
     <>
       {alcohols.length === 0 ? (
-        <div
-          style={{
-            textAlign: 'center',
-            fontFamily: 'Noto Sans KR',
-            color: 'gray',
-          }}
-        >
-          등록된 술이 없습니다.
-        </div>
+        <NoResults>등록된 술이 없습니다.</NoResults>
       ) : (
         <NewSlider {...settings}>
           {alcohols.map((data, index) => (

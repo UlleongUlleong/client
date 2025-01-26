@@ -13,6 +13,7 @@ import { sortChatRoomOptions } from '../../models/dropDownOption';
 import Spinner from '../../assets/Spinner.gif';
 import { LoadingMain } from './Reviews.tsx';
 import { IChatRoom } from '../../models/chatRoom.ts';
+import { NoResults } from '../../styles/Alcohol.ts';
 function ChatSearchList() {
   const location = useLocation();
   const [sort, setSort] = useState('participantCount');
@@ -67,25 +68,22 @@ function ChatSearchList() {
         <CategoryTitle>검색 결과</CategoryTitle>
         <Dropdown onSelect={handleSort} sortOptions={sortChatRoomOptions} />
       </GridTopBar>
-      <StyleChatRoomsGrid>
-        {chatRoomData.length === 0 ? (
-          <div
-            style={{
-              textAlign: 'center',
-              fontFamily: 'Noto Sans KR',
-              color: 'gray',
-            }}
-          >
-            검색 결과가 없습니다.
-          </div>
-        ) : (
-          chatRoomData.map((room: IChatRoom) => (
+
+      {chatRoomData?.length === 0 ? (
+        <NoResults>검색 결과가 없습니다.</NoResults>
+      ) : (
+        <StyleChatRoomsGrid>
+          {chatRoomData.map((room: IChatRoom) => (
             <ChatRoom key={room.id} room={room} />
-          ))
-        )}
-        {isError && <LoadingMain>{error}</LoadingMain>}
-        {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
-      </StyleChatRoomsGrid>
+          ))}
+        </StyleChatRoomsGrid>
+      )}
+      {isError && (
+        <LoadingMain>
+          {error || 'An error occurred. Please try again.'}
+        </LoadingMain>
+      )}
+      {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
     </MainContainer>
   );
 }

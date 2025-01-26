@@ -99,3 +99,8 @@ export const ReviewPoint = styled.span`
     font-size: 11px;
   }
 `;
+export const NoResults = styled.div`
+  text-align: center;
+  font-family: 'Noto Sans KR';
+  color: gray;
+`;
