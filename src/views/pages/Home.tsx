@@ -28,6 +28,16 @@ export const GridTopBar = styled.div`
   justify-content: space-between;
 `;
 
+const HomeDivider = styled.div`
+  width: calc(100% - 80px);
+  margin: 0 auto;
+  height: 2px;
+  background-color: #dadada;
+  @media (max-width: 468px) {
+    width: 60vw;
+  }
+`;
+
 function Home() {
   const navigate = useNavigate();
   const { data, status, error } = useFetchRecentChatRooms(10);
@@ -113,7 +123,7 @@ function Home() {
           </StyledSlider>
         )}
       </>
-
+      <HomeDivider />
       <MakeChatRoomButton onClick={navigateToMakeRoom}>
         방 만들기
       </MakeChatRoomButton>

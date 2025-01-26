@@ -13,7 +13,7 @@ export const StyledSlider = styled(Slider)`
   align-items: center;
   margin: 0 auto;
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 45px;
   .slick-list {
     @media (max-width: 2579px) {
       width: 2150px;
