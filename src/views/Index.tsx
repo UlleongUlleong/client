@@ -14,7 +14,7 @@ import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
 import FindPassword from '../components/login/FindPassword';
 import EmailDuplicateTest from '../components/register/email-verify/EmailDuplicateTest';
-import OauthCallback from '../components/login/OauthCallback';
+import OauthCallback from './pages/OauthCallback';
 
 const Index = () => {
   const routeLists = [
@@ -57,11 +57,6 @@ const Index = () => {
     {
       path: '/find-password',
       element: <FindPassword />,
-      noNav: true,
-    },
-    {
-      path: '/api/auth',
-      element: <OauthCallback />,
       noNav: true,
     },
     {
