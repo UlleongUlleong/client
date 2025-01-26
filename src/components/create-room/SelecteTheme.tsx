@@ -38,6 +38,7 @@ const SelectThemeStyle = styled.div`
   }
 
   .title {
+    display: flex;
     position: relative;
     left: 10%;
     font-size: 1.2rem;
