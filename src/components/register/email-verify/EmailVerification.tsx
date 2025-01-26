@@ -11,7 +11,7 @@ import { GoCheckCircle, GoAlert } from 'react-icons/go';
 
 const EmailVerificationTab = () => {
   const [verificationCode, setVerificationCode] = useState<string>('');
-  const [timeLeft, setTimeLeft] = useState<number>(600);
+  const [timeLeft, setTimeLeft] = useState<number>(30);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);

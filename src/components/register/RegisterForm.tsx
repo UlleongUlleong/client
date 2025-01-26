@@ -88,7 +88,9 @@ const RegisterForm = ({
       if (error.response) {
         setnicknameAvailabilityMessage(error.response.data.message);
       } else {
-        setnicknameAvailabilityMessage('정의되지 않은 오류');
+        setnicknameAvailabilityMessage(
+          '서비스 이용 중 오류가 발생했습니다. 불편을 드려 죄송합니다. 잠시 후 다시 시도해주세요.',
+        );
       }
     }
   };
