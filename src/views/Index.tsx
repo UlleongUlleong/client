@@ -12,6 +12,10 @@ import Mypage from './pages/Mypage';
 import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
 import AlcoholDetail from './pages/AlcoholDetail';
+import Reviews from './pages/Reviews';
+import ReviewLists from './pages/ReviewLists';
+import SearchAlcohol from './pages/SearchAlcohol';
+import ChatSearchList from './pages/ChatSearchList';
 import FindPassword from '../components/login/FindPassword';
 import EmailDuplicateTest from '../components/register/email-verify/EmailDuplicateTest';
 
@@ -22,17 +26,30 @@ const Index = () => {
       element: <Home />,
     },
     {
-      path: '/chatlist',
+      path: '/chat-lists',
       element: <ChatLists />,
     },
     {
+      path: '/chat-lists/results',
+      element: <ChatSearchList />,
+    },
+    {
       path: '/reviews',
-      element: <></>,
+      element: <Reviews />,
+    },
+    {
+      path: '/alcohol-lists/:id',
+      element: <ReviewLists />,
+    },
+    {
+      path: '/alcohol-lists/results',
+      element: <SearchAlcohol />,
     },
     {
       path: '/rooms',
       element: <MakeChat />,
     },
+
     {
       path: '/login',
       element: <Login />,

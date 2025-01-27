@@ -18,58 +18,73 @@ import {
   Input,
   IconButton,
 } from '../styles/SearchBar.ts';
-
+import {
+  ICategory,
+  moodTypeCategories,
+  alcoholTypeCategories,
+} from '../models/categories.ts';
 import Divider from '@mui/material/Divider';
-
-interface Category {
-  id: number;
-  name: string;
+import { useNavigate } from 'react-router-dom';
+interface searchBarProps {
+  isMoodCategories: boolean;
 }
 
-interface SearchBarProps {
-  onSearch: (categories: Category[], searchText: string) => void;
-}
-
-const moodcategories: Category[] = [
-  { id: 1, name: '혼술' },
-  { id: 2, name: '반주' },
-  { id: 3, name: '시끌시끌' },
-  { id: 4, name: '조용한' },
-  { id: 5, name: '고민상담' },
-  { id: 6, name: '레시피공유' },
-];
-
-const alchoholcategories: Category[] = [
-  { id: 7, name: '소주' },
-  { id: 8, name: '맥주' },
-  { id: 9, name: '와인' },
-  { id: 10, name: '칵테일' },
-  { id: 11, name: '하이볼' },
-  { id: 12, name: '전통주' },
-  { id: 13, name: '위스키' },
-];
-
-const SearchBar = () => {
+//isMoodCategories가 true면 moodTypeCategories도 보여주고
+// false면 alcoholTypeCategories만 사용한다.
+const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<ICategory[]>([]);
   const [searchText, setSearchText] = useState('');
-
-  const toggleCategory = (category: Category) => {
+  const navigate = useNavigate();
+  //로그인 여부 머지 후 수정
+  const userIsLoggedIn = false;
+  const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {
-      const isSelected = prev.some((cat) => cat.id === category.id);
-      if (isSelected) {
-        return prev.filter((cat) => cat.id !== category.id);
+      //단일 선택
+      if (!isMoodCategories) {
+        if (prev.some((cat) => cat.id === category.id)) {
+          return [];
+        }
+        return [category];
+      } else {
+        //다중 선택
+        const isSelected = prev.some((cat) => cat.name === category.name);
+        if (isSelected) {
+          return prev.filter((cat) => cat.name !== category.name);
+        }
+        return [...prev, category];
       }
-      return [...prev, category];
     });
   };
 
   const handleSearch = () => {
-    onSearch(selectedCategories, searchText);
+    if (isMoodCategories) {
+      navigate('/chat-lists/results', {
+        state: {
+          selectedCategories,
+          searchText: searchText,
+        },
+      });
+    } else {
+      const categoryId = selectedCategories[0]?.id || 0;
+      navigate('/alcohol-lists/results', {
+        state: {
+          categoryId: categoryId,
+          searchText,
+        },
+      });
+    }
   };
 
   const handleConfirm = () => {
     setIsOpen(false);
+  };
+
+  const navigateToLogin = () => {
+    navigate('/login');
+  };
+  const navigateToLogout = () => {
+    navigate('/logout');
   };
 
   return (
@@ -97,7 +112,7 @@ const SearchBar = () => {
           {/* 선택된 태그 섹션 */}
           <SelectedTagsSection>
             {selectedCategories.map((cat) => (
-              <CategoryTag key={cat.id} onClick={() => toggleCategory(cat)}>
+              <CategoryTag key={cat.name} onClick={() => toggleCategory(cat)}>
                 {cat.name}
                 <DeleteIcon>×</DeleteIcon>
               </CategoryTag>
@@ -107,34 +122,42 @@ const SearchBar = () => {
           {/* 카테고리 선택 섹션 */}
           <CategorySection>
             <SectionTitle>카테고리 선택</SectionTitle>
+            {isMoodCategories ? (
+              <>
+                <CategoryGrid>
+                  {moodTypeCategories.map((category) => (
+                    <CategoryItem
+                      key={category.name}
+                      onClick={() => toggleCategory(category)}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.some(
+                          (cat) => cat.name === category.name,
+                        )}
+                        readOnly
+                      />
+                      <span>{category.name}</span>
+                    </CategoryItem>
+                  ))}
+                </CategoryGrid>
+
+                <Divider />
+              </>
+            ) : (
+              <></>
+            )}
+
             <CategoryGrid>
-              {moodcategories.map((category) => (
+              {alcoholTypeCategories.map((category) => (
                 <CategoryItem
-                  key={category.id}
+                  key={category.name}
                   onClick={() => toggleCategory(category)}
                 >
                   <input
                     type="checkbox"
                     checked={selectedCategories.some(
-                      (cat) => cat.id === category.id,
-                    )}
-                    readOnly
-                  />
-                  <span>{category.name}</span>
-                </CategoryItem>
-              ))}
-            </CategoryGrid>
-            <Divider />
-            <CategoryGrid>
-              {alchoholcategories.map((category) => (
-                <CategoryItem
-                  key={category.id}
-                  onClick={() => toggleCategory(category)}
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.some(
-                      (cat) => cat.id === category.id,
+                      (cat) => cat.name === category.name,
                     )}
                     readOnly
                   />
@@ -147,7 +170,11 @@ const SearchBar = () => {
         </Dropdown>
       </Container>
 
-      <LoginButton>로그인</LoginButton>
+      {userIsLoggedIn ? (
+        <LoginButton onClick={navigateToLogout}>로그아웃</LoginButton>
+      ) : (
+        <LoginButton onClick={navigateToLogin}>로그인</LoginButton>
+      )}
     </TopBar>
   );
 };

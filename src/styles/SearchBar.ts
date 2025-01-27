@@ -16,15 +16,16 @@ export const LoginButton = styled.button`
   font-family: 'Noto Sans KR', serif;
   padding: 6px 16px;
   background-color: rgb(255, 255, 255);
-  border: 1px solid #a9a9a9;
+  border: 0.5px solid gray;
   border-radius: 5px;
-  color: black;
+  color: #3b3b3b;
   position: absolute;
   right: 25px;
   cursor: pointer;
 
   @media (max-width: 468px) {
-    right: 10px;
+    right: 8px;
+    font-size: 12px;
   }
 `;
 
