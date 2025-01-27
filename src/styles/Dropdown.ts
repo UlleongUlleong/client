@@ -1,16 +1,10 @@
 import styled from 'styled-components';
-import { useState } from 'react';
-import React from 'react';
-interface DropdownProps {
-  onSelect: (value: string) => void;
-}
 
-const DropdownContainer = styled.div`
+export const DropdownContainer = styled.div`
   position: relative;
-  top: 45px;
+  top: 25px;
   right: 30px;
   font-family: 'Noto Sans KR', serif;
-  position: relative;
   width: 100px;
   font-size: 14px;
   user-select: none;
@@ -22,7 +16,7 @@ const DropdownContainer = styled.div`
   }
 `;
 
-const DropdownButton = styled.div<{ isOpen: boolean }>`
+export const DropdownButton = styled.div<{ isOpen: boolean }>`
   padding: 8px 11px;
   background-color: #ffffff;
   border: 1px solid ${(props) => (props.isOpen ? '#000000' : '#e0e0e0')};
@@ -49,7 +43,7 @@ const DropdownButton = styled.div<{ isOpen: boolean }>`
   }
 `;
 
-const DropdownList = styled.ul<{ isOpen: boolean }>`
+export const DropdownList = styled.ul<{ isOpen: boolean }>`
   position: relative;
 
   left: 0;
@@ -68,7 +62,7 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
   z-index: 1;
 `;
 
-const DropdownItem = styled.li`
+export const DropdownItem = styled.li`
   padding: 12px 16px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -77,36 +71,3 @@ const DropdownItem = styled.li`
     background-color: #f5f5f5;
   }
 `;
-
-const sortOptions = [
-  { value: 'date', label: '생성일 순' },
-  { value: 'members', label: '인원 순' },
-];
-
-const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(sortOptions[0]);
-
-  const handleSelect = (option: (typeof sortOptions)[0]) => {
-    setSelectedOption(option);
-    setIsOpen(false);
-    onSelect(option.value);
-  };
-
-  return (
-    <DropdownContainer>
-      <DropdownButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
-        {selectedOption.label}
-      </DropdownButton>
-      <DropdownList isOpen={isOpen}>
-        {sortOptions.map((option) => (
-          <DropdownItem key={option.value} onClick={() => handleSelect(option)}>
-            {option.label}
-          </DropdownItem>
-        ))}
-      </DropdownList>
-    </DropdownContainer>
-  );
-};
-
-export default Dropdown;

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { validatePassword } from '../../utils/regitsterUtils';
+import { checkNicknameAvailability } from '../../api/users/registerApi';
 
 interface RegisterFormProps {
   email: string;
@@ -10,6 +12,7 @@ interface RegisterFormProps {
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
   nickname: string;
   setNickname: React.Dispatch<React.SetStateAction<string>>;
+  isEmailVerified: boolean;
   setIsEmailVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -24,78 +27,75 @@ const RegisterForm = ({
   setNickname,
   setIsEmailVerified,
 }: RegisterFormProps) => {
-  const openEmailVerificationWindow = () => {
-    if (!email) {
-      alert('이메일을 입력해주세요.');
-      return;
-    }
-
-    const width = 400;
-    const height = 400;
-    const left = window.screenX + (window.innerWidth - width) / 2;
-    const top = window.screenY + (window.innerHeight - height) / 2;
-
-    const verificationWindow = window.open(
-      `http://localhost:5173/email-verification`, // 인증 URL
-      'EmailVerification',
-      `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
-    );
-
+  useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      if (event.data.type === 'emailVerified' && event.data.success) {
+      if (event.data.type === 'EMAIL_VERIFIED' && event.data.status) {
         setIsEmailVerified(true);
-        alert('이메일 인증이 완료되었습니다!');
       }
     };
 
     window.addEventListener('message', handleMessage);
 
-    const interval = setInterval(() => {
-      if (verificationWindow?.closed) {
-        clearInterval(interval);
-        window.removeEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [setIsEmailVerified]);
+
+  const [nicknameAvailabilityMessage, setnicknameAvailabilityMessage] =
+    useState<string | null>(null);
+
+  const [isNicknameError, setIsNicknameError] = useState<boolean>(false);
+
+  const openEmailVerificationWindow = () => {
+    const width = 400;
+    const height = 400;
+    const left = window.screenX + (window.innerWidth - width) / 2;
+    const top = window.screenY + (window.innerHeight - height) / 2;
+
+    const newWindow = window.open(
+      `http://localhost:5173/email-duplication?email=${encodeURIComponent(email)}`,
+      'EmailDuplicationTest',
+      `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
+    );
+
+    if (!newWindow) {
+      console.error('새 창을 열 수 없습니다. 팝업 차단 설정을 확인하세요.');
+    }
+  };
+
+  const handleEmailCheck = () => {
+    if (!email) {
+      alert('이메일을 입력해주세요');
+      return;
+    }
+
+    openEmailVerificationWindow();
+  };
+
+  const handleNicknameCheck = async () => {
+    if (!nickname) {
+      alert('닉네임을 입력해주세요.');
+      return;
+    }
+
+    try {
+      const response = await checkNicknameAvailability(nickname);
+      setnicknameAvailabilityMessage(response.message);
+      setIsNicknameError(false);
+    } catch (error: any) {
+      setIsNicknameError(true);
+
+      if (error.response) {
+        setnicknameAvailabilityMessage(error.response.data.message);
+      } else {
+        setnicknameAvailabilityMessage(
+          '서비스 이용 중 오류가 발생했습니다. 불편을 드려 죄송합니다. 잠시 후 다시 시도해주세요.',
+        );
       }
-    }, 500);
+    }
   };
 
   const [passwordError, setPasswordError] = useState<string | null>();
-
-  const validatePassword = (password: string): string => {
-    const minLength = 8;
-    const maxLength = 20;
-    const alphabetRegex = /[a-zA-Z]/; // 알파벳 포함 여부
-    const specialCharRegex = /[!@$*&]/; // 특수문자 포함 여부
-    const numberRegex = /[0-9]/; // 숫자 포함 여부
-
-    if (password.length < minLength) {
-      return `비밀번호는 최소 ${minLength}자 이상이어야 합니다.`;
-    }
-
-    if (password.length > maxLength) {
-      return `비밀번호는 최대 ${maxLength}자 이하여야 합니다.`;
-    }
-
-    if (!alphabetRegex.test(password)) {
-      return '비밀번호에는 알파벳이 최소 1자 이상 포함되어야 합니다.';
-    }
-
-    if (!specialCharRegex.test(password)) {
-      return '비밀번호에는 특수 문자 (! * @ $ &) 중 하나 이상 포함되어야 합니다.';
-    }
-
-    if (!numberRegex.test(password)) {
-      return '비밀번호에는 숫자가 최소 1자 이상 포함되어야 합니다.';
-    }
-
-    return '';
-  };
-
-  const comparePassword = () => {
-    if (confirmPassword === password) {
-      return true;
-    }
-    return false;
-  };
 
   useEffect(() => {
     const errorMessage = validatePassword(password);
@@ -116,12 +116,11 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={openEmailVerificationWindow}
+            onClick={handleEmailCheck}
           >
-            중복 검사
+            이메일 인증
           </button>
         </div>
-        {/* 이메일 중복 검사 결과 띄우는 곳*/}
         <input
           className="register"
           type="password"
@@ -147,7 +146,7 @@ const RegisterForm = ({
         />
         {confirmPassword && (
           <div className="check-msg">
-            {comparePassword() ? (
+            {confirmPassword === password ? (
               <span className="pass-msg">{'비밀번호가 일치합니다.'}</span>
             ) : (
               <span className="notpass-msg">
@@ -167,12 +166,18 @@ const RegisterForm = ({
           <button
             className="duplicatetest-btn"
             type="button"
-            onClick={() => {}}
+            onClick={handleNicknameCheck}
           >
             중복 검사
           </button>
         </div>
-        {/* 닉네임 중복 검사 결과 띄우는 곳*/}
+        {nicknameAvailabilityMessage && (
+          <div className="check-msg">
+            <span className={isNicknameError ? 'notpass-msg' : 'pass-msg'}>
+              {nicknameAvailabilityMessage}
+            </span>
+          </div>
+        )}
       </form>
     </RegisterFormStyle>
   );

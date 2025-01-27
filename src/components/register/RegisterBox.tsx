@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
+import { register } from '../../api/users/registerApi';
+import { toast } from 'react-toastify';
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
@@ -13,6 +17,11 @@ const RegisterBox = () => {
   const [checkedUseInfo, setCheckedUseInfo] = useState<boolean>(false);
   const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
 
+  const [moods, setMoods] = useState<number[]>([]);
+  const [alcohols, setAlcohols] = useState<number[]>([]);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     setAllChecked(checkedAge && checkedUseInfo);
   }, [checkedAge, checkedUseInfo]);
@@ -23,7 +32,7 @@ const RegisterBox = () => {
     setCheckedUseInfo(isChecked);
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !nickname) {
       alert('필수 정보를 입력해주세요. (이메일, 비밀번호, 닉네임)');
       return;
@@ -39,7 +48,23 @@ const RegisterBox = () => {
       alert('필수 항목에 동의해야 회원가입이 가능합니다.');
       return;
     }
-    alert('회원가입이 완료되었습니다');
+
+    const registerContent = {
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+      nickname: nickname,
+      moodCategory: moods,
+      alcoholCategory: alcohols,
+    };
+
+    try {
+      const response = await register(registerContent);
+      toast.success(response.message, { icon: <GoCheckCircle /> });
+      navigate('/');
+    } catch (error: any) {
+      toast.error(error.message, { icon: <GoAlert /> });
+    }
   };
 
   return (
@@ -58,11 +83,18 @@ const RegisterBox = () => {
           setConfirmPassword={setConfirmPassword}
           nickname={nickname}
           setNickname={setNickname}
+          isEmailVerified={isEmailVerified}
           setIsEmailVerified={setIsEmailVerified}
         />
       </div>
       <div className="keywords-group">
-        <SelectKeywords title="register" />
+        <SelectKeywords
+          title="register"
+          moods={moods}
+          setMoods={setMoods}
+          alcohols={alcohols}
+          setAlcohols={setAlcohols}
+        />
       </div>
       <div className="check-form">
         <div className="check-group">
@@ -96,7 +128,7 @@ const RegisterBox = () => {
       </div>
       <div className="register-btn">
         <button type="button" onClick={handleRegister}>
-          회원가입하기
+          회원가입 하기
         </button>
       </div>
     </RegisterBoxStyle>

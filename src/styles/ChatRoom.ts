@@ -5,8 +5,7 @@ export const ChatRoomContainer = styled.div`
   align-items: center;
   cursor: pointer;
   display: flex;
-  padding: 10px;
-  margin: 10px auto;
+  margin: 0 auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;
@@ -26,13 +25,13 @@ export const ChatImage = styled.div`
   }
 `;
 
-export const ChatRoomParty = styled.div`
+export const ChatRoomParty = styled.div<{ isFull: boolean }>`
   position: relative;
   display: flex;
-  padding: 5px;
-  width: 55px;
-  right: 115px;
+  padding: 5px 10px;
+  right: ${(props) => (props.isFull ? '95px' : '110px')};
   top: 45px;
+  color: white;
   background-color: rgba(0, 0, 0, 0.7);
   gap: 3px;
   justify-content: center;
