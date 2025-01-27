@@ -2,16 +2,20 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import RegisterForm from './RegisterForm';
 import SelectKeywords from '../create-room/SelectKeywords';
+import { register } from '../../api/users/registerApi';
 
 const RegisterBox = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [nickname, setNickname] = useState<string>('');
+  const [nickName, setNickName] = useState<string>('');
   const [allChecked, setAllChecked] = useState<boolean>(false);
   const [checkedAge, setCheckedAge] = useState<boolean>(false);
   const [checkedUseInfo, setCheckedUseInfo] = useState<boolean>(false);
   const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
+
+  const [moods, setMoods] = useState<number[]>([]);
+  const [alcohols, setAlcohols] = useState<number[]>([]);
 
   useEffect(() => {
     setAllChecked(checkedAge && checkedUseInfo);
@@ -23,8 +27,16 @@ const RegisterBox = () => {
     setCheckedUseInfo(isChecked);
   };
 
-  const handleRegister = () => {
-    if (!email || !password || !confirmPassword || !nickname) {
+  useEffect(() => {
+    console.log('이메일 인증 성공여부: ', isEmailVerified);
+  }, [isEmailVerified]);
+
+  useEffect(() => {
+    console.log(moods, alcohols);
+  }, [moods, alcohols]);
+
+  const handleRegister = async () => {
+    if (!email || !password || !confirmPassword || !nickName) {
       alert('필수 정보를 입력해주세요. (이메일, 비밀번호, 닉네임)');
       return;
     }
@@ -39,7 +51,23 @@ const RegisterBox = () => {
       alert('필수 항목에 동의해야 회원가입이 가능합니다.');
       return;
     }
-    alert('회원가입이 완료되었습니다');
+
+    const registerContent = {
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+      nickname: nickName,
+      moodCategory: moods,
+      alcoholCategory: alcohols,
+    };
+
+    try {
+      const response = await register(registerContent);
+      console.log(response);
+      alert('회원가입이 완료되었습니다');
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   return (
@@ -56,13 +84,20 @@ const RegisterBox = () => {
           setPassword={setPassword}
           confirmPassword={confirmPassword}
           setConfirmPassword={setConfirmPassword}
-          nickname={nickname}
-          setNickname={setNickname}
+          nickName={nickName}
+          setNickName={setNickName}
+          isEmailVerified={isEmailVerified}
           setIsEmailVerified={setIsEmailVerified}
         />
       </div>
       <div className="keywords-group">
-        <SelectKeywords title="register" />
+        <SelectKeywords
+          title="register"
+          moods={moods}
+          setMoods={setMoods}
+          alcohols={alcohols}
+          setAlcohols={setAlcohols}
+        />
       </div>
       <div className="check-form">
         <div className="check-group">
@@ -96,7 +131,7 @@ const RegisterBox = () => {
       </div>
       <div className="register-btn">
         <button type="button" onClick={handleRegister}>
-          회원가입하기
+          회원가입 하기
         </button>
       </div>
     </RegisterBoxStyle>
