@@ -1,17 +1,19 @@
 import { styled } from 'styled-components';
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
+import { AddReview } from '../../api/reviewApi';
 
 interface ModalProps {
   closeModal: () => void;
+  id: string;
 }
 
-function ReviewModal({ closeModal }: ModalProps) {
-  const [selectedRating, setSelectedRating] = useState(0);
+function ReviewModal({ closeModal, id }: ModalProps) {
+  const [selectedscore, setSelectedscore] = useState(0);
   const [reviewText, setReviewText] = useState('');
 
-  const handleStarClick = (rating: number) => {
-    setSelectedRating(rating);
+  const handleStarClick = (score: number) => {
+    setSelectedscore(score);
   };
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -19,17 +21,31 @@ function ReviewModal({ closeModal }: ModalProps) {
   };
 
   const handleSaveClick = () => {
-    if (!selectedRating) {
+    if (!id) return;
+
+    if (!selectedscore) {
       alert('별점을 선택해주세요!');
       return;
     }
+
     if (!reviewText.trim()) {
       alert('리뷰 내용을 입력해주세요!');
       return;
     }
-    console.log('리뷰 저장:', { rating: selectedRating, review: reviewText });
-    alert('리뷰가 저장되었습니다!');
-    closeModal();
+
+    const fetchAddReview = async () => {
+      try {
+        const response = await AddReview(id, selectedscore, reviewText);
+        console.log('리뷰 등록 성공 :', response);
+        alert('리뷰가 저장되었습니다!');
+        closeModal();
+        window.location.reload();
+      } catch (error) {
+        console.log('fetchAddReview : ', error);
+        alert('리뷰 저장에 실패했습니다.');
+      }
+    };
+    fetchAddReview();
   };
 
   const handleModalClick = (e: React.MouseEvent) => {
@@ -40,11 +56,11 @@ function ReviewModal({ closeModal }: ModalProps) {
     <ReviewModalStyle onClick={closeModal}>
       <div className="modal-content" onClick={handleModalClick}>
         <div className="comment">별을 클릭해 점수를 매겨주세요.</div>
-        <div className="rating">
+        <div className="score">
           {Array.from({ length: 5 }, (_, index) => (
             <FaStar
               key={index}
-              className={`star ${selectedRating > index ? 'filled' : ''}`}
+              className={`star ${selectedscore > index ? 'filled' : ''}`}
               onClick={() => handleStarClick(index + 1)}
             />
           ))}
@@ -95,7 +111,7 @@ const ReviewModalStyle = styled.div`
       font-weight: bold;
     }
 
-    .rating {
+    .score {
       display: flex;
       gap: 8px;
       .star {
@@ -147,7 +163,7 @@ const ReviewModalStyle = styled.div`
       .comment {
         font-size: 16px;
       }
-      .rating .star {
+      .score .star {
         font-size: 40px;
       }
       textarea {
@@ -161,7 +177,7 @@ const ReviewModalStyle = styled.div`
       .comment {
         font-size: 12px;
       }
-      .rating .star {
+      .score .star {
         font-size: 28px;
       }
       textarea {

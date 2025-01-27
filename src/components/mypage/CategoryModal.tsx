@@ -1,29 +1,70 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { FaPen } from 'react-icons/fa6';
+import {
+  alcoholCategory,
+  Category,
+  moodsCategory,
+} from '../../api/categoryApi';
+import { modifyProfile, validNickname } from '../../api/profileApi';
+import { ProfileType } from '../../models/profile';
 
 interface ModalProps {
   closeModal: () => void;
+  onUpdateComplete: () => void;
+  profile: ProfileType;
 }
 
-function CategoryModal({ closeModal }: ModalProps) {
+function CategoryModal({ closeModal, onUpdateComplete, profile }: ModalProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState('홍길동');
-  const [selectedMood, setSelectedMood] = useState<Set<string>>(new Set());
-  const [selectedAlcohol, setSelectedAlcohol] = useState<Set<string>>(
+  const [nickname, setNickname] = useState(profile.nickname);
+  const [selectedMood, setSelectedMood] = useState<Set<number>>(new Set());
+  const [selectedAlcohol, setSelectedAlcohol] = useState<Set<number>>(
     new Set(),
   );
+  const [moodOptions, setMoodOptions] = useState<Category[]>([]);
+  const [alcoholOptions, setAlcoholOptions] = useState<Category[]>([]);
+  const [isValidNickname, setIsValidNickname] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const [moodsData, alcoholData] = await Promise.all([
+          moodsCategory(),
+          alcoholCategory(),
+        ]);
+        setMoodOptions(moodsData);
+        setAlcoholOptions(alcoholData);
+      } catch (error) {
+        console.log('fetchCategories error : ', error);
+      }
+    };
+    fetchCategories();
+  }, []);
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setNickname(e.target.value);
   };
 
-  const handleBlur = () => {
-    setIsEditing(false);
+  const handleBlur = async () => {
+    try {
+      const message = await validNickname(nickname);
+      alert(message);
+
+      if (message === '사용가능한 닉네임입니다.') {
+        setIsEditing(false);
+      } else {
+        setIsValidNickname(false);
+      }
+    } catch (error) {
+      console.log('유효성 검사 오류:', error);
+      alert('유효하지 않은 닉네임입니다. 다시 시도해주세요');
+      setIsValidNickname(false);
+    }
   };
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -32,41 +73,60 @@ function CategoryModal({ closeModal }: ModalProps) {
     }
   };
 
-  const handleMoodClick = (value: string) => {
+  const handleMoodClick = (id: number) => {
     setSelectedMood((prev) => {
       const newMood = new Set(prev);
-      if (newMood.has(value)) {
-        newMood.delete(value);
+      if (newMood.has(id)) {
+        newMood.delete(id);
       } else {
-        newMood.add(value);
+        newMood.add(id);
       }
       return newMood;
     });
   };
 
-  const handleAlcoholClick = (value: string) => {
+  const handleAlcoholClick = (id: number) => {
     setSelectedAlcohol((prev) => {
       const newAlcohol = new Set(prev);
-      if (newAlcohol.has(value)) {
-        newAlcohol.delete(value);
+      if (newAlcohol.has(id)) {
+        newAlcohol.delete(id);
       } else {
-        newAlcohol.add(value);
+        newAlcohol.add(id);
       }
       return newAlcohol;
     });
   };
 
-  const handleSave = () => {
-    const moodValues = Array.from(selectedMood);
-    const alcoholValues = Array.from(selectedAlcohol);
-    const data = {
-      name,
-      mood: moodValues,
-      alcohol: alcoholValues,
-    };
-    console.log(data);
-    closeModal();
+  const handleSave = async () => {
+    try {
+      const moodValues = Array.from(selectedMood);
+      const alcoholValues = Array.from(selectedAlcohol);
+      const data = {
+        nickname,
+        moodCategory: moodValues,
+        alcoholCategory: alcoholValues,
+      };
+
+      await modifyProfile(data);
+      onUpdateComplete();
+    } catch (error) {
+      console.error('회원 정보 수정 실패:', error);
+      alert('회원 정보를 저장하는 데 실패했습니다. 다시 시도해주세요.');
+    }
   };
+
+  useEffect(() => {
+    if (profile.moodCategory) {
+      setSelectedMood(
+        new Set(profile.moodCategory.map((category) => category.id)),
+      );
+    }
+    if (profile.alcoholCategory) {
+      setSelectedAlcohol(
+        new Set(profile.alcoholCategory.map((category) => category.id)),
+      );
+    }
+  }, [profile]);
 
   return (
     <CategoryModalStyle onClick={handleBackgroundClick}>
@@ -75,14 +135,14 @@ function CategoryModal({ closeModal }: ModalProps) {
           {isEditing ? (
             <input
               type="text"
-              value={name}
+              value={nickname}
               onChange={handleNameChange}
               onBlur={handleBlur}
               autoFocus
             />
           ) : (
             <>
-              <span>{name}</span>
+              <span>{nickname}</span>
             </>
           )}
           <FaPen className="pen-icon" onClick={handleEditClick} />
@@ -90,46 +150,35 @@ function CategoryModal({ closeModal }: ModalProps) {
         <div className="category-set">
           <span className="mood"> 주제 / 분위기</span>
           <span className="select">
-            {[
-              '혼술',
-              '반주',
-              '시끌시끌',
-              '조용한',
-              '고민상담',
-              '레시피공유',
-            ].map((value) => (
+            {moodOptions.map((mood) => (
               <span
-                key={value}
-                className={`value ${selectedMood.has(value) ? 'selected' : ''}`}
-                onClick={() => handleMoodClick(value)}
+                key={mood.id}
+                className={`value ${selectedMood.has(mood.id) ? 'selected' : ''}`}
+                onClick={() => handleMoodClick(mood.id)}
               >
-                {value}
+                {mood.name}
               </span>
             ))}
           </span>
           <span className="alcohol"> 주종 </span>
           <span className="select">
-            {[
-              '소주',
-              '맥주',
-              '와인',
-              '칵테일',
-              '전통주',
-              '하이볼',
-              '위스키',
-            ].map((value) => (
+            {alcoholOptions.map((alcohol) => (
               <span
-                key={value}
-                className={`value ${selectedAlcohol.has(value) ? 'selected' : ''}`}
-                onClick={() => handleAlcoholClick(value)}
+                key={alcohol.id}
+                className={`value ${selectedAlcohol.has(alcohol.id) ? 'selected' : ''}`}
+                onClick={() => handleAlcoholClick(alcohol.id)}
               >
-                {value}
+                {alcohol.name}
               </span>
             ))}
           </span>
         </div>
         <div className="button-container">
-          <button onClick={handleSave} className="save-btn">
+          <button
+            onClick={handleSave}
+            className="save-btn"
+            disabled={isEditing || !isValidNickname}
+          >
             저장
           </button>
         </div>
@@ -204,7 +253,7 @@ const CategoryModalStyle = styled.div`
         white-space: nowrap;
 
         &.selected {
-          border: 2px solid #007bff;
+          border: 1px solid #007bff;
         }
       }
     }
@@ -221,6 +270,11 @@ const CategoryModalStyle = styled.div`
       border-radius: 20px;
       color: white;
       border: 1px solid #ddd;
+    }
+    .save-btn:disabled {
+      background-color: #ccc;
+      color: #888;
+      cursor: not-allowed;
     }
   }
 `;

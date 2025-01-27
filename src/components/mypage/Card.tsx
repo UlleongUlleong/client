@@ -1,16 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { LikeAlcoholType } from '../../models/profile';
 
-export interface CardProps {
-  imageSrc: string;
-  title: string;
-  description: number;
-  id: number;
-}
-
-function Card({ imageSrc, title, description, id }: CardProps) {
-  const fullStars = Math.floor(description);
+function Card({ id, name, scoreAverage, imageUrl }: LikeAlcoholType) {
+  const fullStars = Math.floor(scoreAverage);
   const emptyStars = 5 - fullStars;
   const navigate = useNavigate();
 
@@ -20,9 +14,9 @@ function Card({ imageSrc, title, description, id }: CardProps) {
 
   return (
     <CardWrapper onClick={handleCardClick}>
-      <CardImage src={imageSrc} alt={title} />
+      <CardImage src={'https://picsum.photos/200'} alt={name} />
       <CardContent>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>{name}</CardTitle>
         <CardStars>
           <StarsWrapper>
             {Array(fullStars)
@@ -38,7 +32,7 @@ function Card({ imageSrc, title, description, id }: CardProps) {
                 </Star>
               ))}
           </StarsWrapper>
-          <Rating>{description.toFixed(1)}</Rating>
+          <Rating>{scoreAverage.toFixed(1)}</Rating>
         </CardStars>
       </CardContent>
     </CardWrapper>
@@ -46,7 +40,7 @@ function Card({ imageSrc, title, description, id }: CardProps) {
 }
 
 const CardWrapper = styled.div`
-  width: 200px;
+  width: auto;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
@@ -55,11 +49,6 @@ const CardWrapper = styled.div`
     transform 0.3s ease,
     box-shadow 0.3s ease;
   cursor: pointer;
-
-  &:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-  }
 `;
 
 const CardImage = styled.img`
