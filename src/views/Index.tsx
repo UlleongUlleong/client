@@ -7,7 +7,7 @@ import ChatLists from './pages/ChatLists';
 import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import EmailVerificationTab from '../components/register/email-verify/EmailVerificationTab';
+import EmailVerificationTab from '../components/register/email-verify/EmailVerification';
 import Mypage from './pages/Mypage';
 import ProfileLike from './pages/ProfileLike';
 import ProfileReview from './pages/ProfileReview';
@@ -16,6 +16,8 @@ import Reviews from './pages/Reviews';
 import ReviewLists from './pages/ReviewLists';
 import SearchAlcohol from './pages/SearchAlcohol';
 import ChatSearchList from './pages/ChatSearchList';
+import FindPassword from '../components/login/FindPassword';
+import EmailDuplicateTest from '../components/register/email-verify/EmailDuplicateTest';
 
 const Index = () => {
   const routeLists = [
@@ -59,8 +61,18 @@ const Index = () => {
       noNav: true,
     },
     {
+      path: '/email-duplication',
+      element: <EmailDuplicateTest />,
+      noNav: true,
+    },
+    {
       path: '/email-verification',
       element: <EmailVerificationTab />,
+      noNav: true,
+    },
+    {
+      path: '/find-password',
+      element: <FindPassword />,
       noNav: true,
     },
     {
