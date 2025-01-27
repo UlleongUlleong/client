@@ -6,7 +6,6 @@ export const StyleChatRoomsGrid = styled.div`
   gap: 20px;
   justify-content: center;
   width: 100%;
-  margin-top: 20px;
   &::after {
     content: '';
     grid-column: 1 / -1;
@@ -27,7 +26,7 @@ export const Category = styled.div`
     float: right;
     position: relative;
     right: 30px;
-    top: 30px;
+    top: 20px;
     cursor: pointer;
     color: black;
     &:visited {

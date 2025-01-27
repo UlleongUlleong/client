@@ -2,15 +2,15 @@ import React from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
+import Spinner from '../../assets/Spinner.gif';
+import ChatRoom from '../../components/chatRoom/ChatRoom.tsx';
 
-import ChatRoom from '../../components/ChatRoom.tsx';
 import {
   StyleChatRoomsGrid,
   Category,
   CategoryTitle,
 } from '../../styles/ChatRoomGrid.ts';
-import { dummyChatRooms } from '../../components/ChatRoom.tsx';
-import ChatRoomGrid from '../../components/ChatRoomGrid.tsx';
+import ChatRoomGrid from '../../components/chatRoom/ChatRoomGrid.tsx';
 import {
   MainContainer,
   StyledSlider,
@@ -18,17 +18,42 @@ import {
 } from '../../styles/Home.ts';
 
 import SearchBar from '../../components/SearchBar.tsx';
-import Dropdown from '../../components/Dropdown.tsx';
+import styled from 'styled-components';
+import { useFetchRecentChatRooms } from '../../hooks/getChatroom.ts';
+import { NoResults } from '../../styles/Alcohol.ts';
+import { LoadingMain } from './Reviews.tsx';
+
+export const GridTopBar = styled.div`
+  height: 50px;
+  justify-content: space-between;
+`;
+
+const HomeDivider = styled.div`
+  width: calc(100% - 80px);
+  margin: 0 auto;
+  height: 2px;
+  background-color: #dadada;
+  @media (max-width: 468px) {
+    width: 60vw;
+  }
+`;
+
 function Home() {
   const navigate = useNavigate();
-  const featuredRooms = dummyChatRooms.slice(0, 6); // 최신 9개 방 (3개씩 보여줄 것)
-  const user_category = ['소주', '맥주', '시끌시끌'];
+  const { data, status } = useFetchRecentChatRooms(10);
+  const mergedData = data?.pages?.flatMap((page) => page.data) || [];
+
+  const navigateToMakeRoom = () => {
+    navigate('/rooms');
+  };
+
   const settings = {
     dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 6,
     slidesToScroll: 6,
+
     responsive: [
       {
         breakpoint: 2220,
@@ -67,41 +92,43 @@ function Home() {
       },
     ],
   };
-  // 슬라이더 이동 함수
-
-  const navigateToMakeRoom = () => {
-    navigate('/makeroom');
-  };
-  const handleSort = (value: string) => {
-    console.log('Selected sort option:', value);
-    // 정렬 로직 구현
-  };
 
   return (
     <MainContainer>
-      <SearchBar />
-      <Category>
-        <Link to="/chatlist" className="more " state={{ data: '최신 순' }}>
-          더보기
-        </Link>
-      </Category>
-      <CategoryTitle>최신 순</CategoryTitle>
-      <StyledSlider {...settings}>
-        {featuredRooms.map((room) => (
-          <StyleChatRoomsGrid key={room.id}>
-            <ChatRoom key={room.id} room={room}></ChatRoom>
-          </StyleChatRoomsGrid>
-        ))}
-      </StyledSlider>{' '}
-      <Dropdown onSelect={handleSort} />
-      {user_category.length > 0 ? (
-        <CategoryTitle>사용자 추천 순</CategoryTitle>
-      ) : (
-        <CategoryTitle> 기본 순</CategoryTitle>
-      )}{' '}
+      <SearchBar isMoodCategories={true} />
+      {/* 최신 순 슬라이더  */}
+      <GridTopBar>
+        <CategoryTitle>최신 순</CategoryTitle>
+        <Category>
+          <Link to="/chat-lists" className="more">
+            더보기
+          </Link>
+        </Category>
+      </GridTopBar>
+      <>
+        {status === 'pending' ? (
+          <LoadingMain>
+            <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
+          </LoadingMain>
+        ) : mergedData.length === 0 ? (
+          // mergedData가 비어 있는 경우
+          <NoResults>채팅방이 없습니다</NoResults>
+        ) : (
+          <StyledSlider {...settings}>
+            {mergedData.map((room) => (
+              <StyleChatRoomsGrid key={room.id}>
+                <ChatRoom key={room.id} room={room} />
+              </StyleChatRoomsGrid>
+            ))}
+          </StyledSlider>
+        )}
+      </>
+      <HomeDivider />
       <MakeChatRoomButton onClick={navigateToMakeRoom}>
         방 만들기
       </MakeChatRoomButton>
+
+      {/* 사용자 추천 순 채팅방 무한 스크롤 */}
       <ChatRoomGrid />
     </MainContainer>
   );

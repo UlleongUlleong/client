@@ -72,7 +72,7 @@ const EmailVerificationTab = () => {
 
       setTimeout(() => {
         window.close();
-      }, 1000); // 약간의 딜레이 후 창 닫기
+      }, 1000);
     } catch (error: any) {
       if (error.response) {
         setErrorMessage(error.response.data.message);

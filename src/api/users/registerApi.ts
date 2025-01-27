@@ -10,6 +10,7 @@ interface RegisterContentProps {
 }
 
 export const register = async (registerContent: RegisterContentProps) => {
+  console.log('정보', registerContent);
   try {
     const response = await apiClient.post('/api/users', registerContent);
     return response.data;
