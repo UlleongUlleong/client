@@ -10,8 +10,8 @@ interface RegisterFormProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   confirmPassword: string;
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
-  nickName: string;
-  setNickName: React.Dispatch<React.SetStateAction<string>>;
+  nickname: string;
+  setNickname: React.Dispatch<React.SetStateAction<string>>;
   isEmailVerified: boolean;
   setIsEmailVerified: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -23,16 +23,14 @@ const RegisterForm = ({
   setPassword,
   confirmPassword,
   setConfirmPassword,
-  nickName,
-  setNickName,
-  isEmailVerified,
+  nickname,
+  setNickname,
   setIsEmailVerified,
 }: RegisterFormProps) => {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === 'EMAIL_VERIFIED' && event.data.status) {
         setIsEmailVerified(true);
-        alert('이메일 인증이 완료되었습니다.');
       }
     };
 
@@ -43,10 +41,10 @@ const RegisterForm = ({
     };
   }, [setIsEmailVerified]);
 
-  const [nickNameAvailabilityMessage, setnickNameAvailabilityMessage] =
+  const [nicknameAvailabilityMessage, setnicknameAvailabilityMessage] =
     useState<string | null>(null);
 
-  const [isNickNameError, setIsNickNameError] = useState<boolean>(false);
+  const [isNicknameError, setIsNicknameError] = useState<boolean>(false);
 
   const openEmailVerificationWindow = () => {
     const width = 400;
@@ -75,19 +73,25 @@ const RegisterForm = ({
   };
 
   const handleNicknameCheck = async () => {
-    if (!nickName) {
+    if (!nickname) {
       alert('닉네임을 입력해주세요.');
       return;
     }
 
     try {
-      const response = await checkNicknameAvailability(nickName);
-      setnickNameAvailabilityMessage(response.message);
-      setIsNickNameError(false);
+      const response = await checkNicknameAvailability(nickname);
+      setnicknameAvailabilityMessage(response.message);
+      setIsNicknameError(false);
     } catch (error: any) {
-      console.log(error);
-      setnickNameAvailabilityMessage(error.message);
-      setIsNickNameError(true);
+      setIsNicknameError(true);
+
+      if (error.response) {
+        setnicknameAvailabilityMessage(error.response.data.message);
+      } else {
+        setnicknameAvailabilityMessage(
+          '서비스 이용 중 오류가 발생했습니다. 불편을 드려 죄송합니다. 잠시 후 다시 시도해주세요.',
+        );
+      }
     }
   };
 
@@ -156,8 +160,8 @@ const RegisterForm = ({
             className="register-email"
             type="text"
             placeholder="사용하실 닉네임을 입력해주세요"
-            value={nickName}
-            onChange={(e) => setNickName(e.target.value)}
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
           />
           <button
             className="duplicatetest-btn"
@@ -167,10 +171,10 @@ const RegisterForm = ({
             중복 검사
           </button>
         </div>
-        {nickNameAvailabilityMessage && (
+        {nicknameAvailabilityMessage && (
           <div className="check-msg">
-            <span className={isNickNameError ? 'notpass-msg' : 'pass-msg'}>
-              {nickNameAvailabilityMessage}
+            <span className={isNicknameError ? 'notpass-msg' : 'pass-msg'}>
+              {nicknameAvailabilityMessage}
             </span>
           </div>
         )}
