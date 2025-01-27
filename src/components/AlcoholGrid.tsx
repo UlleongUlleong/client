@@ -20,14 +20,14 @@ export const StyleAlcoholReviewsGrid = styled.div`
   }
 `;
 
-function AlocholGird({ alcohols }: { alcohols: IAlcohol[] }) {
+function AlcoholGrid({ alcohols }: { alcohols: IAlcohol[] }) {
   return (
     <StyleAlcoholReviewsGrid>
       {alcohols.map((data, index) => (
-        <Alcohol key={index} alcol={data} />
+        <Alcohol key={index} alcohol={data} />
       ))}
     </StyleAlcoholReviewsGrid>
   );
 }
 
-export default AlocholGird;
+export default AlcoholGrid;

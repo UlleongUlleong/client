@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Dropdown from '../../components/Dropdown';
+import Dropdown from '../../components/SortDropDown';
 import { sortReviewOptions } from '../../models/dropDownOption';
 import { useParams } from 'react-router-dom';
 import { ReviewsMainContainer } from '../../styles/Reviews';

@@ -32,7 +32,7 @@ export const useChatRoomsWithCursor = (
         limit,
         searchText,
       }),
-    getNextPageParam: (lastPage, pages) =>
+    getNextPageParam: (lastPage) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
     initialPageParam: undefined,
   });

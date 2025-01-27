@@ -7,7 +7,7 @@ import { useChatRoomsWithCursor } from '../../hooks/getChatroom';
 import { useInView } from 'react-intersection-observer';
 import { LoadingMain } from '../../views/pages/Reviews';
 import { ICategory } from '../../models/categories';
-import Dropdown from '../../components/Dropdown.tsx';
+import Dropdown from '../SortDropDown.tsx';
 import { GridTopBar } from '../../views/pages/Home';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { sortChatRoomOptions } from '../../models/dropDownOption';

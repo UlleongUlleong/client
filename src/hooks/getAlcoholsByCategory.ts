@@ -56,7 +56,7 @@ export const useAlcoholsQuery = (
         limit,
         keyword,
       }),
-    getNextPageParam: (lastPage, page) =>
+    getNextPageParam: (lastPage) =>
       lastPage.pagination.hasNext ? lastPage.pagination.nextCursor : undefined,
     initialPageParam: 0,
   });

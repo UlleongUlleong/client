@@ -12,7 +12,6 @@ import {
 } from '../../styles/ChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { IChatRoom } from '../../models/chatRoom';
-import constructWithOptions from 'styled-components/dist/constructors/constructWithOptions';
 export interface Theme {
   id: number;
   url: string;

@@ -1,5 +1,4 @@
 import { api } from './index';
-import { chatRoomSort } from '../models/sort';
 import { IChatRoom } from '../models/chatRoom';
 export interface FetchCursorParams {
   sort?: string;

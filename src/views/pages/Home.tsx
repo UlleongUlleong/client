@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ const HomeDivider = styled.div`
 
 function Home() {
   const navigate = useNavigate();
-  const { data, status, error } = useFetchRecentChatRooms(10);
+  const { data, status } = useFetchRecentChatRooms(10);
   const mergedData = data?.pages?.flatMap((page) => page.data) || [];
 
   const navigateToMakeRoom = () => {

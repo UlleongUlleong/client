@@ -8,7 +8,7 @@ import { useInView } from 'react-intersection-observer';
 import { useChatRoomsWithCursor } from '../../hooks/getChatroom';
 import { ICategory } from '../../models/categories';
 import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
-import Dropdown from '../../components/Dropdown.tsx';
+import Dropdown from '../../components/SortDropDown.tsx';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 import Spinner from '../../assets/Spinner.gif';
 import { LoadingMain } from './Reviews.tsx';

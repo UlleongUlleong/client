@@ -12,7 +12,7 @@ import {
   Reviewer,
 } from '../styles/Alcohol';
 import { useNavigate } from 'react-router-dom';
-function Alcohol({ alcol: alcohol }: { alcol: IAlcohol }) {
+function Alcohol({ alcohol: alcohol }: { alcohol: IAlcohol }) {
   const navigate = useNavigate();
   const gotoDetailPage = () => {
     navigate(`/alcohol/${alcohol.id}`);

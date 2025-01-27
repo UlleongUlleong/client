@@ -1,7 +1,7 @@
 import { http, HttpResponse, delay } from 'msw';
-import { alcoholTypeCategories, categoryForIndex } from '../models/categories';
+import { alcoholTypeCategories } from '../models/categories';
 import { categoryForFetch } from '../models/categories';
-import { Category } from '../styles/ChatRoomGrid';
+
 // id name score type price
 
 const moodList = [
@@ -12,17 +12,6 @@ const moodList = [
   '고민상담',
   '레시피공유',
 ];
-const alcohol = ['소주', '맥주', '와인', '칵테일', '전통주', '위스키'];
-
-interface data {
-  id: number;
-  name: string;
-  imageUrl: string;
-  scoreAverage: number;
-  type: string;
-  price: number;
-  reviewCount: number;
-}
 
 function generateDummyRoomData(count: number, category: string) {
   let currentId = 0;

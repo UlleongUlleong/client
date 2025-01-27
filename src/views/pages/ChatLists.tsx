@@ -3,17 +3,15 @@ import { MainContainer } from '../../styles/Home';
 import { CategoryTitle, StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
 import ChatRoom from '../../components/chatRoom/ChatRoom';
 import SearchBar from '../../components/SearchBar';
-import Dropdown from '../../components/Dropdown';
 import { IChatRoom } from '../../models/chatRoom';
 import { GridTopBar } from './Home';
 import { useInView } from 'react-intersection-observer';
 import { useFetchRecentChatRooms } from '../../hooks/getChatroom';
 import { LoadingMain } from './Reviews';
 import Spinner from '../../assets/Spinner.gif';
-import { NoResults } from '../../styles/Alcohol';
 function ChatLists() {
   const sortName = '최신 순';
-  //최신 순으로만 정렬
+
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
   const { ref, inView } = useInView();
   const {
@@ -55,16 +53,13 @@ function ChatLists() {
       <GridTopBar>
         <CategoryTitle>{sortName ? sortName : null}</CategoryTitle>
       </GridTopBar>
-      {chatRoomData.length === 0 ? (
-        <NoResults>검색 결과가 없습니다.</NoResults>
-      ) : (
-        <StyleChatRoomsGrid>
-          {chatRoomData.map((rooms, index) => {
-            return <ChatRoom room={rooms} key={index} />;
-          })}
-          {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
-        </StyleChatRoomsGrid>
-      )}
+
+      <StyleChatRoomsGrid>
+        {chatRoomData.map((rooms, index) => {
+          return <ChatRoom room={rooms} key={index} />;
+        })}
+        {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
+      </StyleChatRoomsGrid>
     </MainContainer>
   );
 }
