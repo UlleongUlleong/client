@@ -22,7 +22,7 @@ export const getAlcoholReview = async (id: string) => {
 
 export const handleBookmark = async (id: string) => {
   try {
-    const response = apiClient.put(`/api/alcohol/${id}/mark`, {});
+    const response = apiClient.put(`/api/alcohol/${id}/mark`, {}, {});
     console.log(response);
     return response;
   } catch (error) {
