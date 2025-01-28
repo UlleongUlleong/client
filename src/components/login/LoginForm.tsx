@@ -101,7 +101,6 @@ const LoginForm = () => {
           비밀번호 찾기
         </button>
       </div>
-      db
       <button type="button" onClick={handleLogin}>
         이메일로 로그인
       </button>
