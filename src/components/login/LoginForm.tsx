@@ -30,18 +30,20 @@ const LoginForm = () => {
       const response = await loginApi(loginContent);
       toast.success(response.message, { icon: <GoCheckCircle /> });
 
-      const now = new Date();
-      const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-      const formattedDate = `${expiresAt.getFullYear()}-${String(
-        expiresAt.getMonth() + 1,
-      ).padStart(2, '0')}-${String(expiresAt.getDate()).padStart(2, '0')}`;
+      if (isRemembered) {
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const formattedDate = `${expiresAt.getFullYear()}-${String(
+          expiresAt.getMonth() + 1,
+        ).padStart(2, '0')}-${String(expiresAt.getDate()).padStart(2, '0')}`;
 
-      const loginInfo = {
-        isLoggedIn: true,
-        expiresAt: formattedDate,
-      };
+        const loginInfo = {
+          isLoggedIn: true,
+          expiresAt: formattedDate,
+        };
 
-      localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+        localStorage.setItem('loginInfo', JSON.stringify(loginInfo));
+      }
 
       setTimeout(() => {
         navigate('/');
