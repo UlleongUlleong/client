@@ -25,6 +25,7 @@ import {
 } from '../models/categories.ts';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
+import { isLogin } from '../api/user.ts';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -37,8 +38,17 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
   //로그인 여부 머지 후 수정
-  useEffect(() => {}, []);
-  const userIsLoggedIn = false;
+  const [userLogin, setUserLogin] = useState(false);
+
+  useEffect(() => {
+    const getUserLogin = async () => {
+      const user = await isLogin();
+      setUserLogin(user);
+    };
+
+    getUserLogin(); // Call the async function
+  }, []);
+
   const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {
       //단일 선택
@@ -171,7 +181,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
         </Dropdown>
       </Container>
 
-      {userIsLoggedIn ? (
+      {userLogin ? (
         <LoginButton onClick={navigateToLogout}>로그아웃</LoginButton>
       ) : (
         <LoginButton onClick={navigateToLogin}>로그인</LoginButton>
