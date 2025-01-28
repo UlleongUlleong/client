@@ -20,7 +20,10 @@ function ProfileLikeCard({
   return (
     <ProfileLikeCardStyle onClick={handleCardClick}>
       <div className="cardImage">
-        <img src={imageUrl} alt={name} />
+        <img
+          src={imageUrl ? imageUrl : '/assets/image/default-image.png'}
+          alt={name}
+        />
       </div>
       <div className="cardContent">
         <div className="cardTitle">{name}</div>

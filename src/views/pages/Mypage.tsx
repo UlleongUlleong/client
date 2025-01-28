@@ -13,6 +13,7 @@ import {
   ReviewAlcoholType,
 } from '../../models/profile';
 import {
+  AddProfileImage,
   getInterestAlcohol,
   getProfile,
   getReviewAlcohol,
@@ -36,6 +37,17 @@ function Mypage() {
         setProfileImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append('profile_image', file);
+
+      try {
+        const response = AddProfileImage(formData);
+        console.log('성공', response);
+        alert('프로필 사진이 변경되었습니다!');
+      } catch (error) {
+        console.log('실패', error);
+      }
     }
   };
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -76,34 +88,34 @@ function Mypage() {
     fetchReviewAlcohol();
   }, []);
 
-  const sliderSettings = {
+  const sliderSettings = (itemsLength: number) => ({
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: Math.min(5, itemsLength),
     slidesToScroll: 1,
     arrows: true,
     responsive: [
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: Math.min(3, itemsLength),
         },
       },
       {
         breakpoint: 880,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: Math.min(2, itemsLength),
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: Math.min(1, itemsLength),
         },
       },
     ],
-  };
+  });
 
   return (
     <>
@@ -182,7 +194,7 @@ function Mypage() {
             </Link>
           </div>
           <div className="container">
-            <Slider {...sliderSettings}>
+            <Slider {...sliderSettings(likeAlcohol.length)}>
               {likeAlcohol.map((card) => (
                 <Card
                   key={card.id}
@@ -207,7 +219,7 @@ function Mypage() {
             </Link>
           </div>
           <div className="container">
-            <Slider {...sliderSettings}>
+            <Slider {...sliderSettings(likeAlcohol.length)}>
               {reviewAlcohol.map((card) => (
                 <Card
                   key={card.id}

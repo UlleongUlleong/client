@@ -14,7 +14,10 @@ function Card({ id, name, scoreAverage, imageUrl }: LikeAlcoholType) {
 
   return (
     <CardWrapper onClick={handleCardClick}>
-      <CardImage src={'https://picsum.photos/200'} alt={name} />
+      <CardImage
+        src={imageUrl ? imageUrl : '/assets/image/default-image.png'}
+        alt={name}
+      />
       <CardContent>
         <CardTitle>{name}</CardTitle>
         <CardStars>
@@ -40,6 +43,7 @@ function Card({ id, name, scoreAverage, imageUrl }: LikeAlcoholType) {
 }
 
 const CardWrapper = styled.div`
+  max-width: 200px;
   width: auto;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -55,6 +59,7 @@ const CardImage = styled.img`
   width: 100%;
   height: 200px;
   object-fit: cover;
+  object-position: center;
 `;
 
 const CardContent = styled.div`
@@ -74,7 +79,7 @@ const CardTitle = styled.h3`
 const CardStars = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   margin-top: 10px;
 `;
 
