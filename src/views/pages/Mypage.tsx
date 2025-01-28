@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import { FaCog, FaPlus, FaRegUserCircle } from 'react-icons/fa';
 import Slider from 'react-slick';
@@ -7,11 +7,25 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Card from '../../components/mypage/Card';
 import CategoryModal from '../../components/mypage/CategoryModal';
+import {
+  LikeAlcoholType,
+  ProfileType,
+  ReviewAlcoholType,
+} from '../../models/profile';
+import {
+  AddProfileImage,
+  getInterestAlcohol,
+  getProfile,
+  getReviewAlcohol,
+} from '../../api/profileApi';
 
 function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [likeAlcohol, setLikeAlcohol] = useState<LikeAlcoholType[]>([]);
+  const [reviewAlcohol, setReviewAlcohol] = useState<ReviewAlcoholType[]>([]);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
@@ -23,6 +37,17 @@ function Mypage() {
         setProfileImage(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      const formData = new FormData();
+      formData.append('profile_image', file);
+
+      try {
+        const response = AddProfileImage(formData);
+        console.log('성공', response);
+        alert('프로필 사진이 변경되었습니다!');
+      } catch (error) {
+        console.log('실패', error);
+      }
     }
   };
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -33,103 +58,64 @@ function Mypage() {
     }
   };
 
-  const likedCards = [
-    {
-      id: 1,
-      imageSrc: 'https://picsum.photos/200',
-      title: '마루나 동백 양주',
-      description: 4.5,
-    },
-    {
-      id: 2,
-      imageSrc: 'https://picsum.photos/200',
-      title: '서울 100리 18',
-      description: 3.6,
-    },
-    {
-      id: 3,
-      imageSrc: 'https://picsum.photos/200',
-      title: '극락',
-      description: 4.0,
-    },
-    {
-      id: 4,
-      imageSrc: 'https://picsum.photos/200',
-      title: '디아블로 카베르네 소비뇽',
-      description: 2.8,
-    },
-    {
-      id: 5,
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 3.9,
-    },
-  ];
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+        setProfile(data);
+      } catch (error) {
+        console.log('fetchProfile : ', error);
+      }
+    };
+    const fetchInterestAlcohol = async () => {
+      try {
+        const data = await getInterestAlcohol();
+        setLikeAlcohol(data.data);
+      } catch (error) {
+        console.log('fetchInterestAlcohol:', error);
+      }
+    };
+    const fetchReviewAlcohol = async () => {
+      try {
+        const data = await getReviewAlcohol();
+        setReviewAlcohol(data.data);
+      } catch (error) {
+        console.log('fetchReviewAlcohol:', error);
+      }
+    };
+    fetchProfile();
+    fetchInterestAlcohol();
+    fetchReviewAlcohol();
+  }, []);
 
-  const reviewedCards = [
-    {
-      id: 1,
-      imageSrc: 'https://picsum.photos/200',
-      title: '마루나 동백 양주',
-      description: 4.5,
-    },
-    {
-      id: 2,
-      imageSrc: 'https://picsum.photos/200',
-      title: '서울 100리 18',
-      description: 3.6,
-    },
-    {
-      id: 3,
-      imageSrc: 'https://picsum.photos/200',
-      title: '극락',
-      description: 4.0,
-    },
-    {
-      id: 4,
-      imageSrc: 'https://picsum.photos/200',
-      title: '디아블로 카베르네 소비뇽',
-      description: 2.8,
-    },
-    {
-      id: 5,
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 3.9,
-    },
-  ];
-
-  const sliderSettings = {
+  const sliderSettings = (itemsLength: number) => ({
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: Math.min(5, itemsLength),
     slidesToScroll: 1,
     arrows: true,
     responsive: [
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
+          slidesToShow: Math.min(3, itemsLength),
         },
       },
       {
         breakpoint: 880,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
+          slidesToShow: Math.min(2, itemsLength),
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
+          slidesToShow: Math.min(1, itemsLength),
         },
       },
     ],
-  };
+  });
 
   return (
     <>
@@ -157,20 +143,25 @@ function Mypage() {
               </div>
             </div>
             <div className="profile-details">
-              <h2 className="name">홍길동</h2>
+              <h2 className="name">{profile?.nickname || '이름 없음'}</h2>
               <div className="keywords">
                 <div className="keyword">
                   <span className="topLabel">나의 키워드</span>
                   <span className="label">주제 / 분위기: </span>
                   <span className="category-container">
-                    <span className="value">시끌시끌</span>
-                    <span className="value">시끌시끌</span>
-                    <span className="value">시끌시끌</span>
+                    {profile?.moodCategory.map((mood) => (
+                      <span key={mood.id} className="value">
+                        {mood.name}
+                      </span>
+                    ))}
                   </span>
                   <span className="label">주종: </span>
                   <span className="category-container">
-                    <span className="value">소주</span>
-                    <span className="value">맥주</span>
+                    {profile?.alcoholCategory.map((alcohol) => (
+                      <span key={alcohol.id} className="value">
+                        {alcohol.name}
+                      </span>
+                    ))}
                   </span>
                 </div>
               </div>
@@ -198,19 +189,19 @@ function Mypage() {
         <div className="liked">
           <div className="title">
             <h1>좋아하는 술</h1>
-            <Link className="link" to="/profile/like">
+            <Link className="link" to="/profile/like" state={{ likeAlcohol }}>
               전체 보기
             </Link>
           </div>
           <div className="container">
-            <Slider {...sliderSettings}>
-              {likedCards.map((card) => (
+            <Slider {...sliderSettings(likeAlcohol.length)}>
+              {likeAlcohol.map((card) => (
                 <Card
                   key={card.id}
                   id={card.id}
-                  imageSrc={card.imageSrc}
-                  title={card.title}
-                  description={card.description}
+                  imageUrl={card.imageUrl}
+                  name={card.name}
+                  scoreAverage={card.scoreAverage}
                 />
               ))}
             </Slider>
@@ -219,25 +210,35 @@ function Mypage() {
         <div className="review">
           <div className="title">
             <h1>리뷰한 술</h1>
-            <Link className="link" to="/profile/review">
+            <Link
+              className="link"
+              to="/profile/review"
+              state={{ reviewAlcohol }}
+            >
               전체 보기
             </Link>
           </div>
           <div className="container">
-            <Slider {...sliderSettings}>
-              {reviewedCards.map((card) => (
+            <Slider {...sliderSettings(likeAlcohol.length)}>
+              {reviewAlcohol.map((card) => (
                 <Card
                   key={card.id}
                   id={card.id}
-                  imageSrc={card.imageSrc}
-                  title={card.title}
-                  description={card.description}
+                  imageUrl={card.alcohol.imageUrl}
+                  name={card.alcohol.name}
+                  scoreAverage={card.score}
                 />
               ))}
             </Slider>
           </div>
         </div>
-        {isModalOpen && <CategoryModal closeModal={toggleModal} />}
+        {isModalOpen && profile && (
+          <CategoryModal
+            closeModal={toggleModal}
+            onUpdateComplete={() => window.location.reload()}
+            profile={profile}
+          />
+        )}
       </MypageStyle>
       ;
     </>
@@ -398,6 +399,9 @@ const MypageStyle = styled.div`
     align-items: flex-end;
     .h1 {
       font-size: 24px;
+      @media (max-width: 424px) {
+        font-size: 16px;
+      }
     }
     .link {
       font-size: 16px;

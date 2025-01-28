@@ -1,24 +1,33 @@
 import { styled } from 'styled-components';
 import React from 'react';
+import { ReviewAlcoholType } from '../../models/profile';
+import { useNavigate } from 'react-router-dom';
 
-interface ICardProps {
-  imageSrc: string;
-  title: string;
-  description: number;
-  review: string;
-}
-
-function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
-  const fullStars = Math.floor(description);
+function ProfileReviewCard({
+  id,
+  score,
+  comment,
+  alcoholId,
+  alcohol,
+}: ReviewAlcoholType) {
+  const { imageUrl, name } = alcohol;
+  const fullStars = Math.floor(score);
   const emptyStars = 5 - fullStars;
+  const navigate = useNavigate();
 
+  const handleCardClick = () => {
+    navigate(`/alcohol/${alcoholId.toString()}`);
+  };
   return (
-    <ProfileCardStyle>
+    <ProfileReviewCardStyle onClick={handleCardClick}>
       <div className="cardImage">
-        <img src={imageSrc} alt={title} />
+        <img
+          src={imageUrl ? imageUrl : '/assets/image/default-image.png'}
+          alt={name}
+        />
       </div>
       <div className="cardContent">
-        <div className="cardTitle">{title}</div>
+        <div className="cardTitle">{name}</div>
         <div className="cardStars">
           <div className="stars">
             {Array(fullStars)
@@ -36,23 +45,24 @@ function ProfileCard({ imageSrc, title, description, review }: ICardProps) {
                 </div>
               ))}
           </div>
-          <div className="rating">{description.toFixed(1)}</div>
+          <div className="rating">{score.toFixed(1)}</div>
         </div>
-        <div className="review">{review}</div>
+        <div className="review">{comment}</div>
       </div>
-    </ProfileCardStyle>
+    </ProfileReviewCardStyle>
   );
 }
 
-const ProfileCardStyle = styled.div`
+const ProfileReviewCardStyle = styled.div`
+  display: flex;
   width: 100%;
   max-width: 600px;
+  min-height: 240px;
   border: 1px solid #ddd;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  display: flex;
+  overflow: hidden;
 
   .cardImage {
     width: 200px;
@@ -75,6 +85,7 @@ const ProfileCardStyle = styled.div`
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .cardTitle {
@@ -169,4 +180,4 @@ const ProfileCardStyle = styled.div`
   }
 `;
 
-export default ProfileCard;
+export default ProfileReviewCard;

@@ -38,3 +38,10 @@ export const formatTime = (time: number) => {
     .toString()
     .padStart(2, '0')}`;
 };
+
+// 이메일 형식 검사
+// 이메일 형식 검사 함수
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+};

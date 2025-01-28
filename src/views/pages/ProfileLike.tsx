@@ -1,66 +1,24 @@
-import { styled } from 'styled-components';
 import React from 'react';
-import ProfileCard from '../../components/ProfileCard';
+import { styled } from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import ProfileLikeCard from '../../components/mypage/ProfileLikeCard';
 
 function ProfileLike() {
-  const reviewedCards = [
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '마루나 동백 양주',
-      description: 4.0,
-      review:
-        '리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.리뷰랍니다.',
-    },
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '서울 100리 18',
-      description: 3.2,
-      review: '리뷰랍니다.',
-    },
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '극락',
-      description: 5.0,
-      review: '리뷰랍니다.',
-    },
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '디아블로 카베르네 소비뇽',
-      description: 2.5,
-      review: '리뷰랍니다.',
-    },
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 4.7,
-      review: '리뷰랍니다.',
-    },
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 4.7,
-      review: '리뷰랍니다.',
-    },
-    {
-      imageSrc: 'https://picsum.photos/200',
-      title: '발디비에스 까베르네 소비뇽',
-      description: 4.7,
-      review: '리뷰랍니다.',
-    },
-  ];
+  const location = useLocation();
+  const likeAlcohol = location.state.likeAlcohol || [];
 
   return (
     <ProfileLikeStyle>
       <div className="content">
         <h1>내가 좋아하는 술</h1>
         <div className="container">
-          {reviewedCards.map((card, index) => (
-            <ProfileCard
-              key={`reviewed-${index}`}
-              imageSrc={card.imageSrc}
-              title={card.title}
-              description={card.description}
-              review={card.review}
+          {likeAlcohol.map((card) => (
+            <ProfileLikeCard
+              key={card.id}
+              id={card.id}
+              imageUrl={card.imageUrl}
+              name={card.name}
+              scoreAverage={card.scoreAverage}
             />
           ))}
         </div>
@@ -73,7 +31,7 @@ const ProfileLikeStyle = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 94%;
   padding: 20px;
   overflow-y: auto;
 
@@ -84,7 +42,7 @@ const ProfileLikeStyle = styled.div`
   .content {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    max-width: 100%;
   }
   .container {
     display: grid;
