@@ -3,17 +3,12 @@ import { apiClient } from '../apiClient';
 interface LoginContentProps {
   email: string;
   password: string;
+  isRemembered: boolean;
 }
 
 export const loginApi = async (loginContent: LoginContentProps) => {
   try {
     const response = await apiClient.post('/api/auth/login', loginContent);
-    // const accessToken = response.headers['authorization'];
-
-    // if (!accessToken) {
-    //   throw new Error('서버 응답에 액세스 토큰이 포함되어 있지 않습니다.');
-    // }
-    // localStorage.setItem('accessToken', accessToken);
     return response.data;
   } catch (error: any) {
     console.log('error in login', error.response?.data || error.message);
