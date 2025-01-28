@@ -40,7 +40,7 @@ export const oauthLogin = async (oauthLoginContent: OauthLoginContentProps) => {
     throw new Error('OAuth provider is required');
   }
 
-  window.location.href = `https://ulleong-idbiv.run.goorm.site/api/auth/${provider}`;
+  window.location.href = `https://api.sulleong.coderoom.site/api/auth/${provider}`;
 };
 
 interface findPasswordProps {

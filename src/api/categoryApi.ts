@@ -1,5 +1,5 @@
+// import { apiClient } from './apiClient';
 import axios from 'axios';
-
 export interface Category {
   id: number;
   name: string;

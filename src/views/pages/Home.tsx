@@ -95,9 +95,6 @@ function Home() {
 
   // 슬라이더 이동 함수
 
-  const navigateToMakeRoom = () => {
-    navigate('/rooms');
-  };
   const handleSort = (value: string) => {
     console.log('Selected sort option:', value);
     // 정렬 로직 구현
