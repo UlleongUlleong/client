@@ -40,7 +40,7 @@ export const oauthLogin = async (oauthLoginContent: OauthLoginContentProps) => {
     throw new Error('OAuth provider is required');
   }
 
-  window.location.href = `http://ec2-13-124-44-222.ap-northeast-2.compute.amazonaws.com:3000/api/auth/${provider}`;
+  window.location.href = `https://api.sulleong.coderoom.site/api/auth/${provider}`;
 };
 
 interface findPasswordProps {

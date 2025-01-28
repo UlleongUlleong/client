@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
-import { apiClient } from './apiClient';
 import { ModifyProfile } from '../models/profile';
+import { apiClient } from './apiClient';
 
 export const validNickname = async (nickname: string): Promise<string> => {
   try {
@@ -25,14 +25,8 @@ export const validNickname = async (nickname: string): Promise<string> => {
 };
 
 export const getProfile = async () => {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
   try {
-    const response = await apiClient.get('api/users/me/profile', {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await apiClient.get('api/users/me/profile');
     console.log(response.data.data);
     return response.data.data;
   } catch (error) {
@@ -41,14 +35,8 @@ export const getProfile = async () => {
 };
 
 export const modifyProfile = async (data: ModifyProfile) => {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
   try {
-    const response = await apiClient.put('api/users/me/profile', data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await apiClient.put('api/users/me/profile', data, {});
     console.log(response.data);
   } catch (error) {
     console.log('modifyProfile : ', error);
@@ -56,15 +44,10 @@ export const modifyProfile = async (data: ModifyProfile) => {
 };
 
 export const getInterestAlcohol = async () => {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
   try {
     const response = await apiClient.get(`api/users/interest`, {
       params: {
         limit: 1000,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
@@ -74,19 +57,27 @@ export const getInterestAlcohol = async () => {
 };
 
 export const getReviewAlcohol = async () => {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
   try {
     const response = await apiClient.get(`api/users/reviews`, {
       params: {
         limit: 1000,
       },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
     return response.data;
   } catch (error) {
     console.log('getReviewAlcohol :', error);
+  }
+};
+
+export const AddProfileImage = async (formData: FormData) => {
+  try {
+    const response = await apiClient.post(
+      '/api/users/me/profile/image',
+      formData,
+    );
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log('AddProfileImage :', error);
   }
 };
