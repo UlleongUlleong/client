@@ -8,7 +8,7 @@ import { GoAlert, GoCheckCircle } from 'react-icons/go';
 const LoginForm = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [stayLoggedIn, setStayLoggedIn] = React.useState<boolean>(false);
+  const [isRemembered, setIsRemembered] = React.useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -23,6 +23,7 @@ const LoginForm = () => {
     const loginContent = {
       email: email,
       password: password,
+      isRemembered: isRemembered,
     };
 
     try {
@@ -91,8 +92,8 @@ const LoginForm = () => {
           <input
             className="checkbox"
             type="checkbox"
-            checked={stayLoggedIn}
-            onChange={(e) => setStayLoggedIn(e.target.checked)}
+            checked={isRemembered}
+            onChange={(e) => setIsRemembered(e.target.checked)}
           />
           <label htmlFor="stay-logged-radio">로그인 유지</label>
         </div>
