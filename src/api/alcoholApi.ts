@@ -1,4 +1,4 @@
-import { apiClient } from './categoryApi';
+import { apiClient } from './apiClient';
 
 export const getAlcoholDetail = async (id: string) => {
   try {
@@ -21,18 +21,8 @@ export const getAlcoholReview = async (id: string) => {
 };
 
 export const handleBookmark = async (id: string) => {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
   try {
-    const response = apiClient.put(
-      `/api/alcohol/${id}/mark`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const response = apiClient.put(`/api/alcohol/${id}/mark`, {});
     console.log(response);
     return response;
   } catch (error) {
@@ -41,14 +31,8 @@ export const handleBookmark = async (id: string) => {
 };
 
 export const getValidBookmark = async (id: string) => {
-  const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczNzQzODEwNCwiZXhwIjoxNzM4MDQyOTA0fQ.MZzYULu7nG57K6qa9KGuTPikzKHXpaqD3eAMzypbLPQ';
   try {
-    const response = apiClient.get(`/api/alcohol/${id}/mark`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = apiClient.get(`/api/alcohol/${id}/mark`, {});
     console.log(response);
     return response;
   } catch (error) {

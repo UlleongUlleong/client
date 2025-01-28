@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiClient } from './apiClient';
 
 export interface Category {
   id: number;
@@ -10,13 +11,6 @@ interface CategoryApiResponse {
   data: Category[];
   message: string;
 }
-
-export const apiClient = axios.create({
-  baseURL: 'https://ulleong-idbiv.run.goorm.site',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 export const alcoholCategory = async (): Promise<Category[]> => {
   try {
