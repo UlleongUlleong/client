@@ -1,4 +1,4 @@
-import { api } from './index';
+import { apiClient } from './apiClient';
 import { IChatRoom } from '../models/chatRoom';
 export interface FetchCursorParams {
   sort?: string;
@@ -56,7 +56,7 @@ export const fetchChatRoomsCursor = async ({
       ...(searchText && { keyword: searchText }),
     };
 
-    const response = await api.get('/chat/rooms/cursor', { params });
+    const response = await apiClient.get('/api/chat/rooms/cursor', { params });
     if (response.status !== 200) {
       throw new Error('채팅방을 불러오는데 실패했습니다.');
     }
@@ -74,7 +74,7 @@ export const fetchChatRoomsOffset = async ({
   pageSize,
 }: FetchOffsetParams): Promise<FetchOffsetResponse> => {
   try {
-    const response = await api.get('/chat/rooms/offset', {
+    const response = await apiClient.get('/api/chat/rooms/offset', {
       params: {
         page,
         pageSize,

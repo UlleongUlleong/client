@@ -1,4 +1,4 @@
-import { apiClient } from './categoryApi';
+import { apiClient } from './apiClient';
 
 export const AddReview = async (
   id: string,

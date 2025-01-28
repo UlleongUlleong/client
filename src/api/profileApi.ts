@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { apiClient } from './categoryApi';
+import { apiClient } from './apiClient';
 import { ModifyProfile } from '../models/profile';
 
 export const validNickname = async (nickname: string): Promise<string> => {

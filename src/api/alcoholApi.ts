@@ -1,4 +1,4 @@
-import { apiClient } from './categoryApi';
+import { apiClient } from './apiClient';
 
 export const getAlcoholDetail = async (id: string) => {
   try {
