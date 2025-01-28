@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import {
@@ -37,6 +37,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
   //로그인 여부 머지 후 수정
+  useEffect(() => {}, []);
   const userIsLoggedIn = false;
   const toggleCategory = (category: ICategory) => {
     setSelectedCategories((prev) => {

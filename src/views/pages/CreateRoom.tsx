@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
-import SelectKeywords from '../../components/create-room/SelectKeywords';
+// import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 
 const MakeChat = () => {
@@ -9,7 +9,7 @@ const MakeChat = () => {
     <MakeChatStyle>
       <div className="content">
         <SelectTheme />
-        <SelectKeywords title="create-room" />
+        {/* <SelectKeywords title="create-room" /> */}
         <RoomInfoInput />
       </div>
     </MakeChatStyle>
