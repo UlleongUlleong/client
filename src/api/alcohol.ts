@@ -1,5 +1,5 @@
 import { IAlcohol } from '../models/alcohol';
-import { categoryForFetch } from '../models/categories';
+import { useCategoryStore } from '../store/useCategoryStore';
 import { apiClient } from './apiClient';
 
 export interface FetchAlcoholsParams {
@@ -83,14 +83,18 @@ export const fetchEachAlcoholsByCategory = async (
   category: number,
   limit: number,
 ): Promise<FetchEachAlcoholsResponse> => {
+  const alcoholCategories = useCategoryStore(
+    (state) => state.alcoholCategories,
+  );
+
   try {
     const response = await apiClient.get('/api/alcohol', {
       params: { category, limit },
     });
-
+    console.log('response', response);
     return {
       alcohols: response.data,
-      name: categoryForFetch.find((c) => c.id === category)?.name || '',
+      name: alcoholCategories.find((c) => c.id === category)?.name || '',
       id: category,
     };
   } catch (error) {

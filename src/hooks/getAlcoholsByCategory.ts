@@ -8,12 +8,15 @@ import {
   fetchEachAlcoholsByCategory,
   FetchEachAlcoholsResponse,
 } from '../api/alcohol';
-import { categoryForFetch } from '../models/categories';
+import { useCategoryStore } from '../store/useCategoryStore';
 
 export const useAlcoholsByCategory = () => {
+  const alcoholCategories = useCategoryStore(
+    (state) => state.alcoholCategories,
+  );
   const queries = useQueries({
     queries: [
-      ...categoryForFetch.map((category) => ({
+      ...alcoholCategories.map((category) => ({
         queryKey: ['alcohols', category.id],
         queryFn: () => fetchEachAlcoholsByCategory(category.id, 10),
         staleTime: 5 * 60 * 1000,
@@ -27,9 +30,10 @@ export const useAlcoholsByCategory = () => {
   const categoriesData = queries.reduce<
     Record<number, FetchEachAlcoholsResponse>
   >((acc, result, index) => {
-    const data = result.data;
-    acc[index] = data;
-
+    const categoryId = alcoholCategories[index]?.id;
+    if (categoryId !== undefined && result.data) {
+      acc[categoryId] = result.data;
+    }
     return acc;
   }, {});
 

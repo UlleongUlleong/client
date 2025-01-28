@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SearchBar from '../../components/SearchBar';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import AlcoholEachCategory from './AlcoholEachCategory';
 import { useAlcoholsByCategory } from '../../hooks/getAlcoholsByCategory';
-import { categoryForFetch } from '../../models/categories';
 import Spinner from '../../assets/Spinner.gif';
 import styled from 'styled-components';
 import { NoResults } from '../../styles/Alcohol';
 
+import { useCategoryStore } from '../../store/useCategoryStore';
 export const LoadingMain = styled.div`
   display: flex;
   justify-content: center;
@@ -16,7 +16,12 @@ export const LoadingMain = styled.div`
 `;
 //리뷰 메인 페이지
 function Reviews() {
+  const alcoholCategories = useCategoryStore(
+    (state) => state.alcoholCategories,
+  );
+
   const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
+  console.log(categoriesData);
   if (isLoading)
     return (
       <LoadingMain>
@@ -28,7 +33,7 @@ function Reviews() {
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
 
-      {categoryForFetch.map((category) => (
+      {alcoholCategories.map((category) => (
         <AlcoholEachCategory
           key={category.id}
           categoryId={category.id}

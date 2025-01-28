@@ -5,18 +5,17 @@ import { fetchChatRoomsCursor, fetchChatRoomsOffset } from '../api/chatRoom';
 import { ICategory } from '../models/categories';
 
 export const useChatRoomsWithCursor = (
-  userCategory: ICategory[],
+  userMoodCategory: ICategory[],
+  userAlcoholCategory: ICategory[],
   limit: number,
   sort: string,
   searchText?: string,
 ) => {
-  const moodCategory = userCategory
-    .filter((category) => category.type === 'mood')
+  const moodCategory = userMoodCategory
     .map((category) => category.id)
     .join(',');
 
-  const alcoholCategory = userCategory
-    .filter((category) => category.type === 'alcohol')
+  const alcoholCategory = userAlcoholCategory
     .map((category) => category.id)
     .join(',');
 
