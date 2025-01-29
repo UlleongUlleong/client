@@ -26,7 +26,7 @@ export const validNickname = async (nickname: string): Promise<string> => {
 
 export const getProfile = async () => {
   try {
-    const response = await apiClient.get('api/users/me/profile');
+    const response = await apiClient.get('/api/users/me/profile');
     console.log(response.data.data);
     return response.data.data;
   } catch (error) {
