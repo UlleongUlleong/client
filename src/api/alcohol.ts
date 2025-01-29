@@ -1,5 +1,4 @@
 import { IAlcohol } from '../models/alcohol';
-import { useCategoryStore } from '../store/useCategoryStore';
 import { apiClient } from './apiClient';
 
 export interface FetchAlcoholsParams {
