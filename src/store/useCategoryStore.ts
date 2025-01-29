@@ -36,8 +36,7 @@ export const useCategoryStore = create<CategoryStore>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const categories = await getAlcoholCategory();
-      const allCategories = [{ id: 0, name: '별점 Top 10' }, ...categories];
-      set({ alcoholCategories: allCategories, isLoading: false });
+      set({ alcoholCategories: categories, isLoading: false });
     } catch (error) {
       set({ error: 'Failed to fetch alcohol categories', isLoading: false });
       console.error('fetchAlcoholCategories error:', error);

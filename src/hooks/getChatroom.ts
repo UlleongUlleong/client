@@ -11,17 +11,18 @@ export const useChatRoomsWithCursor = (
   sort: string,
   searchText?: string,
 ) => {
-  const moodCategory = userMoodCategory
-    .map((category) => category.id)
-    .join(',');
+  let moodCategory;
+  let alcoholCategory;
+  if (userAlcoholCategory != undefined && userMoodCategory != undefined) {
+    moodCategory = userMoodCategory.map((category) => category.id).join(',');
 
-  const alcoholCategory = userAlcoholCategory
-    .map((category) => category.id)
-    .join(',');
+    alcoholCategory = userAlcoholCategory
+      .map((category) => category.id)
+      .join(',');
+  }
 
   return useInfiniteQuery({
     queryKey: ['chatrooms', sort, moodCategory, alcoholCategory, searchText],
-
     queryFn: ({ pageParam }) =>
       fetchChatRoomsCursor({
         sort,

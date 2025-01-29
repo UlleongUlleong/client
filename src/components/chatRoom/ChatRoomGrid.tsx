@@ -59,6 +59,7 @@ function ChatRoomGrid() {
 
   useEffect(() => {
     if (data) {
+      console.log(data);
       const mergedData = data.pages.flatMap((page) => page.data);
       setChatRoomData(mergedData);
     }
@@ -83,7 +84,7 @@ function ChatRoomGrid() {
   return (
     <>
       <GridTopBar>
-        {userMoodCategory.length > 0 || userAlcoholCategory.length > 0 ? (
+        {userMoodCategory != undefined || userAlcoholCategory != undefined ? (
           <CategoryTitle>사용자 추천 순</CategoryTitle>
         ) : (
           <CategoryTitle> 기본 순</CategoryTitle>

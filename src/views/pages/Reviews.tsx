@@ -16,12 +16,9 @@ export const LoadingMain = styled.div`
 `;
 //리뷰 메인 페이지
 function Reviews() {
-  const alcoholCategories = useCategoryStore(
-    (state) => state.alcoholCategories,
-  );
-
+  const category = useCategoryStore((state) => state.alcoholCategories);
+  const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
   const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
-  console.log(categoriesData);
   if (isLoading)
     return (
       <LoadingMain>

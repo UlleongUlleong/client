@@ -21,7 +21,6 @@ export interface FetchAlcoholsResponse {
 
 export interface FetchEachAlcoholsResponse {
   id: number;
-  name: string;
   alcohols: { data: IAlcohol[] };
 }
 
@@ -70,7 +69,6 @@ export const fetchAlcoholsTop10 = async (
 
     return {
       alcohols: response.data,
-      name: '평점 TOP 10',
       id: 0,
     };
   } catch (error) {
@@ -83,18 +81,13 @@ export const fetchEachAlcoholsByCategory = async (
   category: number,
   limit: number,
 ): Promise<FetchEachAlcoholsResponse> => {
-  const alcoholCategories = useCategoryStore(
-    (state) => state.alcoholCategories,
-  );
-
   try {
     const response = await apiClient.get('/api/alcohol', {
       params: { category, limit },
     });
-    console.log('response', response);
+
     return {
       alcohols: response.data,
-      name: alcoholCategories.find((c) => c.id === category)?.name || '',
       id: category,
     };
   } catch (error) {

@@ -82,6 +82,10 @@ const categoryChat = [
 ];
 const categoryForFetch = [
   {
+    id: 0,
+    name: 'TOP10',
+  },
+  {
     id: 1,
     name: '와인',
   },
@@ -121,27 +125,21 @@ function generateDummyRoomData(count: number, category: string) {
 
 function generateDummyData(count: number, category: number) {
   let curr = 0;
-  const cat = categoryChat.find((cat) => cat.id === category);
+
   return Array.from({ length: count }, () => ({
     id: ++curr,
-    name: `${cat}${curr}`,
+    name: `${category}${curr}`,
     imageUrl:
       'https://wineall.co.kr/web/product/big/202204/e0b9cfb8b7e703a4e086f6c2a7f72e28.png',
 
     scoreAverage: parseFloat((Math.random() * 5).toFixed(1)),
-    type: `${cat}`,
+    type: `${category}`,
     price: 20000 + (curr - 1) * 500,
     reviewCount: Math.floor(Math.random() * 100),
     interestCount: Math.floor(Math.random() * 100),
   }));
 }
 // 전체 카테고리 더미 데이터
-const dummy = [];
-dummy.push({ popular: generateDummyData(10, 0) });
-
-categoryForFetch.forEach((category) => {
-  dummy.push({ [category.name]: generateDummyData(10, category.id) });
-});
 
 const wineData = generateDummyData(30, 1);
 const reviews = wineData.sort((a, b) => b.reviewCount - a.reviewCount);
@@ -152,15 +150,17 @@ export const handlers = [
   http.all('*', async () => {
     await delay(100);
   }),
-  http.get('https://api.sulleong.coderoom.site/api/alcohol', ({ request }) => {
+  http.get('https://api.sulleong.coderoom.site/api/alcohol*', ({ request }) => {
     const url = new URL(request.url);
     console.log('들어옴');
+
     const category = parseInt(url.searchParams.get('category'));
     const keyword = url.searchParams.get('keyword');
     const sort = parseInt(url.searchParams.get('sort'));
     const offset = parseInt(url.searchParams.get('offset') || '0');
     const limit = parseInt(url.searchParams.get('limit') || '4');
-    const cursor = parseInt(url.searchParams.get('cursor'));
+    const cursorParam = url.searchParams.get('cursor');
+    const cursor = cursorParam ? parseInt(cursorParam) : NaN;
     console.log(
       'category',
       category,
@@ -175,7 +175,7 @@ export const handlers = [
       keyword,
     );
 
-    if (category && isNaN(cursor)) {
+    if (category) {
       console.log('category response');
       return new HttpResponse(
         JSON.stringify({
@@ -269,6 +269,41 @@ export const handlers = [
       );
     }
   }),
+  http.get(
+    'https://api.sulleong.coderoom.site/api/users/me/profile',
+    ({ request }) => {
+      const profile = {
+        statusCode: 200,
+        message: '내 프로필을 가져왔습니다.',
+        data: {
+          nickname: '동동동',
+          moodCategory: [
+            {
+              id: 1,
+              name: '혼술',
+            },
+            {
+              id: 2,
+              name: '반주',
+            },
+          ],
+          alcoholCategory: [
+            {
+              id: 2,
+              name: '맥주',
+            },
+            {
+              id: 4,
+              name: '와인',
+            },
+          ],
+        },
+        path: '/api/users/me/profile',
+      };
+      return new HttpResponse(JSON.stringify(profile));
+    },
+  ),
+
   http.get(
     'https://api.sulleong.coderoom.site/api/categories/alcohol',
     ({ request }) => {
