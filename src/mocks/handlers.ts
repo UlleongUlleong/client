@@ -1,5 +1,4 @@
 import { http, HttpResponse, delay } from 'msw';
-import { alcoholTypeCategories } from '../models/categories';
 
 // id name score type price
 const moods = {
@@ -316,31 +315,31 @@ export const handlers = [
       return new HttpResponse(JSON.stringify(moods));
     },
   ),
-  http.get(
-    'https://api.sulleong.coderoom.site/api/chat/rooms/offset',
-    ({ request }) => {
-      const url = new URL(request.url);
-      const page = parseInt(url.searchParams.get('page'));
-      const pageSize = parseInt(url.searchParams.get('pageSize') || '6');
-      if (page && pageSize) {
-        const start = (page - 1) * pageSize;
-        const end = start + pageSize;
-        const recent = generateDummyRoomData(30, '최신 순');
-        const data = recent.slice(start, end);
-        console.log('최신순 챗룸 데이터', data);
-        return new HttpResponse(
-          JSON.stringify({
-            data,
-            pagination: {
-              page,
-              pageSize,
-              totalPages: Math.ceil(dummy.length / pageSize),
-            },
-          }),
-        );
-      }
-    },
-  ),
+  // http.get(
+  //   'https://api.sulleong.coderoom.site/api/chat/rooms/offset',
+  //   ({ request }) => {
+  //     const url = new URL(request.url);
+  //     const page = parseInt(url.searchParams.get('page'));
+  //     const pageSize = parseInt(url.searchParams.get('pageSize') || '6');
+  //     if (page && pageSize) {
+  //       const start = (page - 1) * pageSize;
+  //       const end = start + pageSize;
+  //       const recent = generateDummyRoomData(30, '최신 순');
+  //       const data = recent.slice(start, end);
+  //       console.log('최신순 챗룸 데이터', data);
+  //       return new HttpResponse(
+  //         JSON.stringify({
+  //           data,
+  //           pagination: {
+  //             page,
+  //             pageSize,
+  //             totalPages: Math.ceil(dummy.length / pageSize),
+  //           },
+  //         }),
+  //       );
+  //     }
+  //   },
+  // ),
   http.get(
     'https://api.sulleong.coderoom.site/api/chat/rooms/cursor',
     ({ request }) => {
