@@ -25,11 +25,11 @@ export const ChatImage = styled.div`
   }
 `;
 
-export const ChatRoomParty = styled.div<{ isFull: boolean }>`
+export const ChatRoomParty = styled.div<{ $isFull: boolean }>`
   position: relative;
   display: flex;
   padding: 5px 10px;
-  right: ${(props) => (props.isFull ? '95px' : '110px')};
+  right: ${(props) => (props.$isFull ? '95px' : '110px')};
   top: 45px;
   color: white;
   background-color: rgba(0, 0, 0, 0.7);
