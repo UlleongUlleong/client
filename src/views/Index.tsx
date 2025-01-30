@@ -4,7 +4,6 @@ import NavigationBar from './layouts/NavigationBar';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import ChatLists from './pages/ChatLists';
-import MakeChat from './pages/CreateRoom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import EmailVerificationTab from '../components/register/email-verify/EmailVerification';
@@ -18,6 +17,8 @@ import SearchAlcohol from './pages/SearchAlcohol';
 import ChatSearchList from './pages/ChatSearchList';
 import FindPassword from '../components/login/FindPassword';
 import EmailDuplicateTest from '../components/register/email-verify/EmailDuplicateTest';
+import ChatRoom from './pages/ChatRoom';
+import CreateRoom from './pages/CreateRoom';
 
 const Index = () => {
   const routeLists = [
@@ -47,9 +48,13 @@ const Index = () => {
     },
     {
       path: '/rooms',
-      element: <MakeChat />,
+      element: <CreateRoom />,
     },
-
+    {
+      path: '/chat-room',
+      element: <ChatRoom />,
+      noNav: true,
+    },
     {
       path: '/login',
       element: <Login />,

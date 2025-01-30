@@ -29,7 +29,10 @@
     "react-slick": "^0.30.3",
     "react-toastify": "^11.0.3",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.14"
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "styled-components": "^6.1.14",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

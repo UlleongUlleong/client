@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { GoTriangleLeft, GoTriangleRight } from 'react-icons/go';
 
-const SelectTheme = () => {
-  const [img, setImg] = useState<number>(1);
+interface SelecteThemeProps {
+  themeId: number;
+  setThemeId: React.Dispatch<React.SetStateAction<number>>;
+}
 
+const SelectTheme = ({ themeId, setThemeId }: SelecteThemeProps) => {
   const handleClickButton = (direction: 'left' | 'right') => {
     if (direction === 'left') {
-      setImg((prev) => prev - 1);
+      setThemeId((prev) => (prev === 1 ? 7 : prev - 1));
     } else {
-      setImg((prev) => prev + 1);
+      setThemeId((prev) => (prev === 7 ? 1 : prev + 1));
     }
   };
 
@@ -24,7 +27,7 @@ const SelectTheme = () => {
             </button>
           </div>
           <div>
-            <img src={`src/assets/images/theme-sample${img}.png`} />
+            <img src={`/public/assets/image/chatTheme/theme0${themeId}.png`} />
           </div>
           <div className="btn">
             <button onClick={() => handleClickButton('right')}>
