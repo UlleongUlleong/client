@@ -18,7 +18,6 @@ function Alcohol({ alcohol: alcohol }: { alcohol: IAlcohol }) {
     navigate(`/alcohol/${alcohol.id}`);
   };
   const { imageUrl, name, reviewCount, scoreAverage } = alcohol;
-  console.log(scoreAverage);
   return (
     <CardContainer key={alcohol.name} onClick={gotoDetailPage}>
       <AlcoholImage>

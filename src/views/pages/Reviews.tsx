@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import SearchBar from '../../components/SearchBar';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import AlcoholEachCategory from './AlcoholEachCategory';

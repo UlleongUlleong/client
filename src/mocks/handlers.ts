@@ -53,62 +53,6 @@ const moodList = [
   '고민상담',
   '레시피공유',
 ];
-const categoryChat = [
-  {
-    id: 1,
-    name: '최신순',
-  },
-  {
-    id: 2,
-    name: '혼술',
-  },
-  {
-    id: 3,
-    name: '위스키',
-  },
-  {
-    id: 4,
-    name: '와인',
-  },
-  {
-    id: 5,
-    name: '막걸리',
-  },
-  {
-    id: 6,
-    name: '기타',
-  },
-];
-const categoryForFetch = [
-  {
-    id: 0,
-    name: 'TOP10',
-  },
-  {
-    id: 1,
-    name: '와인',
-  },
-  {
-    id: 2,
-    name: '맥주',
-  },
-  {
-    id: 3,
-    name: '소주',
-  },
-  {
-    id: 4,
-    name: '막걸리',
-  },
-  {
-    id: 5,
-    name: '위스키',
-  },
-  {
-    id: 6,
-    name: '기타',
-  },
-];
 function generateDummyRoomData(count: number, category: string) {
   let currentId = 0;
   const maxMember = Math.floor(Math.random() * 10);
@@ -268,53 +212,44 @@ export const handlers = [
       );
     }
   }),
-  http.get(
-    'https://api.sulleong.coderoom.site/api/users/me/profile',
-    ({ request }) => {
-      const profile = {
-        statusCode: 200,
-        message: '내 프로필을 가져왔습니다.',
-        data: {
-          nickname: '동동동',
-          moodCategory: [
-            {
-              id: 1,
-              name: '혼술',
-            },
-            {
-              id: 2,
-              name: '반주',
-            },
-          ],
-          alcoholCategory: [
-            {
-              id: 2,
-              name: '맥주',
-            },
-            {
-              id: 4,
-              name: '와인',
-            },
-          ],
-        },
-        path: '/api/users/me/profile',
-      };
-      return new HttpResponse(JSON.stringify(profile));
-    },
-  ),
+  http.get('https://api.sulleong.coderoom.site/api/users/me/profile', () => {
+    const profile = {
+      statusCode: 200,
+      message: '내 프로필을 가져왔습니다.',
+      data: {
+        nickname: '동동동',
+        moodCategory: [
+          {
+            id: 1,
+            name: '혼술',
+          },
+          {
+            id: 2,
+            name: '반주',
+          },
+        ],
+        alcoholCategory: [
+          {
+            id: 2,
+            name: '맥주',
+          },
+          {
+            id: 4,
+            name: '와인',
+          },
+        ],
+      },
+      path: '/api/users/me/profile',
+    };
+    return new HttpResponse(JSON.stringify(profile));
+  }),
 
-  http.get(
-    'https://api.sulleong.coderoom.site/api/categories/alcohol',
-    ({ request }) => {
-      return new HttpResponse(JSON.stringify(alcolCategory));
-    },
-  ),
-  http.get(
-    'https://api.sulleong.coderoom.site/api/categories/moods',
-    ({ request }) => {
-      return new HttpResponse(JSON.stringify(moods));
-    },
-  ),
+  http.get('https://api.sulleong.coderoom.site/api/categories/alcohol', () => {
+    return new HttpResponse(JSON.stringify(alcolCategory));
+  }),
+  http.get('https://api.sulleong.coderoom.site/api/categories/moods', () => {
+    return new HttpResponse(JSON.stringify(moods));
+  }),
   // http.get(
   //   'https://api.sulleong.coderoom.site/api/chat/rooms/offset',
   //   ({ request }) => {

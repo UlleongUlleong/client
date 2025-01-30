@@ -19,6 +19,7 @@ function ChatRoomGrid() {
   const [userAlcoholCategory, setUserAlcoholCategory] = useState<ICategory[]>(
     [],
   );
+
   const [sortChatRooms, setSortChatRooms] = useState(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;
     const savedOption = localStorage.getItem(pageKey);
@@ -28,8 +29,8 @@ function ChatRoomGrid() {
     const getUserCategory = async () => {
       const user = await getProfile();
       if (user) {
-        setUserMoodCategory(user.moodCategories);
-        setUserAlcoholCategory(user.alcoholCategories);
+        setUserMoodCategory(user.moodCategory);
+        setUserAlcoholCategory(user.alcoholCategory);
       }
     };
     getUserCategory();
@@ -59,7 +60,6 @@ function ChatRoomGrid() {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       const mergedData = data.pages.flatMap((page) => page.data);
       setChatRoomData(mergedData);
     }

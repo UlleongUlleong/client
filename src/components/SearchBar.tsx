@@ -134,7 +134,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
           </IconButton>
         </SearchWrapper>
 
-        <Dropdown isOpen={isOpen}>
+        <Dropdown $isOpen={isOpen}>
           {/* 선택된 태그 섹션 */}
           <SelectedTagsSection>
             {[...selectedMoodCategories].map((cat) => (
