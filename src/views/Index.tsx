@@ -47,11 +47,11 @@ const Index = () => {
       element: <SearchAlcohol />,
     },
     {
-      path: '/rooms',
+      path: '/create-room',
       element: <CreateRoom />,
     },
     {
-      path: '/chat-room',
+      path: '/chat',
       element: <ChatRoom />,
       noNav: true,
     },

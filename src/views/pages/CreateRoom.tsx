@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
 import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 import { useNavigate } from 'react-router-dom';
+import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
 
 const CreateRoom = () => {
+  const socket = useSocketStore((state) => state.socket);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const [name, setName] = useState<string>('');
@@ -15,7 +18,37 @@ const CreateRoom = () => {
   const [moods, setMoods] = useState<number[]>([]);
   const [alcohols, setAlcohols] = useState<number[]>([]);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    // 서버에서 "room_create" 응답을 받으면 실행
+    socket.on('room_created', (response) => {
+      console.log('✅ 방 생성 응답:', response);
+      console.log(socket.id);
+      if (response?.message) {
+        navigate(`/chat/${socket.id}`);
+        console.log(response);
+      } else {
+        alert('방 생성 실패');
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      socket.off('room_created'); // 이벤트 리스너 정리
+    };
+  }, [socket]);
+
   const handleCreateRoom = () => {
+    if (!socket) {
+      alert('소켓 연결 중');
+      return;
+    }
+
+    console.log('🛠️ 현재 등록된 리스너:', socket.listeners('create_room'));
+
+    setLoading(true);
+
     const roomData = {
       name,
       maxParticipants,
@@ -25,12 +58,8 @@ const CreateRoom = () => {
       alcohols,
     };
 
-    // console.log('📤 방 만들기 요청 전송:', roomData);
-    // socket.on('connect', () => {
-    //   console.log('연결 성공');
-    // });
-
-    // socket.emit('create_room', roomData);
+    socket.emit('create_room', roomData); // 방만들기 요청
+    console.log('📤 방 만들기 요청 전송:', roomData);
 
     // socket.on('room_create', (res) => {
     //   console.log(res);
