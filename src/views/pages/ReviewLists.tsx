@@ -14,6 +14,7 @@ import { categoryForIndex } from '../../models/categories';
 import { IAlcohol } from '../../models/alcohol';
 import Spinner from '../../assets/Spinner.gif';
 import { LoadingMain } from './Reviews';
+import { useCategoryStore } from '../../store/useCategoryStore';
 
 function ReviewLists() {
   const [sort, setSort] = useState(() => {
@@ -21,6 +22,7 @@ function ReviewLists() {
     const savedOption = localStorage.getItem(pageKey);
     return savedOption || 'name';
   });
+  const category = useCategoryStore((state) => state.alcoholCategories);
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   const { id } = useParams();
   //검색 시 location state로 넘어와서 관리
@@ -35,8 +37,11 @@ function ReviewLists() {
     isError,
     error,
   } = useAlcoholsQuery(categoryId, 5, sort);
-
-  const categoryName = categoryForIndex[categoryId];
+  const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
+  const filteredItems = alcoholCategories.find(
+    (item) => item.id === categoryId,
+  );
+  const categoryName = filteredItems.name;
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
