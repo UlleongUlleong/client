@@ -27,12 +27,11 @@ export const useAlcoholsByCategory = () => {
   const categoriesData = queries.reduce<
     Record<number, FetchEachAlcoholsResponse>
   >((acc, result, index) => {
-    console.log('result', result.data);
     const data = result.data;
     acc[index] = data;
     return acc;
   }, {});
-  console.log('categoriesData', categoriesData);
+
   return {
     categoriesData,
     isLoading,

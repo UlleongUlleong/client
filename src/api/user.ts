@@ -8,7 +8,7 @@ export const isLogin = async () => {
       return false;
     }
   } catch (error) {
-    console.log('isLogin : ', error);
+    console.error('isLogin : ', error);
     new Error('유저 파악 시 에러가 발생했습니다.');
   }
 };
