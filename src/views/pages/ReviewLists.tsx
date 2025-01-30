@@ -10,7 +10,6 @@ import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { useInView } from 'react-intersection-observer';
 import { useAlcoholsQuery } from '../../hooks/getAlcoholsByCategory';
 import { Loading } from '../../styles/Home';
-import { categoryForIndex } from '../../models/categories';
 import { IAlcohol } from '../../models/alcohol';
 import Spinner from '../../assets/Spinner.gif';
 import { LoadingMain } from './Reviews';
