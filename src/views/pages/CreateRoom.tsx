@@ -1,30 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { io } from 'socket.io-client';
 import SelectTheme from '../../components/create-room/SelecteTheme';
 import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
-
-const socket = io('https://api.sulleong.coderoom.site/chat');
+import { useNavigate } from 'react-router-dom';
 
 const CreateRoom = () => {
+  const navigate = useNavigate();
+
   const [name, setName] = useState<string>('');
   const [maxParticipants, setMaxParticipants] = useState<number>(2);
   const [description, setDescription] = useState<string>('');
   const [themeId, setThemeId] = useState<number>(1);
   const [moods, setMoods] = useState<number[]>([]);
   const [alcohols, setAlcohols] = useState<number[]>([]);
-
-  useEffect(() => {
-    socket.on('room_created', (roomData) => {
-      console.log('방이 생성됨:', roomData);
-      // 여기서 페이지 이동 or 상태 업데이트
-    });
-
-    return () => {
-      socket.off('room_created');
-    };
-  }, []);
 
   const handleCreateRoom = () => {
     const roomData = {
@@ -36,8 +25,16 @@ const CreateRoom = () => {
       alcohols,
     };
 
-    socket.emit('create_room', roomData);
-    console.log('방 만들기');
+    // console.log('📤 방 만들기 요청 전송:', roomData);
+    // socket.on('connect', () => {
+    //   console.log('연결 성공');
+    // });
+
+    // socket.emit('create_room', roomData);
+
+    // socket.on('room_create', (res) => {
+    //   console.log(res);
+    // });
   };
 
   return (
