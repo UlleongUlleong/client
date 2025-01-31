@@ -13,6 +13,7 @@ interface DetailCardProps extends AlcoholDetailType {
 
 function DetailCard({
   id,
+  imageUrl,
   name,
   scoreAverage,
   reviewCount,
@@ -22,6 +23,7 @@ function DetailCard({
   isMyReview,
   toggleModal,
 }: DetailCardProps) {
+
   const handleBookmarkClick = () => {
     const fetchHandleBookmark = async () => {
       if (!id) return;
@@ -30,26 +32,29 @@ function DetailCard({
         window.location.reload();
       } catch (error) {
         console.log('handleBookmarkClick :', error);
+        alert("로그인이 필요합니다! 로그인해주세요.");
       }
     };
     fetchHandleBookmark();
   };
 
+  const handleRatingClick = () => {
+    if (!isMyReview) {
+      toggleModal();
+    } else {
+      alert('리뷰를 이미 작성하셨습니다.');
+    }
+  };
+
   return (
     <DetailCardStyle>
       <div className="cardImage">
-        <img src={'https://picsum.photos/200'} alt={name} />
+        <img src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}`} alt={name} />
       </div>
       <div className="cardTitle">{name}</div>
       <div
-        className={`rating ${isMyReview ? '' : 'active'}`}
-        onClick={() => {
-          if (isMyReview) {
-            toggleModal();
-          } else {
-            alert('리뷰를 이미 작성하셨습니다.');
-          }
-        }}
+        className={`rating ${isMyReview ? 'active' : ''}`}
+        onClick={handleRatingClick}
       >
         <FaRegStar />
         {scoreAverage}점({reviewCount}명)
@@ -114,7 +119,14 @@ const DetailCardStyle = styled.div`
     }
   }
 
-  .rating.active svg,
+  .rating svg {
+    color: black;
+  }
+
+  .rating.active svg {
+    color: #ff9500;
+  }
+
   .bookmark.active svg {
     color: #ff9500;
   }
