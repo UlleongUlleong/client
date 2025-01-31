@@ -149,7 +149,7 @@ function Mypage() {
             <div className="profile-image-wrapper">
               <div className="profile-image">
                 {profileImage ? (
-                  <img src={profile.imageUrl} alt={profile.imageUrl} />
+                  <img src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${profile.imageUrl}`} alt={profile.imageUrl} />
                 ) : (
                   <FaRegUserCircle size={200} />
                 )}
@@ -247,7 +247,7 @@ function Mypage() {
               {reviewAlcohol.map((card) => (
                 <Card
                   key={card.id}
-                  id={card.id}
+                  id={card.alcoholId}
                   imageUrl={card.alcohol.imageUrl}
                   name={card.alcohol.name}
                   scoreAverage={card.score}
