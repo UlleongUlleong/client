@@ -30,6 +30,7 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   const handleChatRoomClick = () => {
     navigate(`/chat/${room.id}`);
   };
+  console.log(room.theme.split('.')[0]);
   return (
     <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
       <ChatRoomParty $isFull={isFull}>
@@ -43,7 +44,10 @@ function ChatRoom({ room }: { room: IChatRoom }) {
       </ChatRoomParty>
       <ChatImage>
         {room.theme ? (
-          <img src={`/assets/image/chatTheme/${room.theme}`} alt={room.theme} />
+          <img
+            src={`/assets/image/chatTheme/${room.theme.split('.')[0]}.png`}
+            alt={room.theme}
+          />
         ) : (
           <img src="/assets/image/default-image.png" alt="default-image" />
         )}
