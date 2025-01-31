@@ -22,9 +22,10 @@ import { ICategory } from '../models/categories.ts';
 import Divider from '@mui/material/Divider';
 import { useNavigate } from 'react-router-dom';
 import { isLogin } from '../api/user.ts';
-
+import { GoAlert, GoCheckCircle } from 'react-icons/go';
 import { useCategoryStore } from '../store/useCategoryStore.ts';
 import { logoutApi } from '../api/users/loginApi.ts';
+import { toast } from 'react-toastify';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -111,9 +112,14 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
     navigate('/login');
   };
   const navigateToLogout = () => {
-    logoutApi();
-    setUserLogin(false);
-    navigate('/');
+    const status = logoutApi();
+    if (status) {
+      setUserLogin(false);
+      toast.success('로그아웃 되었습니다.', <GoCheckCircle />);
+      navigate('/');
+    } else {
+      toast.error('로그아웃에 실패했습니다.', <GoAlert />);
+    }
   };
 
   return (
