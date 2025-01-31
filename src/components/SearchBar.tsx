@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import { isLogin } from '../api/user.ts';
 
 import { useCategoryStore } from '../store/useCategoryStore.ts';
+import { logoutApi } from '../api/users/loginApi.ts';
 interface searchBarProps {
   isMoodCategories: boolean;
 }
@@ -110,7 +111,9 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
     navigate('/login');
   };
   const navigateToLogout = () => {
-    navigate('/logout');
+    logoutApi();
+    setUserLogin(false);
+    navigate('/');
   };
 
   return (

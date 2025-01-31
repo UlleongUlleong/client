@@ -23,7 +23,11 @@ function Alcohol({ alcohol: alcohol }: { alcohol: IAlcohol }) {
       <AlcoholImage>
         {
           <img
-            src={imageUrl ? imageUrl : '/assets/image/default-image.png'}
+            src={
+              imageUrl
+                ? `https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}`
+                : '/assets/image/default-image.png'
+            }
             alt={name}
           />
         }
