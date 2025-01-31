@@ -21,12 +21,11 @@ const CreateRoom = () => {
   useEffect(() => {
     if (!socket) return;
 
-    // 서버에서 "room_create" 응답을 받으면 실행
     socket.on('room_created', (response) => {
       console.log('✅ 방 생성 응답:', response);
       console.log(socket.id);
       if (response?.message) {
-        navigate(`/chat/${socket.id}`);
+        navigate(`/chat/${response.roomId}`);
         console.log(response);
       } else {
         alert('방 생성 실패');
@@ -45,7 +44,7 @@ const CreateRoom = () => {
       return;
     }
 
-    console.log('🛠️ 현재 등록된 리스너:', socket.listeners('create_room'));
+    // console.log('🛠️ 현재 등록된 리스너:', socket.listeners('create_room'));
 
     setLoading(true);
 
@@ -60,10 +59,6 @@ const CreateRoom = () => {
 
     socket.emit('create_room', roomData); // 방만들기 요청
     console.log('📤 방 만들기 요청 전송:', roomData);
-
-    // socket.on('room_create', (res) => {
-    //   console.log(res);
-    // });
   };
 
   return (

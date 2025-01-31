@@ -4,8 +4,6 @@ import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
 
 const ChatRoom = () => {
-  // const [people, setPeople] = useState<number>(1);
-
   return (
     <ChatRoomStyle>
       <ChatHeader />

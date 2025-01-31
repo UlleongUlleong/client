@@ -1,50 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Socket, io } from 'socket.io-client';
 import { FiSend } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
+import { useSocketStore } from '../create-room/socket/useSocketStore';
 
-const SOCKET_SERVER_URL = 'https://api.sulleong.coderoom.site/chat';
+interface RoomInfo {
+  name: string;
+  maxParticipants: number;
+  description: string;
+  themeId: number;
+  moods: number[];
+  alcohols: number[];
+}
 
 const Chat = () => {
-  // 소켓 유지를 위해 state에 소켓 인스턴스를 담아서 사용
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
   const [message, setMessage] = useState('');
 
+  const { roomId } = useParams();
+  const socket = useSocketStore((state) => state.socket);
+  const [roomInfo, setRoomInfo] = useState<RoomInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
-    const newSocket = io(SOCKET_SERVER_URL, {
-      path: '/socket.io',
-      transports: ['websocket'],
-    });
+    if (!socket || !roomId) return;
 
-    setSocket(newSocket);
+    socket.emit('방정보 요청 이벤트', { roomId }); // 방정보 요청
+    console.log('방 정보 요청 전송:', roomId);
 
-    newSocket.on('connect', () => {
-      console.log('WebSocket 연결 성공');
-    });
-
-    newSocket.on('message', (data) => {
-      console.log('서버로부터 메시지 수신:', data);
-      setMessages((prev) => [...prev, data]);
-    });
-
-    newSocket.on('disconnect', () => {
-      console.log('WebSocket 연결 종료');
+    socket.on('요청에 대한 듣기 이벤트', (data: RoomInfo) => {
+      console.log('방 정보 수신:', data);
+      setRoomInfo(data);
+      setLoading(false);
     });
 
     return () => {
-      newSocket.disconnect();
+      socket.off('방 정보 수신 이벤트'); // 방 정보 수신 이벤트 정리
     };
-  }, []);
+  }, [socket, roomId]);
 
-  const sendMessage = () => {
-    if (socket && message.trim() !== '') {
-      console.log('메시지 전송:', message);
-      socket.emit('message', message); // 첫번째 인수는 이벤트 이름, 두번째 인수는 데이터
-      setMessage('');
-    }
-  };
-
+  if (loading) return <p>🔄 방 정보를 불러오는 중...</p>;
+  if (!roomInfo) return <p>❌ 방 정보를 찾을 수 없습니다.</p>;
   return (
     <ChatStyle>
       <div className="chat">
@@ -57,7 +53,7 @@ const Chat = () => {
           className="input"
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button className="send-btn" type="button" onClick={sendMessage}>
+        <button className="send-btn" type="button" onClick={() => {}}>
           <FiSend />
         </button>
       </form>

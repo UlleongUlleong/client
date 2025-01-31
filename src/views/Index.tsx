@@ -51,7 +51,7 @@ const Index = () => {
       element: <CreateRoom />,
     },
     {
-      path: '/chat',
+      path: '/chat/:roomId',
       element: <ChatRoom />,
       noNav: true,
     },
