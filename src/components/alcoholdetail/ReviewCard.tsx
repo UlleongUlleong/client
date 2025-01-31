@@ -8,7 +8,8 @@ function ReviewCard({ id, score, comment, user }: AlcoholReviewType) {
   return (
     <ReviewCardStyle>
       <div className="image-container">
-        <img src={imageUrl} alt={imageUrl}></img>
+        <img src={imageUrl ? `https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}` : '/assets/image/default-image.png'}
+          alt={imageUrl}></img>
         <div className="rating">{score}점</div>
       </div>
       <div className="review">
@@ -36,6 +37,7 @@ const ReviewCardStyle = styled.div`
     gap: 4px;
     img {
       width: 60px;
+      min-height: 60px;
       border-radius: 50%;
     }
     .rating {
