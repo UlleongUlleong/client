@@ -50,6 +50,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
 
   useEffect(() => {
     const getUserLogin = async () => {
+      console.log('서치바');
       const user = await isLogin();
       setUserLogin(user);
     };
@@ -114,6 +115,7 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const navigateToLogout = async () => {
     try {
       const status = await logoutApi();
+
       if (status) {
         setUserLogin(false);
         toast.success('로그아웃 되었습니다.', <GoCheckCircle />);

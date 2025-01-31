@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
 
+import { VideoService } from '../../api/videoChat';
+import { useParams } from 'react-router-dom';
+
 const ChatRoom = () => {
+  // const [roomData, setRoomData] = useState<any>(null);
+
+  const { roomId } = useParams();
+  useEffect(() => {
+    const handleJoinRoom = async () => {
+      try {
+        await VideoService.joinRoom(roomId, 'viewer');
+        // setRoomData(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    handleJoinRoom();
+  });
+
   return (
     <ChatRoomStyle>
       <ChatHeader />

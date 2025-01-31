@@ -13,27 +13,34 @@ import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 import { NoResults } from '../../styles/Alcohol.ts';
 import { getProfile } from '../../api/profileApi.ts';
+import { isLogin } from '../../api/user.ts';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
   const [userMoodCategory, setUserMoodCategory] = useState<ICategory[]>([]);
   const [userAlcoholCategory, setUserAlcoholCategory] = useState<ICategory[]>(
     [],
   );
-
+  const [login, setLogin] = useState(false);
   const [sortChatRooms, setSortChatRooms] = useState(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;
     const savedOption = localStorage.getItem(pageKey);
     return savedOption || 'participantCount';
   });
+
   useEffect(() => {
-    const getUserCategory = async () => {
-      const user = await getProfile();
-      if (user) {
-        setUserMoodCategory(user.moodCategory);
-        setUserAlcoholCategory(user.alcoholCategory);
+    const checkLogin = async () => {
+      const isAuthenticated = await isLogin();
+      setLogin(isAuthenticated);
+      console.log('로그인여부', isAuthenticated);
+      if (isAuthenticated) {
+        const profile = await getProfile();
+        if (profile) {
+          setUserMoodCategory(profile.moodCategory);
+          setUserAlcoholCategory(profile.alcoholCategory);
+        }
       }
     };
-    getUserCategory();
+    checkLogin();
   }, []);
 
   const { ref, inView } = useInView();
@@ -84,7 +91,7 @@ function ChatRoomGrid() {
   return (
     <>
       <GridTopBar>
-        {userMoodCategory != undefined || userAlcoholCategory != undefined ? (
+        {userMoodCategory.length > 0 || userAlcoholCategory.length > 0 ? (
           <CategoryTitle>사용자 추천 순</CategoryTitle>
         ) : (
           <CategoryTitle> 기본 순</CategoryTitle>

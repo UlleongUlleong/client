@@ -1,5 +1,12 @@
 import React, { useEffect } from 'react';
 import { StreamManager } from 'openvidu-browser';
+import styled from 'styled-components';
+const StyledVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
 const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
   streamManager,
 }) => {
@@ -11,7 +18,7 @@ const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
     }
   }, [streamManager]);
 
-  return <video autoPlay ref={videoRef} />;
+  return <StyledVideo autoPlay ref={videoRef} />;
 };
 
 export default StreamComponent;

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
-// import SelectKeywords from '../../components/create-room/SelectKeywords';
+import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 import { useNavigate } from 'react-router-dom';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
-
+import { RoomConfig, VideoService } from '../../api/videoChat';
 const CreateRoom = () => {
   const socket = useSocketStore((state) => state.socket);
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ const CreateRoom = () => {
     };
   }, [socket]);
 
-  const handleCreateRoom = () => {
+  const handleCreateRoom = async () => {
     if (!socket) {
       alert('소켓 연결 중');
       return;
@@ -59,6 +59,18 @@ const CreateRoom = () => {
 
     socket.emit('create_room', roomData); // 방만들기 요청
     console.log('📤 방 만들기 요청 전송:', roomData);
+
+    try {
+      const config: RoomConfig = {
+        title: name,
+        maxParticipants,
+      };
+      const data = await VideoService.createRoom(config);
+      navigate(`/chat/${data.roomId}`);
+    } catch (error) {
+      console.error('Error while creating room', error);
+      throw error;
+    }
   };
 
   return (
