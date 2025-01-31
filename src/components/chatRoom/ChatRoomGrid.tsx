@@ -31,7 +31,6 @@ function ChatRoomGrid() {
     const checkLogin = async () => {
       const isAuthenticated = await isLogin();
       setLogin(isAuthenticated);
-      console.log('로그인여부', isAuthenticated);
       if (isAuthenticated) {
         const profile = await getProfile();
         if (profile) {

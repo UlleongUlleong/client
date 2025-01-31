@@ -50,7 +50,6 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
 
   useEffect(() => {
     const getUserLogin = async () => {
-      console.log('서치바');
       const user = await isLogin();
       setUserLogin(user);
     };

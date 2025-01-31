@@ -6,18 +6,24 @@ import 'slick-carousel/slick/slick-theme.css';
 
 export const NewSlider = styled(Slider)`
   font-family: 'Noto Sans KR', sans-serif;
-  position: relative;
-  justify-content: space-evenly;
-
-  display: flex;
 
   .slick-list {
-    position: relative;
-    left: 15px;
-    right: 15px;
-    width: calc(100% - 30px);
+    margin: 0 30px; // Creates equal left/right spacing
   }
 
+  .slick-track {
+    display: flex !important; // Override inline styles
+    justify-content: space-between;
+    align-items: center; // Optional for vertical alignment
+  }
+
+  .slick-slide {
+    float: none !important; // Disable default float
+    height: auto; // Ensure slide height adjusts
+    > div {
+      height: 100%; // Ensure child div fills slide
+    }
+  }
   .slick-arrow {
     width: 30px;
     height: 30px;
@@ -49,6 +55,7 @@ export const NewSlider = styled(Slider)`
 
   .slick-next:before {
     color: rgb(0, 0, 0);
+
     content: '❯';
   }
 `;
@@ -58,6 +65,7 @@ export const SliderSettings = {
   speed: 500,
   slidesToShow: 8,
   slidesToScroll: 8,
+  variableWidth: false,
   responsive: [
     {
       breakpoint: 2100,
