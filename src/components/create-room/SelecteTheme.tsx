@@ -2,22 +2,35 @@ import React from 'react';
 import styled from 'styled-components';
 import { GoTriangleLeft, GoTriangleRight } from 'react-icons/go';
 
-const SelectTheme = () => {
+interface SelecteThemeProps {
+  themeId: number;
+  setThemeId: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const SelectTheme = ({ themeId, setThemeId }: SelecteThemeProps) => {
+  const handleClickButton = (direction: 'left' | 'right') => {
+    if (direction === 'left') {
+      setThemeId((prev) => (prev === 1 ? 7 : prev - 1));
+    } else {
+      setThemeId((prev) => (prev === 7 ? 1 : prev + 1));
+    }
+  };
+
   return (
     <SelectThemeStyle>
       <div className="container">
         <div className="title">테마 선택</div>
         <div className="theme">
           <div className="btn">
-            <button onClick={() => {}}>
+            <button onClick={() => handleClickButton('left')}>
               <GoTriangleLeft />
             </button>
           </div>
           <div>
-            <img src="src/assets/images/theme-sample1.png" />
+            <img src={`/public/assets/image/chatTheme/theme0${themeId}.png`} />
           </div>
           <div className="btn">
-            <button onClick={() => {}}>
+            <button onClick={() => handleClickButton('right')}>
               <GoTriangleRight />
             </button>
           </div>
@@ -38,6 +51,7 @@ const SelectThemeStyle = styled.div`
   }
 
   .title {
+    display: flex;
     position: relative;
     left: 10%;
     font-size: 1.2rem;
