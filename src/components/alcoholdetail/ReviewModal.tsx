@@ -40,9 +40,14 @@ function ReviewModal({ closeModal, id }: ModalProps) {
         alert('리뷰가 저장되었습니다!');
         closeModal();
         window.location.reload();
-      } catch (error) {
-        console.log('fetchAddReview : ', error);
-        alert('리뷰 저장에 실패했습니다.');
+      } catch (error: any) {
+        if (error.message === "엑세스 토큰이 필요합니다.") {
+          alert("로그인이 필요합니다! 로그인해주세요.");
+          closeModal();
+        } else {
+          alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+          closeModal();
+        }
       }
     };
     fetchAddReview();
