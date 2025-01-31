@@ -6,7 +6,7 @@ export const AddReview = async (
   reviewText: string,
 ) => {
   try {
-    const response = apiClient.post(
+    const response = await apiClient.post(
       `/api/alcohol/${id}/reviews`,
       {
         score: selectedscore,
@@ -16,7 +16,11 @@ export const AddReview = async (
     );
     console.log(response);
     return response;
-  } catch (error) {
-    console.log('AddReview :', error);
+  } catch (error: any) {
+    console.log('AddReview error:', error);
+    if (error?.response?.status === 401) {
+      throw new Error("엑세스 토큰이 필요합니다.");
+    }
+    throw error;
   }
 };

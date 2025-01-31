@@ -71,7 +71,7 @@ export const getReviewAlcohol = async () => {
 
 export const AddProfileImage = async (formData: FormData) => {
   try {
-    const response = await apiClient.post(
+    const response = await apiClient.put(
       '/api/users/me/profile/image',
       formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
