@@ -111,17 +111,21 @@ const SearchBar = ({ isMoodCategories }: searchBarProps) => {
   const navigateToLogin = () => {
     navigate('/login');
   };
-  const navigateToLogout = () => {
-    const status = logoutApi();
-    if (status) {
-      setUserLogin(false);
-      toast.success('로그아웃 되었습니다.', <GoCheckCircle />);
-      navigate('/');
-    } else {
-      toast.error('로그아웃에 실패했습니다.', <GoAlert />);
+  const navigateToLogout = async () => {
+    try {
+      const status = await logoutApi();
+      if (status) {
+        setUserLogin(false);
+        toast.success('로그아웃 되었습니다.', <GoCheckCircle />);
+        navigate('/');
+      } else {
+        toast.error('로그아웃에 실패했습니다.', <GoAlert />);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('로그아웃 처리 중 오류가 발생했습니다.', <GoAlert />);
     }
   };
-
   return (
     <TopBar>
       <Container>

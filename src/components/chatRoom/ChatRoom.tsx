@@ -27,10 +27,11 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   const isFull = partyNumber === room.maxParticipants;
   const FULL = 'FULL';
   const navigate = useNavigate();
+
   const handleChatRoomClick = () => {
     navigate(`/chat/${room.id}`);
   };
-  console.log(room.theme.split('.')[0]);
+
   return (
     <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
       <ChatRoomParty $isFull={isFull}>
