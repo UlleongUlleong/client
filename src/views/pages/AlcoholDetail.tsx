@@ -66,8 +66,9 @@ function AlcoholDetail() {
           const myReview = data.data.find(
             (review) => review.alcoholId === parseInt(id),
           );
-          setIsMyReview(!myReview);
-          console.log(!!myReview);
+          if (myReview) {
+            setIsMyReview(!isMyReview);
+          }
         }
       } catch (error) {
         console.log('fetchValidReview:', error);
@@ -77,7 +78,7 @@ function AlcoholDetail() {
     fetchAlcoholReview();
     fetchValidBookmark();
     fetchValidReview();
-  }, [id]);
+  }, []);
 
   return (
     <AlcoholDetailStyle>
