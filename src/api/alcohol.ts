@@ -1,5 +1,4 @@
 import { IAlcohol } from '../models/alcohol';
-import { categoryForFetch } from '../models/categories';
 import { apiClient } from './apiClient';
 
 export interface FetchAlcoholsParams {
@@ -21,7 +20,6 @@ export interface FetchAlcoholsResponse {
 
 export interface FetchEachAlcoholsResponse {
   id: number;
-  name: string;
   alcohols: { data: IAlcohol[] };
 }
 
@@ -70,7 +68,6 @@ export const fetchAlcoholsTop10 = async (
 
     return {
       alcohols: response.data,
-      name: '평점 TOP 10',
       id: 0,
     };
   } catch (error) {
@@ -90,7 +87,6 @@ export const fetchEachAlcoholsByCategory = async (
 
     return {
       alcohols: response.data,
-      name: categoryForFetch.find((c) => c.id === category)?.name || '',
       id: category,
     };
   } catch (error) {

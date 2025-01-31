@@ -32,7 +32,7 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   };
   return (
     <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
-      <ChatRoomParty isFull={isFull}>
+      <ChatRoomParty $isFull={isFull}>
         <PersonIcon
           sx={{
             position: 'relative',

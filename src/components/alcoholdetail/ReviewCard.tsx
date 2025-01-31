@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import {} from '../../models/profile';
+import { } from '../../models/profile';
 import { AlcoholReviewType } from '../../models/alcohol';
 
 function ReviewCard({ id, score, comment, user }: AlcoholReviewType) {
@@ -8,7 +8,7 @@ function ReviewCard({ id, score, comment, user }: AlcoholReviewType) {
   return (
     <ReviewCardStyle>
       <div className="image-container">
-        <img src={'https://picsum.photos/200'} alt={imageUrl}></img>
+        <img src={imageUrl} alt={imageUrl}></img>
         <div className="rating">{score}점</div>
       </div>
       <div className="review">

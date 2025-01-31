@@ -23,8 +23,9 @@ function ChatSearchList() {
   });
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
   const { ref, inView } = useInView();
-  const { selectedCategories, searchText } = location.state as {
-    selectedCategories?: ICategory[];
+  const { moodCategory, alcoholCategory, searchText } = location.state as {
+    moodCategory?: ICategory[];
+    alcoholCategory?: ICategory[];
     searchText?: string;
   } | null;
 
@@ -36,7 +37,13 @@ function ChatSearchList() {
     isFetchingNextPage,
     error,
     isError,
-  } = useChatRoomsWithCursor(selectedCategories, 6, sortChatRooms, searchText);
+  } = useChatRoomsWithCursor(
+    moodCategory,
+    alcoholCategory,
+    6,
+    sortChatRooms,
+    searchText,
+  );
 
   //초기 렌더링 시, 저장한 정렬 옵션 가져오기
   useEffect(() => {

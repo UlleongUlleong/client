@@ -44,10 +44,10 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   return (
     <DropdownContainer>
-      <DropdownButton isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
+      <DropdownButton $isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
         {selectedOption.label}
       </DropdownButton>
-      <DropdownList isOpen={isOpen}>
+      <DropdownList $isOpen={isOpen}>
         {filteredOptions.map((option) => (
           <DropdownItem key={option.value} onClick={() => handleSelect(option)}>
             {option.label}

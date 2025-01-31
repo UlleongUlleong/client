@@ -26,7 +26,7 @@ export const validNickname = async (nickname: string): Promise<string> => {
 
 export const getProfile = async () => {
   try {
-    const response = await apiClient.get('api/users/me/profile');
+    const response = await apiClient.get('/api/users/me/profile');
     console.log(response.data.data);
     return response.data.data;
   } catch (error) {
@@ -73,11 +73,21 @@ export const AddProfileImage = async (formData: FormData) => {
   try {
     const response = await apiClient.post(
       '/api/users/me/profile/image',
-      formData,
-    );
+      formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     console.log(response);
     return response;
   } catch (error) {
     console.log('AddProfileImage :', error);
   }
 };
+
+export const RemoveProfileImage = async () => {
+  try {
+    const response = await apiClient.delete('/api/users/me/profile/image');
+    return response;
+  } catch (error) {
+    console.log('RemoveProfileImage :', error)
+  }
+}

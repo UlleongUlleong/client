@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -91,13 +91,6 @@ function Home() {
         },
       },
     ],
-  };
-
-  // 슬라이더 이동 함수
-
-  const handleSort = (value: string) => {
-    console.log('Selected sort option:', value);
-    // 정렬 로직 구현
   };
 
   return (

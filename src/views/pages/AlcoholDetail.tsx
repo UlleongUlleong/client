@@ -82,7 +82,7 @@ function AlcoholDetail() {
   return (
     <AlcoholDetailStyle>
       <div className="search-bar">
-        <SearchBar />
+        <SearchBar isMoodCategories={false} />
       </div>
       <div className="content">
         <div className="alcohol-container">

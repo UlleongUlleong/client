@@ -6,19 +6,18 @@ import {
   ChatTitleBox,
   Title,
   ChatDescription,
-  Star,
   ReviewPoint,
   AlcoholImage,
   Reviewer,
 } from '../styles/Alcohol';
 import { useNavigate } from 'react-router-dom';
+import StarRating from './StarRating';
 function Alcohol({ alcohol: alcohol }: { alcohol: IAlcohol }) {
   const navigate = useNavigate();
   const gotoDetailPage = () => {
     navigate(`/alcohol/${alcohol.id}`);
   };
   const { imageUrl, name, reviewCount, scoreAverage } = alcohol;
-
   return (
     <CardContainer key={alcohol.name} onClick={gotoDetailPage}>
       <AlcoholImage>
@@ -34,7 +33,8 @@ function Alcohol({ alcohol: alcohol }: { alcohol: IAlcohol }) {
           <Title>{name}</Title>
         </ChatTitleBox>
         <ChatDescription>
-          <Star>★★★★☆</Star>
+          <StarRating score={scoreAverage} />
+
           <Reviewer>{reviewCount}명의 평가</Reviewer>
           <ReviewPoint>{scoreAverage}</ReviewPoint>
         </ChatDescription>

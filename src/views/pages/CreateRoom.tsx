@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
-import SelectKeywords from '../../components/create-room/SelectKeywords';
+// import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 import { useNavigate } from 'react-router-dom';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';

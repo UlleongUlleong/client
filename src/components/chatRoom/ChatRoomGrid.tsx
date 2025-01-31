@@ -12,21 +12,29 @@ import { GridTopBar } from '../../views/pages/Home';
 import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 import { NoResults } from '../../styles/Alcohol.ts';
+import { getProfile } from '../../api/profileApi.ts';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
+  const [userMoodCategory, setUserMoodCategory] = useState<ICategory[]>([]);
+  const [userAlcoholCategory, setUserAlcoholCategory] = useState<ICategory[]>(
+    [],
+  );
+
   const [sortChatRooms, setSortChatRooms] = useState(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;
     const savedOption = localStorage.getItem(pageKey);
     return savedOption || 'participantCount';
   });
-
-  //유저가 선택한 카테고리 머지 후 수정
-  const user_category: ICategory[] = [
-    { id: 1, name: '혼술', type: 'mood' },
-    { id: 2, name: '반주', type: 'mood' },
-    { id: 4, name: '칵테일', type: 'alcohol' },
-    { id: 5, name: '전통주', type: 'alcohol' },
-  ];
+  useEffect(() => {
+    const getUserCategory = async () => {
+      const user = await getProfile();
+      if (user) {
+        setUserMoodCategory(user.moodCategory);
+        setUserAlcoholCategory(user.alcoholCategory);
+      }
+    };
+    getUserCategory();
+  }, []);
 
   const { ref, inView } = useInView();
   const {
@@ -37,7 +45,12 @@ function ChatRoomGrid() {
     isFetchingNextPage,
     error,
     isError,
-  } = useChatRoomsWithCursor(user_category, 6, sortChatRooms);
+  } = useChatRoomsWithCursor(
+    userMoodCategory,
+    userAlcoholCategory,
+    6,
+    sortChatRooms,
+  );
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -71,7 +84,7 @@ function ChatRoomGrid() {
   return (
     <>
       <GridTopBar>
-        {user_category.length > 0 ? (
+        {userMoodCategory != undefined || userAlcoholCategory != undefined ? (
           <CategoryTitle>사용자 추천 순</CategoryTitle>
         ) : (
           <CategoryTitle> 기본 순</CategoryTitle>

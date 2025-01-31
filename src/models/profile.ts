@@ -1,7 +1,7 @@
 import { Category } from '../api/categoryApi';
 
 export interface ProfileType {
-  imageUrl?: string;
+  imageUrl: string;
   nickname: string;
   moodCategory: Category[];
   alcoholCategory: Category[];

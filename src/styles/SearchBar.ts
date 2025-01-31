@@ -69,7 +69,7 @@ export const IconButton = styled.button`
   align-items: center;
 `;
 
-export const Dropdown = styled.div<{ isOpen: boolean }>`
+export const Dropdown = styled.div<{ $isOpen: boolean }>`
   z-index: 1;
   color: black;
   position: absolute;
@@ -80,7 +80,7 @@ export const Dropdown = styled.div<{ isOpen: boolean }>`
   border: 1px solid #ddd;
   border-radius: 4px;
   margin-top: 4px;
-  display: ${(props) => (props.isOpen ? 'block' : 'none')};
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 

@@ -17,19 +17,22 @@ import {
   getInterestAlcohol,
   getProfile,
   getReviewAlcohol,
+  RemoveProfileImage,
 } from '../../api/profileApi';
+import ImageModal from '../../components/mypage/ImageModal';
 
 function Mypage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [likeAlcohol, setLikeAlcohol] = useState<LikeAlcoholType[]>([]);
   const [reviewAlcohol, setReviewAlcohol] = useState<ReviewAlcoholType[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
       const reader = new FileReader();
@@ -42,7 +45,7 @@ function Mypage() {
       formData.append('profile_image', file);
 
       try {
-        const response = AddProfileImage(formData);
+        const response = await AddProfileImage(formData);
         console.log('성공', response);
         alert('프로필 사진이 변경되었습니다!');
       } catch (error) {
@@ -53,16 +56,37 @@ function Mypage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileInputClick = () => {
+    setIsImageModalOpen(true);
+  };
+
+  const handleImageUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
+    setIsImageModalOpen(false);
   };
+
+  const handleRemoveImage = async () => {
+    try {
+      await RemoveProfileImage();
+      setProfileImage(null);
+      alert('프로필 사진이 삭제되었습니다!');
+    } catch (error) {
+      console.error('프로필 사진 삭제 실패:', error);
+    }
+    setIsImageModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsImageModalOpen(false);
+  }
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
         setProfile(data);
+        setProfileImage(data.imageUrl);
       } catch (error) {
         console.log('fetchProfile : ', error);
       }
@@ -125,7 +149,7 @@ function Mypage() {
             <div className="profile-image-wrapper">
               <div className="profile-image">
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" />
+                  <img src={profile.imageUrl} alt={profile.imageUrl} />
                 ) : (
                   <FaRegUserCircle size={200} />
                 )}
@@ -237,6 +261,14 @@ function Mypage() {
             closeModal={toggleModal}
             onUpdateComplete={() => window.location.reload()}
             profile={profile}
+          />
+        )}
+        {isImageModalOpen && (
+          <ImageModal
+            isImageModalOpen={isImageModalOpen}
+            handleCloseModal={handleCloseModal}
+            handleImageUploadClick={handleImageUploadClick}
+            handleRemoveImage={handleRemoveImage}
           />
         )}
       </MypageStyle>
@@ -475,6 +507,23 @@ const MypageStyle = styled.div`
     li:last-child {
       border-bottom: none;
     }
+  }
+  
+  .image-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 `;
 
