@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import KeywordButton from './keywords/KeywordButton';
 
@@ -161,6 +161,7 @@ const SelectKeywordsStyle = styled.div<SelectKeywordsStyleProps>`
   padding: 10px 0;
 
   h4 {
+    display: flex;
     font-size: ${({ $title }) => ($title === 'register' ? '1rem' : '1.2rem')};
   }
 
@@ -169,6 +170,7 @@ const SelectKeywordsStyle = styled.div<SelectKeywordsStyleProps>`
     padding: 10px 0;
 
     .section-title {
+      display: flex;
       padding-bottom: 8px;
       font-size: 0.9rem;
       font-weight: light;

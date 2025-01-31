@@ -1,12 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const RoomInfoInput = () => {
+interface RoomInfoInputProps {
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  maxParticipants: number;
+  setMaxParticipants: React.Dispatch<React.SetStateAction<number>>;
+  description: string;
+  setDescription: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const RoomInfoInput = ({
+  name,
+  setName,
+  maxParticipants,
+  setMaxParticipants,
+  description,
+  setDescription,
+}: RoomInfoInputProps) => {
   const maxPeopleOptions = Array.from({ length: 9 }, (_, i) => i + 2);
 
   return (
     <RoomInfoInputStyle>
-      <form className="setting" onSubmit={(e) => e.preventDefault()}>
+      <div className="setting">
         <div className="input-group">
           <div className="field">
             <div className="description">
@@ -18,6 +34,8 @@ const RoomInfoInput = () => {
               type="text"
               placeholder="방 제목을 입력하세요"
               maxLength={10}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="field">
@@ -25,7 +43,10 @@ const RoomInfoInput = () => {
               <label htmlFor="max-people">최대 인원 선택</label>
               <span>(최대 10명)</span>
             </div>
-            <select>
+            <select
+              value={maxParticipants}
+              onChange={(e) => setMaxParticipants(Number(e.target.value))}
+            >
               {maxPeopleOptions.map((number) => (
                 <option key={number} value={number}>
                   {number}
@@ -45,13 +66,12 @@ const RoomInfoInput = () => {
               type="text"
               placeholder="방에 대한 설명을 입력하세요"
               maxLength={20}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
         </div>
-        <div className="button-group">
-          <button type="submit">방 만들기</button>
-        </div>
-      </form>
+      </div>
     </RoomInfoInputStyle>
   );
 };
@@ -121,31 +141,6 @@ const RoomInfoInputStyle = styled.div`
   select:focus {
     outline: none;
     border-color: #273ec2;
-  }
-
-  .button-group {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      background-color: #273ec2;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #1a2a89;
-      }
-
-      &:active {
-        background-color: #142062;
-      }
-    }
   }
 `;
 
