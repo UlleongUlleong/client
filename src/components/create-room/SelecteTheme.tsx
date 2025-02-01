@@ -27,7 +27,7 @@ const SelectTheme = ({ themeId, setThemeId }: SelecteThemeProps) => {
             </button>
           </div>
           <div>
-            <img src={`/public/assets/image/chatTheme/theme0${themeId}.png`} />
+            <img src={`/public/assets/image/chatTheme/theme0${themeId}.jpg`} />
           </div>
           <div className="btn">
             <button onClick={() => handleClickButton('right')}>

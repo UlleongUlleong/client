@@ -23,10 +23,8 @@ const CreateRoom = () => {
 
     socket.on('room_created', (response) => {
       console.log('✅ 방 생성 응답:', response);
-      console.log(socket.id);
       if (response?.message) {
-        navigate(`/chat/${response.roomId}`);
-        console.log(response);
+        navigate(`/chat/${response.data.roomId}`);
       } else {
         alert('방 생성 실패');
       }
