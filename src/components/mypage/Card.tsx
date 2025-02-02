@@ -43,8 +43,8 @@ function Card({ id, name, scoreAverage, imageUrl }: LikeAlcoholType) {
 }
 
 const CardWrapper = styled.div`
-  max-width: 200px;
-  width: auto;
+max-width: 200px;
+  width: 200px;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;

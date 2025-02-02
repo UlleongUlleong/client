@@ -18,7 +18,7 @@ export const loginApi = async (loginContent: LoginContentProps) => {
 
 export const logoutApi = async () => {
   try {
-    const response = await apiClient.get('/api/auth/logout');
+    const response = await apiClient.delete('/api/auth/logout');
     return response.data;
   } catch (error) {
     console.log(error);
