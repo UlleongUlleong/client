@@ -66,11 +66,10 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         setSession(session);
         sessionRef.current = session;
         session.on('streamCreated', (event) => {
-          setTimeout(() => {
-            const subscriber = session.subscribe(event.stream, undefined);
-            setSubscribers((prev) => [...prev, subscriber]);
-            console.log('New stream subscribed:', event.stream.streamId);
-          }, 100); // delay of 500ms
+          const subscriber = session.subscribe(event.stream, undefined);
+          setSubscribers((prev) => [...prev, subscriber]);
+          console.log('New stream subscribed:', event.stream.streamId);
+          // delay of 500ms
         });
 
         session.on('streamDestroyed', (event) => {
@@ -98,26 +97,6 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
         await session.publish(publisher);
         setPublisher(publisher);
-
-        session.streamManagers.forEach((streamManager) => {
-          if (
-            streamManager.stream.connection.connectionId !==
-            session.connection.connectionId
-          ) {
-            setTimeout(() => {
-              const subscriber = session.subscribe(
-                streamManager.stream,
-                undefined,
-              );
-
-              setSubscribers((prev) => [...prev, subscriber]);
-              console.log(
-                'Subscribed to pre-existing stream:',
-                streamManager.stream.streamId,
-              );
-            }, 100); // delay of 500ms
-          }
-        });
       } catch (error) {
         console.error('There was an error connecting to the session:', error);
       }
