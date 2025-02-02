@@ -5,7 +5,7 @@ import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 import { useNavigate } from 'react-router-dom';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
-import { RoomConfig, VideoService } from '../../api/videoChat';
+import { createSession, RoomConfig } from '../../api/videoChat';
 const CreateRoom = () => {
   const socket = useSocketStore((state) => state.socket);
   const [loading, setLoading] = useState(false);
@@ -17,15 +17,27 @@ const CreateRoom = () => {
   const [themeId, setThemeId] = useState<number>(1);
   const [moods, setMoods] = useState<number[]>([]);
   const [alcohols, setAlcohols] = useState<number[]>([]);
+  const [roomId, setRoomId] = useState<string>('');
 
+  const makeVideoRoom = async (roomId: string) => {
+    try {
+      const response = await createSession({ roomId });
+      console.log('✅ 비디오방 생성 응답:', response);
+    } catch (e) {
+      console.error('비디오방 생성 실패:', e);
+    }
+  };
   useEffect(() => {
     if (!socket) return;
 
-    socket.on('room_created', (response) => {
+    socket.on('room_created', async (response) => {
       console.log('✅ 방 생성 응답:', response);
       console.log(socket.id);
       if (response?.message) {
-        navigate(`/chat/${response.roomId}`);
+        setRoomId(response.roomId);
+        const newRoomId = response.data.roomId.toString();
+        await makeVideoRoom(newRoomId);
+        navigate(`/chat/${newRoomId}`);
         console.log(response);
       } else {
         alert('방 생성 실패');
@@ -59,18 +71,6 @@ const CreateRoom = () => {
 
     socket.emit('create_room', roomData); // 방만들기 요청
     console.log('📤 방 만들기 요청 전송:', roomData);
-
-    try {
-      const config: RoomConfig = {
-        title: name,
-        maxParticipants,
-      };
-      const data = await VideoService.createRoom(config);
-      navigate(`/chat/${data.roomId}`);
-    } catch (error) {
-      console.error('Error while creating room', error);
-      throw error;
-    }
   };
 
   return (

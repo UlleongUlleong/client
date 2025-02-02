@@ -94,7 +94,7 @@ export const MakeChatRoomButton = styled.button`
   color: black;
   border: none;
   background: white;
-  z-index: 100;
+  z-index: 1000;
   cursor: pointer;
   font-family: 'Noto Sans KR', serif;
   font-size: 14px;

@@ -2,25 +2,41 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
-
-import { VideoService } from '../../api/videoChat';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { joinRoom } from '../../api/videoChat';
+import VideoRoom from '../../components/Video/VideoRoom';
+import { getProfile } from '../../api/profileApi';
 
 const ChatRoom = () => {
+  console.log('ChatComponent 렌더링됨');
   // const [roomData, setRoomData] = useState<any>(null);
-
+  const [token, setToken] = useState<string>();
   const { roomId } = useParams();
+  useLocation();
+  const [userName, setUserName] = useState<string>('');
+
   useEffect(() => {
     const handleJoinRoom = async () => {
       try {
-        await VideoService.joinRoom(roomId, 'viewer');
-        // setRoomData(data);
+        const response = await joinRoom(roomId);
+        console.log('response:', response.data.token);
+        setToken(response.data.token);
       } catch (e) {
-        console.error(e);
+        console.error('Failed to join room:', e);
       }
     };
     handleJoinRoom();
-  });
+  }, [roomId]);
+
+  useEffect(() => {
+    const getUserName = async () => {
+      const profile = await getProfile();
+      if (profile) {
+        setUserName(profile.nickname);
+      }
+    };
+    getUserName();
+  }, []);
 
   return (
     <ChatRoomStyle>
@@ -28,9 +44,11 @@ const ChatRoom = () => {
       <div className="chat-container">
         <div className="members-container">
           <div className="members">
-            {
-              // 다른 컴포넌트 들어올 곳
-            }
+            {token && userName ? (
+              <VideoRoom sessionId={roomId} token={token} userName={userName} />
+            ) : (
+              <div>Loading video...</div>
+            )}
           </div>
         </div>
         <div className="chatting">

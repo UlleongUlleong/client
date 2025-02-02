@@ -1,6 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
+import {
+  OpenVidu,
+  Session,
+  Publisher,
+  Subscriber,
+  Stream,
+} from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
 const VideoContainer = styled.div`
@@ -25,6 +31,7 @@ const VideoControls = styled.div`
 `;
 
 const ControlButton = styled.button`
+  z-index: 1;
   background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
@@ -47,7 +54,9 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
   const [session, setSession] = useState<Session | null>(null);
   const [publisher, setPublisher] = useState<Publisher | null>(null);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-
+  const [isAudioActive, setIsAudioActive] = useState(true);
+  const [isVideoActive, setIsVideoActive] = useState(true);
+  const sessionRef = useRef<Session | null>(null);
   useEffect(() => {
     const initSession = async () => {
       try {
@@ -55,21 +64,28 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
         const session = OV.initSession(); //새 세션 생성
         setSession(session);
-
+        sessionRef.current = session;
         session.on('streamCreated', (event) => {
-          const subscriber = session.subscribe(event.stream, undefined);
-          setSubscribers((prev) => [...prev, subscriber]); //스트림 생성 시 구독자 추가
+          setTimeout(() => {
+            const subscriber = session.subscribe(event.stream, undefined);
+            setSubscribers((prev) => [...prev, subscriber]);
+            console.log('New stream subscribed:', event.stream.streamId);
+          }, 100); // delay of 500ms
         });
 
         session.on('streamDestroyed', (event) => {
           setSubscribers(
-            (prev) => prev.filter((sub) => sub !== event.stream.streamManager), //스트림 제거 시 구독자에서 제거
+            (prev) =>
+              prev.filter(
+                (sub) => sub.stream.streamId !== event.stream.streamId,
+              ), //스트림 제거 시 구독자에서 제거
           );
         });
 
         await session.connect(token, { clientData: userName });
+        console.log('Connected to session');
 
-        const publisher = await OV.initPublisherAsync(undefined, {
+        const publisher = await OV.initPublisher(undefined, {
           audioSource: undefined,
           videoSource: undefined,
           publishAudio: true,
@@ -80,29 +96,57 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
           mirror: false,
         });
 
-        session.publish(publisher);
-        setSession(session);
+        await session.publish(publisher);
         setPublisher(publisher);
+
+        session.streamManagers.forEach((streamManager) => {
+          if (
+            streamManager.stream.connection.connectionId !==
+            session.connection.connectionId
+          ) {
+            setTimeout(() => {
+              const subscriber = session.subscribe(
+                streamManager.stream,
+                undefined,
+              );
+
+              setSubscribers((prev) => [...prev, subscriber]);
+              console.log(
+                'Subscribed to pre-existing stream:',
+                streamManager.stream.streamId,
+              );
+            }, 100); // delay of 500ms
+          }
+        });
       } catch (error) {
         console.error('There was an error connecting to the session:', error);
       }
     };
     initSession();
     return () => {
-      if (session) {
-        session.disconnect();
+      if (sessionRef.current) {
+        sessionRef.current.disconnect();
+        sessionRef.current = null;
       }
+      if (publisher) {
+        setPublisher(null);
+      }
+      setSubscribers([]);
     };
   }, [sessionId, token, userName]);
 
   const handleVideoToggle = () => {
     if (publisher) {
-      publisher.publishVideo(!publisher.stream.videoActive); //비디오 스트림을 on/off
+      const newState = !isVideoActive;
+      publisher.publishVideo(newState);
+      setIsVideoActive(newState);
     }
   };
   const handleAudioToggle = () => {
     if (publisher) {
-      publisher.publishAudio(!publisher.stream.audioActive); //오디오 스트림을 on/off
+      const newState = !isAudioActive;
+      publisher.publishAudio(newState);
+      setIsAudioActive(newState);
     }
   };
   return (
@@ -114,20 +158,22 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
             <StreamComponent streamManager={publisher} />
             <VideoControls>
               <ControlButton onClick={handleVideoToggle}>
-                {publisher?.stream.videoActive ? '비디오 끄기' : '비디오 켜기'}
+                {isVideoActive ? '비디오 끄기' : '비디오 켜기'}
               </ControlButton>
               <ControlButton onClick={handleAudioToggle}>
-                {publisher?.stream.audioActive ? '마이크 끄기' : '마이크 켜기'}
+                {isAudioActive ? '마이크 끄기' : '마이크 켜기'}
               </ControlButton>
             </VideoControls>
           </VideoContainer>
         )}
         {/* 다른 참가자 비디오 */}
-        {subscribers.map((sub, i) => (
-          <VideoContainer key={i}>
-            <StreamComponent streamManager={sub} />
-          </VideoContainer>
-        ))}
+        <div id="subscribers" className="video-container">
+          {subscribers.map((sub, i) => (
+            <VideoContainer key={i}>
+              <StreamComponent streamManager={sub} />
+            </VideoContainer>
+          ))}
+        </div>
       </div>
     </>
   );
