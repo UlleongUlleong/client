@@ -63,10 +63,14 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         sessionRef.current = session;
 
         session.on('streamCreated', (event) => {
-          const subscriber = session.subscribe(event.stream, 'subscribers', {
-            subscribeToAudio: true,
-            subscribeToVideo: true,
-          });
+          const subscriber = session.subscribe(
+            event.stream,
+            `subscribers-${event.stream.streamId}`,
+            {
+              subscribeToAudio: true,
+              subscribeToVideo: true,
+            },
+          );
 
           console.log('New stream subscribed:', subscriber.stream);
 
@@ -174,7 +178,10 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
       {/* Subscriber videos */}
 
       {subscribers.map((sub) => (
-        <VideoContainer id="subscribers" key={sub.stream.streamId}>
+        <VideoContainer
+          id={`subscribers-${sub.stream.streamId}`}
+          key={sub.stream.streamId}
+        >
           <StreamComponent streamManager={sub} />
         </VideoContainer>
       ))}

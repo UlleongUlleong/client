@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const getBasicAuthHeader = (secretKey: string) => {
-  const basicAuth = btoa(`OPENVIDUAPP:${secretKey}`);
+  const basicAuth = btoa(`${secretKey}`);
   return `Basic ${basicAuth}`;
 };
 
