@@ -44,6 +44,7 @@ export const StyledSlider = styled(Slider)`
   .slick-arrow {
     width: 30px;
     height: 30px;
+    z-index: 100;
 
     &::before {
       font-size: 30px;

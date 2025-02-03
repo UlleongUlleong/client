@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { StreamManager } from 'openvidu-browser';
 import styled from 'styled-components';
 const StyledVideo = styled.video`
@@ -10,11 +10,14 @@ const StyledVideo = styled.video`
 export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
   streamManager,
 }) => {
-  const videoRef = React.createRef<HTMLVideoElement>();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // const vidoeRef = useRef(null);
   const [name, setName] = React.useState('');
   useEffect(() => {
-    if (streamManager && videoRef.current) {
+    if (streamManager && videoRef) {
       streamManager.addVideoElement(videoRef.current);
+      videoRef.current.muted = true;
     }
     try {
       const data = JSON.parse(streamManager.stream.connection.data);
@@ -27,7 +30,8 @@ export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
 
   return (
     <div style={{ position: 'relative' }}>
-      <StyledVideo autoPlay={true} ref={videoRef} />
+      <video autoPlay ref={videoRef} muted></video>
+
       <div
         style={{
           position: 'absolute',
