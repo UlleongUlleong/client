@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Chat from '../../components/chat-room/chat/Chat';
+import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
 import { getRoomInfo } from '../../api/roomApi';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
@@ -16,10 +16,14 @@ interface RoomInfo {
 }
 
 const ChatRoom = () => {
-  const { roomId } = useParams();
-  const socket = useSocketStore((state) => state.socket);
+  const { roomId } = useParams<{ roomId: string }>();
+  const { socket } = useSocketStore();
   const [roomInfo, setRoomInfo] = useState<RoomInfo | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!socket || !roomId) return;
+    fetchRoomInfo();
+  }, [socket, roomId]);
 
   const fetchRoomInfo = async () => {
     try {
@@ -27,19 +31,10 @@ const ChatRoom = () => {
 
       const response = await getRoomInfo({ roomId });
       setRoomInfo(response.data);
-      setLoading(false);
     } catch (error: any) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
-      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (!socket || !roomId) return;
-    fetchRoomInfo();
-  }, [socket, roomId]);
-
-  // if (loading) return <p>🔄 방 정보를 불러오는 중...</p>;
 
   return (
     <ChatRoomStyle>
@@ -57,10 +52,6 @@ const ChatRoom = () => {
     </ChatRoomStyle>
   );
 };
-
-// interface ChatRoomStyleProps {
-//   $img: string;
-// }
 
 const ChatRoomStyle = styled.div`
   background: url('/assets/image/chatTheme/theme06.jpg') no-repeat center center;
@@ -80,7 +71,6 @@ const ChatRoomStyle = styled.div`
     width: 70%;
     height: 100%;
     padding: 0 40px;
-    // background: gray;
   }
 
   .chatting {

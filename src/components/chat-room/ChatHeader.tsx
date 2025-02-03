@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { MdLogout } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
+interface ChatHeaderProps {
+  title: string;
+}
+
 const ChatHeader = () => {
   const navigate = useNavigate();
 
@@ -14,7 +18,7 @@ const ChatHeader = () => {
 
   return (
     <ChatHeaderStyle>
-      <span className="chat-title">혼술러 ㄱㄱ</span>
+      <span className="chat-title">혼술러ㄱㄱ</span>
       <button className="chat-out" type="button" onClick={onClickOutButton}>
         <MdLogout />
       </button>

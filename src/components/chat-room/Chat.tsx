@@ -1,59 +1,101 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { FiSend } from 'react-icons/fi';
-import { useSocketStore } from '../../create-room/socket/useSocketStore';
+import { useSocketStore } from '../create-room/socket/useSocketStore';
 import { useParams } from 'react-router-dom';
-import Message from './Message';
+import Message from './UserMessage';
+import SystemMessage from './SystemMessage';
 
 interface MessageContent {
+  type: 'user' | 'system';
   userId: number;
   nickname: string;
   message: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 const Chat = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const numericRoomId = roomId ? parseInt(roomId, 10) : null;
-  const socket = useSocketStore((state) => state.socket);
+  const { socket, connectSocket } = useSocketStore();
   const [messages, setMessages] = useState<MessageContent[]>([]);
   const [message, setMessage] = useState('');
-  const [receivedMessage, setReceivedMessage] = useState<MessageContent | null>(
-    null,
-  );
   const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!roomId || !socket) return;
+    if (!socket) {
+      console.log('⚠️ 소켓이 연결되지 않음. 연결 시도...');
+      connectSocket();
+      return;
+    }
 
-    socket.emit('join_room', { numericRoomId });
+    if (!roomId) {
+      console.error('❌ 방 ID가 없음');
+      return;
+    }
+
+    console.log('📢 방 참가 요청 전송:', numericRoomId);
+    socket.emit('join_room', { roomId: numericRoomId });
 
     socket.on('room_joined', (response) => {
-      console.log(`유저 방 참가 완료:`, response);
+      console.log(`✅ 유저 방 참가 완료:`, response);
     });
 
     socket.on('user_joined', (response) => {
-      console.log('전체 메세지 새로운 유저 방에 참여', response);
+      console.log('👥 새로운 유저가 방에 참여:', response);
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: 'system',
+          userId: response.data.userId,
+          nickname: response.data.nickname,
+          message: response.message,
+        },
+      ]);
     });
 
     socket.on('user_left', (response) => {
-      console.log('전체메세지 유저 방 나감', response);
+      console.log('👋 유저가 방을 떠남:', response);
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: 'system',
+          userId: response.data.userId,
+          nickname: response.data.nickname,
+          message: response.message,
+        },
+      ]);
     });
 
     socket.on('new_message', (response) => {
       console.log('새로운 메세지 도착', response.data);
-      setMessages((prev) => [...prev, response.data]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          type: 'user',
+          userId: response.data.userId,
+          nickname: response.data.nickname,
+          message: response.data.message,
+          createdAt: response.data.createdAt,
+        },
+      ]);
     });
 
     socket.on('error', (response) => {
-      console.log('error', response);
+      console.error('🚨 소켓 오류 발생:', response);
     });
 
     return () => {
+      console.log('🚪 채팅방 나가기 처리');
+      socket.emit('leave_room', { roomId: numericRoomId });
+
       socket.off('room_joined');
+      socket.off('user_joined');
+      socket.off('user_left');
       socket.off('new_message');
+      socket.off('error');
     };
-  }, []);
+  }, [socket, roomId, connectSocket]);
 
   const showScrollBar = () => {
     if (chatRef.current) {
@@ -99,11 +141,18 @@ const Chat = () => {
         onMouseEnter={showScrollBar}
         onMouseLeave={hideScrollBar}
       >
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <Message message={msg.message} nickname={msg.nickname} />
-          </div>
-        ))}
+        {messages.map((msg, index) =>
+          msg.type === 'system' ? (
+            <SystemMessage key={index} message={msg.message} />
+          ) : (
+            <Message
+              key={index}
+              message={msg.message}
+              nickname={msg.nickname!}
+              id={String(msg.userId!)}
+            />
+          ),
+        )}
       </div>
       <form onSubmit={sendMessage} className="input-box">
         <textarea
@@ -122,7 +171,7 @@ const Chat = () => {
 const ChatStyle = styled.div`
   width: 100%;
   height: 100%;
-  background: #303030;
+  background: rgba(48, 48, 48, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -161,6 +210,7 @@ const ChatStyle = styled.div`
     display: flex;
     gap: 8px;
     overflow-y: auto;
+    opacity: 1 !important;
 
     .input {
       width: 100%;
