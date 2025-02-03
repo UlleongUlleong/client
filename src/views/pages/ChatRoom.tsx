@@ -6,7 +6,7 @@ import { getRoomInfo } from '../../api/roomApi';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
 import { useParams } from 'react-router-dom';
 
-interface RoomInfo {
+interface RoomDetailInfo {
   id: number;
   name: string;
   description: string;
@@ -18,12 +18,11 @@ interface RoomInfo {
 const ChatRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const { socket } = useSocketStore();
-  const [roomInfo, setRoomInfo] = useState<RoomInfo | null>(null);
+  const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
 
   useEffect(() => {
     if (!socket || !roomId) return;
     fetchRoomInfo();
-    console.log('유즈이펙트', roomInfo);
   }, [socket, roomId]);
 
   const fetchRoomInfo = async () => {
@@ -32,15 +31,14 @@ const ChatRoom = () => {
 
       const response = await getRoomInfo({ roomId });
       setRoomInfo(response.data);
-      console.log('패치함수', roomInfo);
     } catch (error: any) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
     }
   };
 
   return (
-    <ChatRoomStyle>
-      <ChatHeader />
+    <ChatRoomStyle $img={sessionStorage.getItem('themeId')}>
+      <ChatHeader title={sessionStorage.getItem('name')} />
       <div className="chat-container">
         <div className="members-container">
           {
@@ -55,8 +53,13 @@ const ChatRoom = () => {
   );
 };
 
-const ChatRoomStyle = styled.div`
-  background: url('/assets/image/chatTheme/theme06.jpg') no-repeat center center;
+interface ChatRoomStyleProps {
+  $img: string;
+}
+
+const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
+  background: url('/assets/image/chatTheme/theme0${({ $img }) => $img}.jpg')
+    no-repeat center center;
   background-size: cover;
   height: 100%;
 

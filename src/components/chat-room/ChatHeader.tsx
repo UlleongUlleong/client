@@ -7,7 +7,7 @@ interface ChatHeaderProps {
   title: string;
 }
 
-const ChatHeader = () => {
+const ChatHeader = ({ title }: ChatHeaderProps) => {
   const navigate = useNavigate();
 
   const onClickOutButton = () => {
@@ -18,7 +18,7 @@ const ChatHeader = () => {
 
   return (
     <ChatHeaderStyle>
-      <span className="chat-title">혼술러ㄱㄱ</span>
+      <span className="chat-title">{title}</span>
       <button className="chat-out" type="button" onClick={onClickOutButton}>
         <MdLogout />
       </button>
