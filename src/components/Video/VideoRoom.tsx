@@ -59,18 +59,16 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         const OV = new OpenVidu();
 
         const session = OV.initSession();
-        setSession(session);
-        sessionRef.current = session;
 
+        sessionRef.current = session;
+        session.on('exception', (exception) => {
+          console.warn('Exception:', exception);
+        });
         session.on('streamCreated', (event) => {
-          const subscriber = session.subscribe(
-            event.stream,
-            `subscribers-${event.stream.streamId}`,
-            {
-              subscribeToAudio: true,
-              subscribeToVideo: true,
-            },
-          );
+          const subscriber = session.subscribe(event.stream, undefined, {
+            subscribeToAudio: true,
+            subscribeToVideo: true,
+          });
 
           console.log('New stream subscribed:', subscriber.stream);
 
@@ -93,6 +91,14 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         await session.connect(token, { clientData: userName });
         console.log('Connected to session');
 
+        //세션 가져온 뒤 setSession
+        setSession(session);
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasCamera = devices.some(
+          (device) => device.kind === 'videoinput',
+        );
+
+        console.log('카메라 감지됨:', hasCamera);
         // Initialize publisher with specific constraints
         const publisher = await OV.initPublisherAsync(undefined, {
           audioSource: undefined,
@@ -112,10 +118,6 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
           console.log('accessAllowed');
         });
         // Publish our stream
-
-        session.on('exception', (exception) => {
-          console.warn('Exception:', exception);
-        });
 
         await session.publish(publisher);
         setPublisher(publisher);
@@ -178,10 +180,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
       {/* Subscriber videos */}
 
       {subscribers.map((sub) => (
-        <VideoContainer
-          id={`subscribers-${sub.stream.streamId}`}
-          key={sub.stream.streamId}
-        >
+        <VideoContainer key={sub.stream.streamId}>
           <StreamComponent streamManager={sub} />
         </VideoContainer>
       ))}
