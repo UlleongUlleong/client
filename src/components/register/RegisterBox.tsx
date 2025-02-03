@@ -70,7 +70,7 @@ const RegisterBox = () => {
   return (
     <RegisterBoxStyle>
       <div className="logo">
-        <img className="logo-img" src="src/assets/images/logo.png" />
+        <img className="logo-img" src="/assets/image/logo/logo.png" />
       </div>
       <h1>회원가입</h1>
       <div className="register-form">
