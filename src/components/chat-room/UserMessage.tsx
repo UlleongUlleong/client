@@ -30,7 +30,7 @@ const MessageStyle = styled.div<MessageStyleProps>`
   padding: 16px;
 
   .nickname {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: medium;
     margin-bottom: 4px;
     color: white;
@@ -41,7 +41,7 @@ const MessageStyle = styled.div<MessageStyleProps>`
     width: 65%;
     border-radius: 4px;
     padding: 6px;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 `;
 

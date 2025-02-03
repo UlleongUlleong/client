@@ -67,6 +67,10 @@ const Chat = () => {
       ]);
     });
 
+    socket.on('message_sent', (response) => {
+      console.log('메세지 전송 완료 응답', response);
+    });
+
     socket.on('new_message', (response) => {
       console.log('새로운 메세지 도착', response.data);
       setMessages((prev) => [
@@ -121,14 +125,6 @@ const Chat = () => {
 
     socket.emit('send_message', sendMsg);
     console.log('메세지 전송', sendMsg);
-
-    socket.on('message_sent', (response) => {
-      console.log('메세지 전송 완료 응답', response);
-    });
-
-    socket.on('error', (response) => {
-      console.log('send message error', response);
-    });
 
     setMessage('');
   };
