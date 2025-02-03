@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
-import { URL } from 'url';
+
 const VideoContainer = styled.div`
   position: relative;
   width: 320px;
@@ -53,80 +52,65 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
   const [isVideoActive, setIsVideoActive] = useState(true);
 
   const sessionRef = useRef<Session | null>(null);
+
   useEffect(() => {
     const initSession = async () => {
       try {
         const OV = new OpenVidu();
-
         const session = OV.initSession();
         setSession(session);
         sessionRef.current = session;
 
         session.on('streamCreated', (event) => {
-          const subscriber = session.subscribe(
-            event.stream,
-            `subscribers-${event.stream.streamId}`,
-            {
-              subscribeToAudio: true,
-              subscribeToVideo: true,
-            },
-          );
-
-          console.log('New stream subscribed:', subscriber.stream);
-
-          console.log('New stream subscribed:', event.stream.streamId);
+          const subscriber = session.subscribe(event.stream, `subscribers-${event.stream.streamId}`);
+          console.log('New stream subscribed:', subscriber.stream.streamId);
 
           subscriber.on('streamPlaying', () => {
-            console.log('subscriber stream is playing:', event.stream.streamId);
+            console.log('Subscriber stream is playing:', event.stream.streamId);
           });
+
           setSubscribers((prev) => [...prev, subscriber]);
         });
 
-        // Handle stream removals
         session.on('streamDestroyed', (event) => {
           setSubscribers((prev) =>
             prev.filter((sub) => sub.stream.streamId !== event.stream.streamId),
           );
         });
 
-        // Connect to the session
         await session.connect(token, { clientData: userName });
         console.log('Connected to session');
 
-        // Initialize publisher with specific constraints
+        // 📌 카메라 장치 확인 후 퍼블리셔 초기화
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasCamera = devices.some((device) => device.kind === 'videoinput');
+        const hasAudio = devices.some((device) => device.kind === 'audioinput');
+
+        console.log('카메라 감지됨:', hasCamera);
+
         const publisher = await OV.initPublisherAsync(undefined, {
-          audioSource: undefined,
-          videoSource: undefined,
-          publishAudio: true,
-          publishVideo: true,
+          audioSource: hasAudio ? undefined : false,
+          videoSource: hasCamera ? undefined : false,
+          publishAudio: hasAudio,
+          publishVideo: hasCamera,
           resolution: '640x480',
           frameRate: 24,
           insertMode: 'APPEND',
           mirror: false,
         });
 
-        publisher.on('streamPlaying', () =>
-          console.log('Publisher stream playing'),
-        );
-        publisher.on('accessAllowed', () => {
-          console.log('accessAllowed');
-        });
-        // Publish our stream
-
-        session.on('exception', (exception) => {
-          console.warn('Exception:', exception);
-        });
+        publisher.on('streamPlaying', () => console.log('Publisher stream playing'));
+        publisher.on('accessAllowed', () => console.log('accessAllowed'));
 
         await session.publish(publisher);
         setPublisher(publisher);
       } catch (error) {
-        console.error('There was an error connecting to the session:', error);
+        console.error('Error connecting to session:', error);
       }
     };
 
     initSession();
 
-    // Cleanup function
     return () => {
       if (sessionRef.current) {
         try {
@@ -136,7 +120,6 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         }
         sessionRef.current = null;
       }
-
       setPublisher(null);
       setSubscribers([]);
     };
@@ -160,7 +143,6 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
   return (
     <div className="video-container">
-      {/* Publisher video */}
       {publisher && (
         <VideoContainer>
           <StreamComponent streamManager={publisher} />
@@ -175,17 +157,13 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         </VideoContainer>
       )}
 
-      {/* Subscriber videos */}
-
       {subscribers.map((sub) => (
-        <VideoContainer
-          id={`subscribers-${sub.stream.streamId}`}
-          key={sub.stream.streamId}
-        >
+        <VideoContainer id="subscribers" key={sub.stream.streamId}>
           <StreamComponent streamManager={sub} />
         </VideoContainer>
       ))}
     </div>
   );
 }
+
 export default VideoRoom;
