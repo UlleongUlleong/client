@@ -92,18 +92,18 @@ const Chat = () => {
     return () => {
       console.log('🚪 채팅방 나가기 처리');
       socket.emit('leave_room', { roomId: numericRoomId });
-
       socket.off('room_joined');
       socket.off('user_joined');
       socket.off('user_left');
       socket.off('new_message');
+      socket.off('message_sent');
       socket.off('error');
     };
   }, [socket, roomId, connectSocket]);
 
   const showScrollBar = () => {
     if (chatRef.current) {
-      chatRef.current.style.scrollbarWidth = 'thin'; // Firefox용
+      chatRef.current.style.scrollbarWidth = 'thin';
       chatRef.current.style.setProperty('--scrollbar-opacity', '1');
     }
   };
@@ -113,10 +113,14 @@ const Chat = () => {
       if (chatRef.current) {
         chatRef.current.style.setProperty('--scrollbar-opacity', '0');
       }
-    }, 1500); // 1.5초 후 사라짐
+    }, 1500);
   };
 
-  const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendMessage = (
+    e:
+      | React.FormEvent<HTMLFormElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
 
     const sendMsg = {
@@ -127,6 +131,14 @@ const Chat = () => {
     console.log('메세지 전송', sendMsg);
 
     setMessage('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+
+      sendMessage(e);
+    }
   };
 
   return (
@@ -155,6 +167,7 @@ const Chat = () => {
           className="input"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <button className="send-btn" type="submit" disabled={message === ''}>
           <FiSend />
@@ -174,7 +187,7 @@ const ChatStyle = styled.div`
 
   .chat {
     overflow-y: auto;
-    --scrollbar-opacity: 0; /* 기본적으로 스크롤바 숨김 */
+    --scrollbar-opacity: 0;
     transition:
       scrollbar-color 0.3s,
       opacity 0.3s;

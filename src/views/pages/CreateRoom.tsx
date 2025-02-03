@@ -18,7 +18,7 @@ const CreateRoom = () => {
 
   useEffect(() => {
     if (!socket) {
-      connectSocket(); // 소켓이 없으면 연결 시도
+      connectSocket();
       return;
     }
 
@@ -37,7 +37,7 @@ const CreateRoom = () => {
     return () => {
       socket.off('room_created', handleRoomCreated);
     };
-  }, [socket, navigate, connectSocket]); // `connectSocket`도 의존성 배열에 추가
+  }, [socket, navigate, connectSocket]);
 
   const handleCreateRoom = () => {
     if (!socket) {

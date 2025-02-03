@@ -14,7 +14,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     const existingSocket = get().socket;
     if (existingSocket) {
       console.log('⚠️ 이미 소켓이 연결되어 있습니다:', existingSocket.id);
-      return; // 이미 소켓이 있으면 재연결 방지
+      return;
     }
 
     const newSocket = io('https://api.sulleong.coderoom.site/chat', {
@@ -30,7 +30,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       console.error('❌ 소켓 연결 실패:', err.message);
     });
 
-    set({ socket: newSocket }); // 새로운 소켓을 상태로 저장
+    set({ socket: newSocket });
   },
 
   disconnectSocket: () => {
@@ -38,7 +38,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
     if (existingSocket) {
       existingSocket.disconnect();
       console.log('❌ 소켓 연결 해제됨!');
-      set({ socket: null }); // 상태에서 소켓 제거
+      set({ socket: null });
     }
   },
 }));

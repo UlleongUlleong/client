@@ -23,6 +23,7 @@ const ChatRoom = () => {
   useEffect(() => {
     if (!socket || !roomId) return;
     fetchRoomInfo();
+    console.log('유즈이펙트', roomInfo);
   }, [socket, roomId]);
 
   const fetchRoomInfo = async () => {
@@ -31,6 +32,7 @@ const ChatRoom = () => {
 
       const response = await getRoomInfo({ roomId });
       setRoomInfo(response.data);
+      console.log('패치함수', roomInfo);
     } catch (error: any) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
     }
