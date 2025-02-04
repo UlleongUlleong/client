@@ -1,11 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { StreamManager } from 'openvidu-browser';
 import styled from 'styled-components';
-const StyledVideo = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
 
 export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
   streamManager,
@@ -28,9 +23,8 @@ export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
   }, [streamManager]);
 
   return (
-    <div style={{ position: 'relative' }}>
+    <StyledVideo>
       <video autoPlay ref={videoRef} muted></video>
-
       <div
         style={{
           position: 'absolute',
@@ -44,8 +38,21 @@ export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
       >
         {name}
       </div>
-    </div>
+    </StyledVideo>
   );
 };
+
+const StyledVideo = styled.div`
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`;
 
 export default StreamComponent;

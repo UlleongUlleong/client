@@ -29,15 +29,12 @@ const ChatRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const { socket } = useSocketStore();
   const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
-
+  const [userName, setUserName] = useState<string | null>(null);
   const [roomName, setRoomName] = useState<string | null>(null);
   const [themeId, setThemeId] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
 
-  const [userName, setUserName] = useState<string>('');
-  const [token, setToken] = useState<string>();
-  const newToken = location.state as { token: string };
   useEffect(() => {
     if (!socket || !roomId) return;
 
@@ -82,8 +79,8 @@ const ChatRoom = () => {
       <ChatHeader title={roomName || '로딩 중...'} />
       <div className="chat-container">
         <div className="members-container">
-          {token && userName ? (
-            <VideoRoom sessionId={roomId} token={token} userName={userName} />
+          {userName ? (
+            <VideoRoom userName={userName} />
           ) : (
             <div>비디오 연결 요청 중...</div>
           )}

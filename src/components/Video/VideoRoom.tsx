@@ -4,24 +4,24 @@ import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
 import { useSocketStore } from '../create-room/socket/useSocketStore';
+import { useLocation, useParams } from 'react-router-dom';
 
-interface VideoProps {
-  sessionId: string;
-  token: string;
-  userName: string;
-}
-
-function VideoRoom({ sessionId, token, userName }: VideoProps) {
+function VideoRoom({ userName }: { userName: string }) {
   const [session, setSession] = useState<Session | null>(null);
   const [publisher, setPublisher] = useState<Publisher | null>(null);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [isAudioActive, setIsAudioActive] = useState(true);
   const [isVideoActive, setIsVideoActive] = useState(true);
   const { socket } = useSocketStore();
+  const { roomId } = useParams<{ roomId: string }>();
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<string | undefined>(
     undefined,
   );
+  const [token, setToken] = useState<string>();
+  const location = useLocation();
+  const newToken = location?.state?.token;
+
   const [selectedMic, setSelectedMic] = useState<string | undefined>(undefined);
 
   // State for dropdown visibility
@@ -30,6 +30,14 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
   const sessionRef = useRef<Session | null>(null);
   //디바이스 변경시 재 렌더링
+
+  useEffect(() => {
+    if (newToken) {
+      console.log('토큰 인가 완료', newToken);
+      setToken(newToken);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchDevices = async () => {
       const deviceList = await navigator.mediaDevices.enumerateDevices();
@@ -44,10 +52,10 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
     socket.on('room_joined', (response) => {
       console.log('room_joined event: 토큰을 받아옵니다.', response.data);
-
-      // 현재 토큰 상태를 확인하여 없을 때만 업데이트
+      setToken(response.data.token);
     });
   }, [socket]);
+
   useEffect(() => {
     const initSession = async () => {
       if (!token) return;
@@ -99,7 +107,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
           publishVideo: hasCamera,
           resolution: '1280x720',
           frameRate: 30,
-          insertMode: 'REPLACE',
+          insertMode: 'APPEND',
           mirror: false,
         });
 
@@ -127,7 +135,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [sessionId, token, userName, selectedCamera, selectedMic]);
+  }, [roomId, token, userName, selectedCamera, selectedMic]);
 
   const handleVideoOnOff = () => {
     if (publisher) {
@@ -299,10 +307,9 @@ const MemberList = styled.div`
 const VideoContainer = styled.div`
   position: relative;
   margin: 10px;
-
   border-radius: 10px;
   aspect-ratio: 4 / 3;
-  background-color: #1a1a1a;
+  background-color: black;
   display: inline-block;
   padding: 4px;
 `;
