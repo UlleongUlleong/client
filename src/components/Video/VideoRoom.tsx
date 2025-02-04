@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
-
 import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
+import { useSocketStore } from '../create-room/socket/useSocketStore';
 
 interface VideoProps {
   sessionId: string;
@@ -17,7 +17,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [isAudioActive, setIsAudioActive] = useState(true);
   const [isVideoActive, setIsVideoActive] = useState(true);
-
+  const { socket } = useSocketStore();
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<string | undefined>(
     undefined,
@@ -39,6 +39,15 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
     fetchDevices();
   }, []);
 
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('room_joined', (response) => {
+      console.log('room_joined event: 토큰을 받아옵니다.', response.data);
+
+      // 현재 토큰 상태를 확인하여 없을 때만 업데이트
+    });
+  }, [socket]);
   useEffect(() => {
     const initSession = async () => {
       if (!token) return;

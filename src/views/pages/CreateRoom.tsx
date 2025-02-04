@@ -19,14 +19,14 @@ const CreateRoom = () => {
   const [alcohols, setAlcohols] = useState<number[]>([]);
   const [roomId, setRoomId] = useState<string>('');
 
-  const makeVideoRoom = async (roomId: string) => {
-    try {
-      const response = await createSession({ roomId });
-      console.log('✅ 비디오방 생성 응답:', response);
-    } catch (e) {
-      console.error('비디오방 생성 실패:', e);
-    }
-  };
+  // const makeVideoRoom = async (roomId: string) => {
+  //   try {
+  //     const response = await createSession({ roomId });
+  //     console.log('✅ 비디오방 생성 응답:', response);
+  //   } catch (e) {
+  //     console.error('비디오방 생성 실패:', e);
+  //   }
+  // };
   useEffect(() => {
     if (!socket) return;
 
@@ -36,8 +36,8 @@ const CreateRoom = () => {
       if (response?.message) {
         setRoomId(response.roomId);
         const newRoomId = response.data.roomId.toString();
-        await makeVideoRoom(newRoomId);
-        navigate(`/chat/${newRoomId}`);
+        const newToken = response.data.token;
+        navigate(`/chat/${newRoomId}`, { state: { token: newToken } });
         console.log(response);
       } else {
         alert('방 생성 실패');
