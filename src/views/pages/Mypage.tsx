@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import { FaCog, FaPlus, FaRegUserCircle } from 'react-icons/fa';
 import Slider from 'react-slick';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Card from '../../components/mypage/Card';
@@ -20,6 +20,8 @@ import {
   RemoveProfileImage,
 } from '../../api/profileApi';
 import ImageModal from '../../components/mypage/ImageModal';
+import WithDrawModal from '../../components/mypage/WithdrawModal';
+import { logoutApi } from '../../api/users/loginApi';
 
 function Mypage() {
   const [profile, setProfile] = useState<ProfileType | null>(null);
@@ -29,8 +31,12 @@ function Mypage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+  const toggleWithdrawModal = () => setIsWithdrawModalOpen((prev) => !prev);
+  const navigate = useNavigate();
+  const isAlertShown = useRef(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -81,6 +87,18 @@ function Mypage() {
     setIsImageModalOpen(false);
   }
 
+  const handleWithdrawConfirm = async () => {
+    alert("회원 탈퇴가 완료되었습니다. 계정은 일주일 동안 유지되고, 로그인 시에 다시 활성화됩니다. 탈퇴 후 일주일이 지나면 계정은 복구할 수 없습니다.");
+
+    try {
+      await logoutApi();
+      navigate("/");
+    } catch (error) {
+      console.log("로그아웃 실패:", error);
+      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -89,6 +107,11 @@ function Mypage() {
         setProfileImage(data.imageUrl);
       } catch (error) {
         console.log('fetchProfile : ', error);
+        if (!isAlertShown.current) {
+          alert("로그인이 필요합니다!");
+          isAlertShown.current = true;
+          navigate("/");
+        }
       }
     };
     const fetchInterestAlcohol = async () => {
@@ -119,27 +142,32 @@ function Mypage() {
     slidesToShow: Math.min(5, itemsLength),
     slidesToScroll: 1,
     arrows: true,
+    centerMode: itemsLength < 5,
+    centerPadding: itemsLength < 5 ? '0px' : '50px',
     responsive: [
       {
         breakpoint: 1280,
         settings: {
           slidesToShow: Math.min(3, itemsLength),
+          centerMode: itemsLength < 3,
         },
       },
       {
         breakpoint: 880,
         settings: {
           slidesToShow: Math.min(2, itemsLength),
+          centerMode: itemsLength < 2,
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: Math.min(1, itemsLength),
+          slidesToShow: 1,
         },
       },
     ],
   });
+
 
   return (
     <>
@@ -204,7 +232,10 @@ function Mypage() {
                   >
                     회원정보 수정
                   </li>
-                  <li>회원 탈퇴</li>
+                  <li onClick={() => {
+                    toggleWithdrawModal();
+                    setIsDropdownOpen(false);
+                  }}>회원 탈퇴</li>
                 </ul>
               </div>
             )}
@@ -243,7 +274,7 @@ function Mypage() {
             </Link>
           </div>
           <div className="container">
-            <Slider {...sliderSettings(likeAlcohol.length)}>
+            <Slider {...sliderSettings(reviewAlcohol.length)}>
               {reviewAlcohol.map((card) => (
                 <Card
                   key={card.id}
@@ -269,6 +300,13 @@ function Mypage() {
             handleCloseModal={handleCloseModal}
             handleImageUploadClick={handleImageUploadClick}
             handleRemoveImage={handleRemoveImage}
+          />
+        )}
+        {isWithdrawModalOpen && (
+          <WithDrawModal
+            isOpen={isWithdrawModalOpen}
+            onClose={toggleWithdrawModal}
+            onConfirm={handleWithdrawConfirm}
           />
         )}
       </MypageStyle>
@@ -468,12 +506,13 @@ const MypageStyle = styled.div`
   }
 
   .slick-track {
+    margin-left: 0;
     display: flex;
     justify-content: center;
   }
 
   .slick-slide {
-    display: flex;
+    display: flex !important;
     justify-content: center;
     align-items: center;
   }
