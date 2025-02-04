@@ -9,7 +9,6 @@ import { getProfile } from '../../api/profileApi';
 
 const ChatRoom = () => {
   console.log('ChatComponent 렌더링됨');
-  // const [roomData, setRoomData] = useState<any>(null);
   const [token, setToken] = useState<string>();
   const { roomId } = useParams();
   useLocation();
@@ -43,13 +42,13 @@ const ChatRoom = () => {
       <ChatHeader />
       <div className="chat-container">
         <div className="members-container">
-          <div className="members">
-            {token && userName ? (
-              <VideoRoom sessionId={roomId} token={token} userName={userName} />
-            ) : (
+          <VideoRoom sessionId={roomId} token={token} userName={userName} />
+
+          {/* {token && userName ? ( */}
+
+          {/* ) : (
               <div>Loading video...</div>
-            )}
-          </div>
+            )} */}
         </div>
         <div className="chatting">
           <Chat />
@@ -72,17 +71,8 @@ const ChatRoomStyle = styled.div`
 
   .members-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
     width: 70%;
     height: 100%;
-    padding: 0 40px;
-
-    .members {
-      background: gray;
-      width: 100%;
-      height: 80%;
-    }
   }
 
   .chatting {

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
-import styled from 'styled-components';
 
+import styled from 'styled-components';
+import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
 const VideoContainer = styled.div`
   position: relative;
   width: 320px;
@@ -12,29 +13,15 @@ const VideoContainer = styled.div`
   overflow: hidden;
   background-color: #1a1a1a;
   display: inline-block;
-`;
 
-const VideoControls = styled.div`
-  position: absolute;
-  bottom: 10px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-`;
+  @media (max-width: 468px) {
+    width: 100px;
+    height: 80px;
+  }
 
-const ControlButton = styled.button`
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+  @media (max-width: 468px) {
+    width: 100px;
+    height: 80px;
   }
 `;
 
@@ -51,7 +38,26 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
   const [isAudioActive, setIsAudioActive] = useState(true);
   const [isVideoActive, setIsVideoActive] = useState(true);
 
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [selectedCamera, setSelectedCamera] = useState<string | undefined>(
+    undefined,
+  );
+  const [selectedMic, setSelectedMic] = useState<string | undefined>(undefined);
+
+  // State for dropdown visibility
+  const [showCameraDropdown, setShowCameraDropdown] = useState(false);
+  const [showMicDropdown, setShowMicDropdown] = useState(false);
+
   const sessionRef = useRef<Session | null>(null);
+  //디바이스 변경시 재 렌더링
+  useEffect(() => {
+    const fetchDevices = async () => {
+      const deviceList = await navigator.mediaDevices.enumerateDevices();
+      setDevices(deviceList);
+    };
+
+    fetchDevices();
+  }, []);
 
   useEffect(() => {
     const initSession = async () => {
@@ -132,9 +138,9 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [sessionId, token, userName]);
+  }, [sessionId, token, userName, selectedCamera, selectedMic]);
 
-  const handleVideoToggle = () => {
+  const handleVideoOnOff = () => {
     if (publisher) {
       const newState = !isVideoActive;
       publisher.publishVideo(newState);
@@ -142,7 +148,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
     }
   };
 
-  const handleAudioToggle = () => {
+  const handleAudioOnOff = () => {
     if (publisher) {
       const newState = !isAudioActive;
       publisher.publishAudio(newState);
@@ -150,29 +156,225 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
     }
   };
 
-  return (
-    <div className="video-container">
-      {publisher && (
-        <VideoContainer>
-          <StreamComponent streamManager={publisher} />
-          <VideoControls>
-            <ControlButton onClick={handleVideoToggle}>
-              {isVideoActive ? '비디오 끄기' : '비디오 켜기'}
-            </ControlButton>
-            <ControlButton onClick={handleAudioToggle}>
-              {isAudioActive ? '마이크 끄기' : '마이크 켜기'}
-            </ControlButton>
-          </VideoControls>
-        </VideoContainer>
-      )}
+  const toggleCameraDropdown = () => {
+    setShowCameraDropdown((prev) => !prev);
+    setShowMicDropdown(false);
+  };
 
-      {subscribers.map((sub) => (
-        <VideoContainer key={sub.stream.streamId}>
-          <StreamComponent streamManager={sub} />
-        </VideoContainer>
-      ))}
-    </div>
+  const toggleMicDropdown = () => {
+    setShowMicDropdown((prev) => !prev);
+    setShowCameraDropdown(false);
+  };
+
+  const handleCameraSelect = (deviceId: string) => {
+    setSelectedCamera(deviceId);
+    setShowCameraDropdown(false);
+    // In a real-world scenario you might need to reinitialize the publisher
+    // to apply the new video device.
+  };
+
+  const handleMicSelect = (deviceId: string) => {
+    setSelectedMic(deviceId);
+    setShowMicDropdown(false);
+    // Similarly, reinitialize the publisher to apply the new audio device if needed.
+  };
+  return (
+    <WholeScreen>
+      <VideoArea>
+        <MemberList>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+          <VideoContainer>
+            <StreamComponent streamManager={publisher} />
+          </VideoContainer>
+
+          {publisher && (
+            <VideoContainer>
+              <StreamComponent streamManager={publisher} />
+            </VideoContainer>
+          )}
+
+          {subscribers.map((sub) => (
+            <VideoContainer key={sub.stream.streamId}>
+              <StreamComponent streamManager={sub} />
+            </VideoContainer>
+          ))}
+        </MemberList>
+      </VideoArea>
+      <ControlBar>
+        <Controller>
+          {/* Camera Icon Button with Dropdown */}
+          <IconButton>
+            {isVideoActive ? (
+              <Video
+                className="icon-button"
+                size={24}
+                onClick={handleVideoOnOff}
+              />
+            ) : (
+              <VideoOff
+                className="icon-button"
+                size={24}
+                onClick={handleVideoOnOff}
+              />
+            )}
+
+            <ChevronDown
+              className="icon-button"
+              size={16}
+              onClick={toggleCameraDropdown}
+            />
+            {showCameraDropdown && (
+              <Dropdown>
+                {devices
+                  .filter((device) => device.kind === 'videoinput')
+                  .map((device) => (
+                    <DropdownItem
+                      key={device.deviceId}
+                      onClick={() => handleCameraSelect(device.deviceId)}
+                    >
+                      {device.label || `Camera ${device.deviceId}`}
+                    </DropdownItem>
+                  ))}
+              </Dropdown>
+            )}
+          </IconButton>
+
+          {/* Microphone Icon Button with Dropdown */}
+          <IconButton>
+            {isAudioActive ? (
+              <Mic
+                className="icon-button"
+                size={24}
+                onClick={handleAudioOnOff}
+              />
+            ) : (
+              <MicOff
+                className="icon-button"
+                size={24}
+                onClick={handleAudioOnOff}
+              />
+            )}
+
+            <ChevronDown
+              className="icon-button"
+              size={16}
+              onClick={toggleMicDropdown}
+            />
+            {showMicDropdown && (
+              <Dropdown>
+                {devices
+                  .filter((device) => device.kind === 'audioinput')
+                  .map((device) => (
+                    <DropdownItem
+                      key={device.deviceId}
+                      onClick={() => handleMicSelect(device.deviceId)}
+                    >
+                      {device.label || `Mic ${device.deviceId}`}
+                    </DropdownItem>
+                  ))}
+              </Dropdown>
+            )}
+          </IconButton>
+        </Controller>
+      </ControlBar>
+    </WholeScreen>
   );
 }
+
+const WholeScreen = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+const MemberList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+`;
+
+const VideoArea = styled.div`
+  display: flex;
+  height: calc(100% - 60px);
+`;
+
+const ControlBar = styled.div`
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Controller = styled.div`
+  background-color: #2d2d2d;
+  width: 200px;
+  height: 50px;
+  border-radius: 25px;
+  display: flex;
+  gap: 40px;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+`;
+
+const IconButton = styled.button`
+  background: transparent;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 4px;
+  position: relative;
+  font-size: 16px;
+  padding: 4px;
+
+  .icon-button:hover {
+    color: #00aced;
+  }
+`;
+
+const Dropdown = styled.div`
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 100;
+  min-width: 200px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+`;
+
+const DropdownItem = styled.div`
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+
+  &:hover {
+    background-color: #eee;
+  }
+`;
 
 export default VideoRoom;
