@@ -10,11 +10,9 @@ function renderApp() {
   );
   const queryClient = new QueryClient();
   root.render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </React.StrictMode>,
+    <QueryClientProvider client={queryClient}>
+      <App />
+    </QueryClientProvider>,
   );
 }
 // if (process.env.NODE_ENV === 'development') {

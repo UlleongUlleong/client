@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
-// import SelectKeywords from '../../components/create-room/SelectKeywords';
-import RoomInfoInput from '../../components/create-room/RoomInfoInput';
-import { useNavigate } from 'react-router-dom';
-import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
 import SelectKeywords from '../../components/create-room/SelectKeywords';
+import RoomInfoInput from '../../components/create-room/RoomInfoInput';
+import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
+import { useNavigate } from 'react-router-dom';
 
 const CreateRoom = () => {
-  const socket = useSocketStore((state) => state.socket);
-  const [loading, setLoading] = useState(false);
+  const { socket, connectSocket } = useSocketStore();
   const navigate = useNavigate();
-
   const [name, setName] = useState<string>('');
   const [maxParticipants, setMaxParticipants] = useState<number>(2);
   const [description, setDescription] = useState<string>('');
@@ -20,45 +17,44 @@ const CreateRoom = () => {
   const [alcohols, setAlcohols] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!socket) return;
-
-    socket.on('room_created', (response) => {
-      console.log('✅ 방 생성 응답:', response);
-      console.log(socket.id);
-      if (response?.message) {
-        navigate(`/chat/${response.roomId}`);
-        console.log(response);
-      } else {
-        alert('방 생성 실패');
-      }
-      setLoading(false);
-    });
-
-    return () => {
-      socket.off('room_created'); // 이벤트 리스너 정리
-    };
-  }, [socket]);
-
-  const handleCreateRoom = () => {
     if (!socket) {
-      alert('소켓 연결 중');
+      connectSocket();
       return;
     }
 
-    // console.log('🛠️ 현재 등록된 리스너:', socket.listeners('create_room'));
+    const handleRoomCreated = (response: any) => {
+      console.log('✅ 방 생성 응답:', response);
+      if (response?.data?.roomId) {
+        navigate(`/chat/${response.data.roomId}`);
+        sessionStorage.setItem('userId', response.data.userId);
+      } else {
+        alert('방 생성 실패');
+      }
+    };
 
-    setLoading(true);
+    socket.on('room_created', handleRoomCreated);
+
+    return () => {
+      socket.off('room_created', handleRoomCreated);
+    };
+  }, [socket, navigate, connectSocket]);
+
+  const handleCreateRoom = () => {
+    if (!socket) {
+      alert('소켓 연결 중입니다. 잠시 후 다시 시도해주세요.');
+      return;
+    }
 
     const roomData = {
       name,
       maxParticipants,
       description,
       themeId,
-      moods,
       alcohols,
+      moods,
     };
 
-    socket.emit('create_room', roomData); // 방만들기 요청
+    socket.emit('create_room', roomData);
     console.log('📤 방 만들기 요청 전송:', roomData);
   };
 
