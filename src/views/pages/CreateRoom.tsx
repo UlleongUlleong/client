@@ -5,6 +5,7 @@ import SelectTheme from '../../components/create-room/SelecteTheme';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
 import { useNavigate } from 'react-router-dom';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
+import SelectKeywords from '../../components/create-room/SelectKeywords';
 
 const CreateRoom = () => {
   const socket = useSocketStore((state) => state.socket);
