@@ -60,10 +60,17 @@ const RegisterBox = () => {
 
     try {
       const response = await register(registerContent);
-      toast.success(response.message, { icon: <GoCheckCircle /> });
-      navigate('/');
+
+      if (response.status === 201) {
+        toast.success(response.message, { icon: <GoCheckCircle /> });
+        navigate('/');
+      } else if (response.status === 400 || response.status === 401) {
+        toast.error(response.message, { icon: <GoAlert /> });
+      }
     } catch (error: any) {
-      toast.error(error.message, { icon: <GoAlert /> });
+      toast.error('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.', {
+        icon: <GoAlert />,
+      });
     }
   };
 
