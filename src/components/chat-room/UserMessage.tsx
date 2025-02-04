@@ -7,13 +7,22 @@ interface MessageProps {
   id: string;
 }
 
+const formatMessage = (text: string) => {
+  return text.split('\n').map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ));
+};
+
 const Message = ({ nickname, message, id }: MessageProps) => {
   const userId = sessionStorage.getItem('userId');
 
   return (
     <MessageStyle $me={userId === id}>
       {userId !== id && <div className="nickname">{nickname}</div>}
-      <div className="user-message">{message}</div>
+      <div className="user-message">{formatMessage(message)}</div>
     </MessageStyle>
   );
 };

@@ -24,7 +24,7 @@ const Chat = () => {
 
   useEffect(() => {
     if (!socket) {
-      console.log('⚠️ 소켓이 연결되지 않음. 연결 시도...');
+      console.log('소켓이 연결되지 않음. 연결 시도...');
       connectSocket();
       return;
     }
@@ -116,28 +116,26 @@ const Chat = () => {
     }, 1500);
   };
 
-  const sendMessage = (
-    e:
-      | React.FormEvent<HTMLFormElement>
-      | React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    e.preventDefault();
-
+  const sendMessage = () => {
     const sendMsg = {
       message,
     };
 
     socket.emit('send_message', sendMsg);
-    console.log('메세지 전송', sendMsg);
+    console.log('💌 메세지 전송', sendMsg);
 
     setMessage('');
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendMessage();
+  };
 
-      sendMessage(e);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      sendMessage();
     }
   };
 
@@ -162,7 +160,7 @@ const Chat = () => {
           ),
         )}
       </div>
-      <form onSubmit={sendMessage} className="input-box">
+      <form onSubmit={handleSubmit} className="input-box">
         <textarea
           className="input"
           value={message}

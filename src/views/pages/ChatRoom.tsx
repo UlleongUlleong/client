@@ -11,7 +11,7 @@ interface RoomDetailInfo {
   name: string;
   description: string;
   maxParticipants: number;
-  theme: string;
+  themeId: string;
   participants: number;
 }
 
@@ -19,6 +19,7 @@ const ChatRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const { socket } = useSocketStore();
   const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (!socket || !roomId) return;
@@ -28,7 +29,6 @@ const ChatRoom = () => {
   const fetchRoomInfo = async () => {
     try {
       if (!roomId) return;
-
       const response = await getRoomInfo({ roomId });
       setRoomInfo(response.data);
     } catch (error: any) {
