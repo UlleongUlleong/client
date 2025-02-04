@@ -33,7 +33,7 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   };
 
   return (
-    <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
+    <ChatRoomContainer key={room.id}>
       <ChatRoomParty $isFull={isFull}>
         <PersonIcon
           sx={{
@@ -43,12 +43,9 @@ function ChatRoom({ room }: { room: IChatRoom }) {
         />
         <div className="number">{isFull ? FULL : partyNumber}</div>
       </ChatRoomParty>
-      <ChatImage>
+      <ChatImage onClick={handleChatRoomClick}>
         {room.theme ? (
-          <img
-            src={`/assets/image/chatTheme/${room.theme.split('.')[0]}.png`}
-            alt={room.theme}
-          />
+          <img src={`/assets/image/chatTheme/${room.theme}`} alt={room.theme} />
         ) : (
           <img src="/assets/image/default-image.png" alt="default-image" />
         )}

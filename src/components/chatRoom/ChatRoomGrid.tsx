@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatRoom from './ChatRoom';
 import { IChatRoom } from '../../models/chatRoom';
-import { StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
+import { StyleChatRoomsGrid, MarginSet } from '../../styles/ChatRoomGrid';
 import Spinner from '../../assets/Spinner.gif';
 import { useChatRoomsWithCursor } from '../../hooks/getChatroom';
 import { useInView } from 'react-intersection-observer';
@@ -101,12 +101,14 @@ function ChatRoomGrid() {
       {chatRoomData.length === 0 ? (
         <NoResults>채팅방이 없습니다.</NoResults>
       ) : (
-        <StyleChatRoomsGrid>
-          {chatRoomData.map((room: IChatRoom) => (
-            <ChatRoom key={room.id} room={room} />
-          ))}
-          {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
-        </StyleChatRoomsGrid>
+        <MarginSet>
+          <StyleChatRoomsGrid>
+            {chatRoomData.map((room: IChatRoom) => (
+              <ChatRoom key={room.id} room={room} />
+            ))}
+            {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
+          </StyleChatRoomsGrid>
+        </MarginSet>
       )}
 
       {isError && <div>{error}</div>}

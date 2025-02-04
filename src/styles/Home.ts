@@ -14,8 +14,15 @@ export const StyledSlider = styled(Slider)`
   margin: 0 auto;
   display: flex;
   margin-bottom: 45px;
+  .slick-track {
+    display: flex !important; // Override inline styles
+    justify-content: space-between;
+    align-items: center; // Optional for vertical alignment
+  }
+
   .slick-list {
-    @media (max-width: 2579px) {
+    margin: 0 40px;
+    /* @media (max-width: 2579px) {
       width: 2150px;
     }
     @media (max-width: 2219px) {
@@ -35,10 +42,17 @@ export const StyledSlider = styled(Slider)`
     }
     @media (max-width: 400px) {
       width: 250px;
-    }
+    } */
   }
 
   .slick-slide {
+    .slick-slide {
+      float: none !important; // Disable default float
+      height: auto; // Ensure slide height adjusts
+      > div {
+        height: 100%; // Ensure child div fills slide
+      }
+    }
   }
 
   .slick-arrow {
@@ -51,11 +65,11 @@ export const StyledSlider = styled(Slider)`
     }
 
     &.slick-prev {
-      left: 0px;
+      left: 10px;
     }
 
     &.slick-next {
-      right: 0px;
+      right: 10px;
     }
 
     &:hover {
