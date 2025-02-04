@@ -20,7 +20,7 @@
     "@tanstack/react-query": "^5.64.2",
     "axios": "^1.7.9",
     "lucide-react": "^0.471.1",
-    "openvidu-browser": "2.21.0",
+    "openvidu-browser": "^2.31.0",
     "qs": "^6.14.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

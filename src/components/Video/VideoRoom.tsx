@@ -4,7 +4,7 @@ import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
 import { useSocketStore } from '../create-room/socket/useSocketStore';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 function VideoRoom({ userName }: { userName: string }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -18,6 +18,8 @@ function VideoRoom({ userName }: { userName: string }) {
   const [selectedCamera, setSelectedCamera] = useState<string | undefined>(
     undefined,
   );
+  const navigate = useNavigate();
+  const tokenRef = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
   const location = useLocation();
   const newToken = location?.state?.token;
@@ -27,7 +29,7 @@ function VideoRoom({ userName }: { userName: string }) {
   // State for dropdown visibility
   const [showCameraDropdown, setShowCameraDropdown] = useState(false);
   const [showMicDropdown, setShowMicDropdown] = useState(false);
-
+  const socketErrorRef = useRef<boolean>(false);
   const sessionRef = useRef<Session | null>(null);
   //디바이스 변경시 재 렌더링
 
@@ -50,27 +52,41 @@ function VideoRoom({ userName }: { userName: string }) {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on('room_joined', (response) => {
-      console.log('room_joined event: 토큰을 받아옵니다.', response.data);
-      setToken(response.data.token);
-    });
+    const handleRoomJoined = (response) => {
+      if (!tokenRef.current) {
+        console.log('✅ room_joined event: 토큰을 받아옵니다.', response.data);
+        tokenRef.current = response.data.token;
+        setToken(response.data.token);
+      } else {
+        console.log('🔍 Token already exists, ignoring duplicate token.');
+      }
+    };
+
+    socket.on('room_joined', handleRoomJoined);
+
+    return () => {
+      socket.off('room_joined', handleRoomJoined);
+      // 🔹 이벤트 리스너 해제
+    };
   }, [socket]);
 
   useEffect(() => {
     const initSession = async () => {
-      if (!token) return;
+      if (!token || sessionRef.current) return;
+
       try {
         const OV = new OpenVidu();
-        const session = OV.initSession();
+        const newSession = OV.initSession();
 
-        sessionRef.current = session;
+        sessionRef.current = newSession;
+        setSession(newSession);
 
-        session.on('exception', (exception) => {
+        newSession.on('exception', (exception) => {
           console.warn('Exception:', exception);
         });
 
-        session.on('streamCreated', (event) => {
-          const subscriber = session.subscribe(event.stream, undefined);
+        newSession.on('streamCreated', (event) => {
+          const subscriber = newSession.subscribe(event.stream, undefined);
           console.log('New stream subscribed:', subscriber.stream.streamId);
 
           subscriber.on('streamPlaying', () => {
@@ -80,27 +96,22 @@ function VideoRoom({ userName }: { userName: string }) {
           setSubscribers((prev) => [...prev, subscriber]);
         });
 
-        session.on('streamDestroyed', (event) => {
+        newSession.on('streamDestroyed', (event) => {
           setSubscribers((prev) =>
             prev.filter((sub) => sub.stream.streamId !== event.stream.streamId),
           );
         });
-        // 세션 연결 후 setSession 호출
-        await session.connect(token, { clientData: userName });
-        console.log('Connected to session');
 
-        setSession(session);
+        await newSession.connect(token, { clientData: userName });
+        console.log('✅ Successfully connected to session');
 
-        // 📌 카메라 장치 확인 후 퍼블리셔 초기화
         const devices = await navigator.mediaDevices.enumerateDevices();
-        const hasCamera = devices.some(
-          (device) => device.kind === 'videoinput',
-        );
-        const hasAudio = devices.some((device) => device.kind === 'audioinput');
+        const hasCamera = devices.some((d) => d.kind === 'videoinput');
+        const hasAudio = devices.some((d) => d.kind === 'audioinput');
 
-        console.log('카메라 감지됨:', hasCamera);
+        console.log('🔍 Camera detected:', hasCamera);
 
-        const publisher = await OV.initPublisherAsync(undefined, {
+        const newPublisher = await OV.initPublisherAsync(undefined, {
           audioSource: hasAudio ? undefined : false,
           videoSource: hasCamera ? undefined : false,
           publishAudio: hasAudio,
@@ -111,15 +122,15 @@ function VideoRoom({ userName }: { userName: string }) {
           mirror: false,
         });
 
-        publisher.on('streamPlaying', () =>
+        newPublisher.on('streamPlaying', () =>
           console.log('Publisher stream playing'),
         );
-        publisher.on('accessAllowed', () => console.log('accessAllowed'));
+        newPublisher.on('accessAllowed', () => console.log('accessAllowed'));
 
-        await session.publish(publisher);
-        setPublisher(publisher);
+        await newSession.publish(newPublisher);
+        setPublisher(newPublisher);
       } catch (error) {
-        console.error('Error connecting to session:', error);
+        console.error('❌ Error connecting to session:', error);
       }
     };
 
@@ -128,14 +139,48 @@ function VideoRoom({ userName }: { userName: string }) {
     return () => {
       if (sessionRef.current) {
         sessionRef.current.disconnect();
-        console.log('Session disconnected');
+        console.log('❌ Session disconnected');
         sessionRef.current = null;
       }
       setSession(null);
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [roomId, token, userName, selectedCamera, selectedMic]);
+  }, [token, userName]);
+  useEffect(() => {
+    const updatePublisher = async () => {
+      if (!session || !publisher) return;
+
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasCamera = devices.some((d) => d.kind === 'videoinput');
+        const hasAudio = devices.some((d) => d.kind === 'audioinput');
+
+        const OV = new OpenVidu();
+        const newPublisher = await OV.initPublisherAsync(undefined, {
+          audioSource: selectedMic || (hasAudio ? undefined : false),
+          videoSource: selectedCamera || (hasCamera ? undefined : false),
+          publishAudio: hasAudio,
+          publishVideo: hasCamera,
+          resolution: '1280x720',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false,
+        });
+
+        if (session) {
+          await session.unpublish(publisher);
+          await session.publish(newPublisher);
+        }
+
+        setPublisher(newPublisher);
+      } catch (error) {
+        console.error('❌ Error updating publisher:', error);
+      }
+    };
+
+    updatePublisher();
+  }, [selectedCamera, selectedMic]);
 
   const handleVideoOnOff = () => {
     if (publisher) {
@@ -310,8 +355,6 @@ const VideoContainer = styled.div`
   border-radius: 10px;
   aspect-ratio: 4 / 3;
   background-color: black;
-  display: inline-block;
-  padding: 4px;
 `;
 
 const ControlBar = styled.div`

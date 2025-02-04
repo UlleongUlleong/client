@@ -34,6 +34,7 @@ export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
           color: 'white',
           padding: '4px 8px',
           fontSize: '15px',
+          borderRadius: '0 0 8px 0',
         }}
       >
         {name}
@@ -50,6 +51,7 @@ const StyledVideo = styled.div`
   video {
     width: 100%;
     height: 100%;
+    border-radius: 8px;
     object-fit: cover;
     display: block;
   }
