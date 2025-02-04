@@ -4,26 +4,6 @@ import StreamComponent from './StreamComponent';
 
 import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
-const VideoContainer = styled.div`
-  position: relative;
-  width: 320px;
-  height: 240px;
-  margin: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #1a1a1a;
-  display: inline-block;
-
-  @media (max-width: 468px) {
-    width: 100px;
-    height: 80px;
-  }
-
-  @media (max-width: 468px) {
-    width: 100px;
-    height: 80px;
-  }
-`;
 
 interface VideoProps {
   sessionId: string;
@@ -182,28 +162,6 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
     <WholeScreen>
       <VideoArea>
         <MemberList>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-          <VideoContainer>
-            <StreamComponent streamManager={publisher} />
-          </VideoContainer>
-
           {publisher && (
             <VideoContainer>
               <StreamComponent streamManager={publisher} />
@@ -302,18 +260,42 @@ const WholeScreen = styled.div`
   width: 100%;
   height: 100%;
 `;
-
+const VideoArea = styled.div`
+  display: grid;
+  max-width: 100%;
+  max-height: 100%;
+  height: calc(100% - 60px);
+`;
 const MemberList = styled.div`
+  display: grid;
+
+  grid-gap: 10px;
+  overflow-y: auto;
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
+  height: 100%;
+  scrollbar-width: none;
+
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
   justify-content: center;
   align-items: center;
-`;
 
-const VideoArea = styled.div`
-  display: flex;
-  height: calc(100% - 60px);
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+`;
+const VideoContainer = styled.div`
+  position: relative;
+  margin: 10px;
+
+  border-radius: 10px;
+  aspect-ratio: 4 / 3;
+  background-color: #1a1a1a;
+  display: inline-block;
+  padding: 4px;
 `;
 
 const ControlBar = styled.div`
