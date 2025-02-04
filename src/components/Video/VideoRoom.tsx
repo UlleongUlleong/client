@@ -55,6 +55,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
   useEffect(() => {
     const initSession = async () => {
+      if (!token) return;
       try {
         const OV = new OpenVidu();
         const session = OV.initSession();
@@ -101,9 +102,9 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
           videoSource: hasCamera ? undefined : false,
           publishAudio: hasAudio,
           publishVideo: hasCamera,
-          resolution: '640x480',
-          frameRate: 24,
-          insertMode: 'APPEND',
+          resolution: '1280x720',
+          frameRate: 30,
+          insertMode: 'REPLACE',
           mirror: false,
         });
 
@@ -123,13 +124,11 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
 
     return () => {
       if (sessionRef.current) {
-        try {
-          sessionRef.current.disconnect();
-        } catch (e) {
-          console.warn('Error disconnecting session:', e);
-        }
+        sessionRef.current.disconnect();
+        console.log('Session disconnected');
         sessionRef.current = null;
       }
+      setSession(null);
       setPublisher(null);
       setSubscribers([]);
     };

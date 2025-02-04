@@ -17,7 +17,6 @@ export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
   useEffect(() => {
     if (streamManager && videoRef) {
       streamManager.addVideoElement(videoRef.current);
-      videoRef.current.muted = true;
     }
     try {
       const data = JSON.parse(streamManager.stream.connection.data);
