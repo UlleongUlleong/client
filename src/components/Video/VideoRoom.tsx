@@ -60,14 +60,13 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
         const session = OV.initSession();
 
         sessionRef.current = session;
+
         session.on('exception', (exception) => {
           console.warn('Exception:', exception);
         });
+
         session.on('streamCreated', (event) => {
-          const subscriber = session.subscribe(
-            event.stream,
-            `subscribers-${event.stream.streamId}`,
-          );
+          const subscriber = session.subscribe(event.stream, undefined);
           console.log('New stream subscribed:', subscriber.stream.streamId);
 
           subscriber.on('streamPlaying', () => {
@@ -82,9 +81,11 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
             prev.filter((sub) => sub.stream.streamId !== event.stream.streamId),
           );
         });
-
+        // 세션 연결 후 setSession 호출
         await session.connect(token, { clientData: userName });
         console.log('Connected to session');
+
+        setSession(session);
 
         // 📌 카메라 장치 확인 후 퍼블리셔 초기화
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -167,10 +168,7 @@ function VideoRoom({ sessionId, token, userName }: VideoProps) {
       )}
 
       {subscribers.map((sub) => (
-        <VideoContainer
-          id={`subscribers-${sub.stream.streamId}`}
-          key={sub.stream.streamId}
-        >
+        <VideoContainer key={sub.stream.streamId}>
           <StreamComponent streamManager={sub} />
         </VideoContainer>
       ))}
