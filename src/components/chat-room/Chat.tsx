@@ -39,6 +39,7 @@ const Chat = () => {
 
     socket.on('room_joined', (response) => {
       console.log(`✅ 유저 방 참가 완료:`, response);
+      sessionStorage.setItem('userId', response.data.userId);
     });
 
     socket.on('user_joined', (response) => {
@@ -90,7 +91,7 @@ const Chat = () => {
     });
 
     return () => {
-      console.log('🚪 채팅방 나가기 처리');
+      console.log('🚪 채팅방 나가기 처리 - 브라우저탈출');
       socket.emit('leave_room', { roomId: numericRoomId });
       socket.off('room_joined');
       socket.off('user_joined');

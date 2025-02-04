@@ -6,6 +6,14 @@ import { getRoomInfo } from '../../api/roomApi';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
 import { useParams } from 'react-router-dom';
 
+const LoadingScreen = () => {
+  return (
+    <LoadingContainer>
+      <h2>채팅방 로딩 중...</h2>
+    </LoadingContainer>
+  );
+};
+
 interface RoomDetailInfo {
   id: number;
   name: string;
@@ -19,26 +27,44 @@ const ChatRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const { socket } = useSocketStore();
   const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+
+  const [roomName, setRoomName] = useState<string | null>(null);
+  const [themeId, setThemeId] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!socket || !roomId) return;
+
     fetchRoomInfo();
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // 시간 줄이기
+
+    return () => clearTimeout(timer);
   }, [socket, roomId]);
 
   const fetchRoomInfo = async () => {
     try {
       if (!roomId) return;
       const response = await getRoomInfo({ roomId });
-      setRoomInfo(response.data);
+
+      if (response.data) {
+        setRoomInfo(response.data);
+        setRoomName(response.data.name);
+        setThemeId(response.data.themeId);
+      }
     } catch (error: any) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
     }
   };
 
+  if (loading) return <LoadingScreen />;
+
   return (
-    <ChatRoomStyle $img={sessionStorage.getItem('themeId')}>
-      <ChatHeader title={sessionStorage.getItem('name')} />
+    <ChatRoomStyle $img={themeId}>
+      <ChatHeader title={roomName || '로딩 중...'} />
       <div className="chat-container">
         <div className="members-container">
           {
@@ -54,11 +80,12 @@ const ChatRoom = () => {
 };
 
 interface ChatRoomStyleProps {
-  $img: string;
+  $img: string | null;
 }
 
 const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
-  background: url('/assets/image/chatTheme/theme0${({ $img }) => $img}.jpg')
+  background: url('/assets/image/chatTheme/theme0${({ $img }) =>
+      $img || '1'}.jpg')
     no-repeat center center;
   background-size: cover;
   height: 100%;
@@ -82,6 +109,16 @@ const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
     width: 30%;
     min-width: 300px;
   }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 1.5rem;
 `;
 
 export default ChatRoom;

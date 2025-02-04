@@ -56,9 +56,6 @@ const CreateRoom = () => {
 
     socket.emit('create_room', roomData);
     console.log('📤 방 만들기 요청 전송:', roomData);
-
-    sessionStorage.setItem('name', name);
-    sessionStorage.setItem('themeId', String(themeId));
   };
 
   return (

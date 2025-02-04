@@ -11,8 +11,6 @@ const ChatHeader = ({ title }: ChatHeaderProps) => {
   const navigate = useNavigate();
 
   const onClickOutButton = () => {
-    // 채팅방 나감 처리
-    console.log('채팅방 나감');
     navigate('/');
   };
 
