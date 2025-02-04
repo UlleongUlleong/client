@@ -36,6 +36,7 @@ function Mypage() {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   const toggleWithdrawModal = () => setIsWithdrawModalOpen((prev) => !prev);
   const navigate = useNavigate();
+  const isAlertShown = useRef(false);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -106,6 +107,11 @@ function Mypage() {
         setProfileImage(data.imageUrl);
       } catch (error) {
         console.log('fetchProfile : ', error);
+        if (!isAlertShown.current) {
+          alert("로그인이 필요합니다!");
+          isAlertShown.current = true;
+          navigate("/");
+        }
       }
     };
     const fetchInterestAlcohol = async () => {

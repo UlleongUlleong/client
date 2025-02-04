@@ -119,7 +119,7 @@ function WithDrawModal({ isOpen, onClose, onConfirm }: WithDrawModalProps) {
                         >
                             인증 메일 보내기
                         </button>
-                        <p>인증 메일이 전송되었습니다. 인증 코드를 입력해주세요.</p>
+                        <p>인증 코드를 입력해주세요.</p>
                         <input
                             type="text"
                             value={verificationCode}
