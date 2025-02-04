@@ -32,7 +32,20 @@ function VideoRoom({ userName }: { userName: string }) {
   const socketErrorRef = useRef<boolean>(false);
   const sessionRef = useRef<Session | null>(null);
   //디바이스 변경시 재 렌더링
+  useEffect(() => {
+    const unloadHandler = () => {
+      if (sessionRef.current) {
+        sessionRef.current.disconnect();
+        console.log('세션 강제 종료');
+      }
+    };
 
+    window.addEventListener('beforeunload', unloadHandler);
+
+    return () => {
+      window.removeEventListener('beforeunload', unloadHandler);
+    };
+  }, []);
   useEffect(() => {
     if (newToken) {
       console.log('토큰 인가 완료', newToken);
@@ -86,6 +99,15 @@ function VideoRoom({ userName }: { userName: string }) {
         });
 
         newSession.on('streamCreated', (event) => {
+          // 내 자신의 스트림이면 구독하지 않음
+          if (
+            event.stream.connection.connectionId ===
+            newSession.connection.connectionId
+          ) {
+            console.log('내 스트림은 구독하지 않습니다.');
+            return;
+          }
+          // 타인의 스트림인 경우에만 구독
           const subscriber = newSession.subscribe(event.stream, undefined);
           console.log('New stream subscribed:', subscriber.stream.streamId);
 
@@ -95,13 +117,13 @@ function VideoRoom({ userName }: { userName: string }) {
 
           setSubscribers((prev) => [...prev, subscriber]);
         });
-
         newSession.on('streamDestroyed', (event) => {
-          setSubscribers((prev) =>
-            prev.filter((sub) => sub.stream.streamId !== event.stream.streamId),
+          setSubscribers((prevSubscribers) =>
+            prevSubscribers.filter(
+              (sub) => sub.stream.streamId !== event.stream.streamId,
+            ),
           );
         });
-
         await newSession.connect(token, { clientData: userName });
         console.log('✅ Successfully connected to session');
 
