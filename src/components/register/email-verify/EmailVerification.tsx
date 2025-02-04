@@ -69,7 +69,6 @@ const EmailVerificationTab = () => {
           '*',
         );
       }
-
       setTimeout(() => {
         window.close();
       }, 1000);

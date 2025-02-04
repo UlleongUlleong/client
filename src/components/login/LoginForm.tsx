@@ -12,9 +12,7 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleLogin = async () => {
     if (!email || !password) {
       alert('이메일과 비밀번호를 모두 입력해주세요.');
       return;
@@ -50,7 +48,24 @@ const LoginForm = () => {
       }, 1000);
     } catch (error: any) {
       console.log(error);
-      toast.error(error.message, { icon: <GoAlert /> });
+      if (error.status === 401) {
+        toast.error('이메일 혹은 비밀번호가 다릅니다.', { icon: <GoAlert /> });
+      } else if (error.status === 403) {
+        toast.error('간편 로그인으로 등록된 사용자입니다.', {
+          icon: <GoAlert />,
+        });
+      } else if (error.status > 500) {
+        toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+          icon: <GoAlert />,
+        });
+      } else {
+        toast.error(
+          '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.',
+          {
+            icon: <GoAlert />,
+          },
+        );
+      }
     }
   };
 
@@ -73,7 +88,7 @@ const LoginForm = () => {
 
   return (
     <LoginFormStyle>
-      <form>
+      <div className="login-inputs">
         <input
           className="login"
           type="text"
@@ -88,7 +103,7 @@ const LoginForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-      </form>
+      </div>
       <div className="login-options">
         <div className="stay-logged-group">
           <input
@@ -117,10 +132,10 @@ const LoginFormStyle = styled.div`
   width: 60%;
   margin: 0 auto;
 
-  form {
+  .login-inputs {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 16px;
   }
 
   .login {
