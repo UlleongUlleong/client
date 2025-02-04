@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
 import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
-import { useNavigate } from 'react-router-dom';
+
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
-import { createSession, RoomConfig } from '../../api/videoChat';
+import { useNavigate } from 'react-router-dom';
+
 const CreateRoom = () => {
   const socket = useSocketStore((state) => state.socket);
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,7 @@ const CreateRoom = () => {
     if (!socket) return;
 
     socket.on('room_created', async (response) => {
+    const handleRoomCreated = (response: any) => {
       console.log('✅ 방 생성 응답:', response);
       console.log(socket.id);
       if (response?.message) {
@@ -39,6 +41,9 @@ const CreateRoom = () => {
         const newToken = response.data.token;
         navigate(`/chat/${newRoomId}`, { state: { token: newToken } });
         console.log(response);
+      if (response?.data?.roomId) {
+        navigate(`/chat/${response.data.roomId}`);
+        sessionStorage.setItem('userId', response.data.userId);
       } else {
         alert('방 생성 실패');
       }

@@ -92,3 +92,22 @@ export const RemoveProfileImage = async () => {
     console.log('RemoveProfileImage :', error);
   }
 };
+
+export const WithdrawUser = async (password: string) => {
+  try {
+    const response = await apiClient.delete(`/api/users/me`, {
+      data: {
+        password: password,
+      },
+    });
+    return response;
+  } catch (error: any) {
+    if (error.response) {
+      console.error('WithdrawUser API 오류:', error.response.data);
+      console.error('HTTP 상태 코드:', error.response.status);
+    } else {
+      console.error('WithdrawUser 요청 실패:', error.message);
+    }
+    throw error;
+  }
+};

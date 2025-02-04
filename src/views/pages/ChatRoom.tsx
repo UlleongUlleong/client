@@ -1,60 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getProfile } from '../../api/profileApi';
+import VideoRoom from '../../components/Video/VideoRoom';
 import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
-import { useLocation, useParams } from 'react-router-dom';
-import { joinRoom } from '../../api/videoChat';
-import VideoRoom from '../../components/Video/VideoRoom';
-import { getProfile } from '../../api/profileApi';
+import { getRoomInfo } from '../../api/roomApi';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
+import { useParams } from 'react-router-dom';
+
+const LoadingScreen = () => {
+  return (
+    <LoadingContainer>
+      <h2>채팅방 로딩 중...</h2>
+    </LoadingContainer>
+  );
+};
+
+interface RoomDetailInfo {
+  id: number;
+  name: string;
+  description: string;
+  maxParticipants: number;
+  themeId: string;
+  participants: number;
+}
+
 const ChatRoom = () => {
-  const { socket, connectSocket } = useSocketStore();
+  const { roomId } = useParams<{ roomId: string }>();
+  const { socket } = useSocketStore();
+  const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
+
+  const [roomName, setRoomName] = useState<string | null>(null);
+  const [themeId, setThemeId] = useState<string | null>(null);
+
+  const [loading, setLoading] = useState(true);
+
   const [userName, setUserName] = useState<string>('');
   const [token, setToken] = useState<string>();
-  const { roomId } = useParams();
-  const location = useLocation();
   const newToken = location.state as { token: string };
-  // useEffect(() => {
-  //   if (newToken?.token) {
-  //     setToken(newToken.token);
-  //   }
-  // }, [newToken]);
-  const handleRoomJoined = (response) => {
-    console.log('room_joined event: 토큰을 받아옵니다.', response.data);
-    if (response.message) {
-      console.log('입장 메시지', response.message);
-    }
-    // 현재 토큰 상태를 확인하여 없을 때만 업데이트
-    setToken((currentToken) => {
-      if (!currentToken) {
-        return response.data.token;
-      }
-      return currentToken;
-    });
-  };
+  useEffect(() => {
+    if (!socket || !roomId) return;
 
-  // useEffect(() => {
-  //   if (!socket) {
-  //     console.log('소켓이 연결되지 않음. 연결 시도...');
-  //     connectSocket();
-  //     return;
-  //   }
-  //   socket.emit('join_room', { roomId: roomId });
-  //   console.log(' 성공! ');
+    fetchRoomInfo();
 
-  //   socket?.on('room_joined', handleRoomJoined);
-  //   console.log('👥 새로운 유저가 방에 참여:', handleRoomJoined);
-  // }, []);
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // 시간 줄이기
 
-  // useEffect(() => {
-  //   console.log('방 입장 성공! ');
-
-  //   socket?.on('room_joined', handleRoomJoined);
-
-  //   return () => {
-  //     socket?.off('room_joined', handleRoomJoined);
-  //   };
-  // }, [socket]);
+    return () => clearTimeout(timer);
+  }, [socket, roomId]);
 
   useEffect(() => {
     const getUserName = async () => {
@@ -66,9 +60,26 @@ const ChatRoom = () => {
     getUserName();
   }, []);
 
+  const fetchRoomInfo = async () => {
+    try {
+      if (!roomId) return;
+      const response = await getRoomInfo({ roomId });
+
+      if (response.data) {
+        setRoomInfo(response.data);
+        setRoomName(response.data.name);
+        setThemeId(response.data.themeId);
+      }
+    } catch (error: any) {
+      console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
+    }
+  };
+
+  if (loading) return <LoadingScreen />;
+
   return (
-    <ChatRoomStyle>
-      <ChatHeader />
+    <ChatRoomStyle $img={themeId}>
+      <ChatHeader title={roomName || '로딩 중...'} />
       <div className="chat-container">
         <div className="members-container">
           {token && userName ? (
@@ -85,8 +96,14 @@ const ChatRoom = () => {
   );
 };
 
-const ChatRoomStyle = styled.div`
-  background: url('/assets/image/chatTheme/theme02.png') no-repeat center center;
+interface ChatRoomStyleProps {
+  $img: string | null;
+}
+
+const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
+  background: url('/assets/image/chatTheme/theme0${({ $img }) =>
+      $img || '1'}.jpg')
+    no-repeat center center;
   background-size: cover;
   height: 100%;
 
@@ -98,14 +115,27 @@ const ChatRoomStyle = styled.div`
 
   .members-container {
     display: flex;
+    justify-content: center;
+    align-items: center;
     width: 70%;
     height: 100%;
+    padding: 0 40px;
   }
 
   .chatting {
     width: 30%;
     min-width: 300px;
   }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 1.5rem;
 `;
 
 export default ChatRoom;

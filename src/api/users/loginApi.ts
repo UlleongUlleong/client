@@ -19,11 +19,7 @@ export const loginApi = async (loginContent: LoginContentProps) => {
 export const logoutApi = async () => {
   try {
     const response = await apiClient.delete('/api/auth/logout');
-    if (response.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return response.data;
   } catch (error) {
     console.log(error);
   }
