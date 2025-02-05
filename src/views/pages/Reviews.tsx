@@ -55,7 +55,7 @@ function Reviews() {
       <AlcoholEachCategory
         key={0}
         categoryId={0}
-        categoryName={'별점 Top 10'}
+        categoryName={'평점 TOP 10'}
         alcoholsData={top10}
       />
 
