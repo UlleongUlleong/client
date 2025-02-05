@@ -183,7 +183,6 @@ function VideoRoom({ userName }: { userName: string }) {
         ),
       );
       console.log('🔌 사용자 연결 종료:', event.connection.connectionId);
-      sessionStorage.removeItem('userId');
     };
 
     session.on('streamDestroyed', handleStreamDestroyed);
