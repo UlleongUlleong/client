@@ -4,7 +4,7 @@ import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
 import { useSocketStore } from '../create-room/socket/useSocketStore';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { GoAlert } from 'react-icons/go';
 
@@ -20,228 +20,276 @@ function VideoRoom({ userName }: { userName: string }) {
     undefined,
   );
   const navigate = useNavigate();
-  const tokenRef = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
   const location = useLocation();
   const newToken = location?.state?.token;
 
   const [selectedMic, setSelectedMic] = useState<string | undefined>(undefined);
 
-  // State for dropdown visibility
   const [showCameraDropdown, setShowCameraDropdown] = useState(false);
   const [showMicDropdown, setShowMicDropdown] = useState(false);
+
+  const publisherRef = useRef<Publisher | null>(null);
+  const tokenRef = useRef<string | null>(null);
   const socketErrorRef = useRef<boolean>(false);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+  const isComponentMounted = useRef(true);
   const sessionRef = useRef<Session | null>(null);
+
+  if (newToken) {
+    tokenRef.current = newToken;
+  }
+
   //디바이스 변경시 재 렌더링
+
   useEffect(() => {
-    const unloadHandler = () => {
-      if (sessionRef.current) {
-        sessionRef.current.disconnect();
-        if (session) {
-          console.log('❌ session있음  Session disconnected');
-          session.disconnect();
-        }
-        console.log('세션 강제 종료');
-      }
-    };
-
-    window.addEventListener('beforeunload', unloadHandler);
-
+    isComponentMounted.current = true;
     return () => {
-      window.removeEventListener('beforeunload', unloadHandler);
-      if (sessionRef.current) {
-        sessionRef.current.disconnect();
-        if (session) {
-          console.log('❌ session있음  Session disconnected');
-          session.disconnect();
-        }
-        console.log('컴포넌트 unmount시 세션 종료');
-        sessionRef.current = null;
+      isComponentMounted.current = false;
+      cleanupSession();
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
       }
     };
   }, []);
-  useEffect(() => {
-    if (newToken) {
-      console.log('토큰 인가 완료', newToken);
-      setToken(newToken);
+
+  //세션 정리
+  const cleanupSession = async () => {
+    if (publisherRef.current) {
+      try {
+        publisherRef.current.stream?.disposeMediaStream();
+        publisherRef.current = null;
+      } catch (error) {
+        console.error('Error disposing publisher:', error);
+      }
     }
-  }, []);
 
-  useEffect(() => {
-    const fetchDevices = async () => {
+    if (sessionRef.current) {
+      try {
+        await sessionRef.current.disconnect();
+        console.log('Session disconnected successfully');
+      } catch (error) {
+        console.error('Error disconnecting session:', error);
+      }
+      sessionRef.current = null;
+    }
+
+    setSession(null);
+    setPublisher(null);
+    setSubscribers([]);
+  };
+
+  //디바이스 초기화
+  const initializeDevices = async () => {
+    try {
       const deviceList = await navigator.mediaDevices.enumerateDevices();
-      setDevices(deviceList);
-    };
+      if (isComponentMounted.current) {
+        setDevices(deviceList);
 
-    fetchDevices();
-  }, []);
+        // Set default devices if not already set
+        if (!selectedCamera) {
+          const defaultCamera = deviceList.find(
+            (device) => device.kind === 'videoinput',
+          );
+          setSelectedCamera(defaultCamera?.deviceId);
+        }
+        if (!selectedMic) {
+          const defaultMic = deviceList.find(
+            (device) => device.kind === 'audioinput',
+          );
+          setSelectedMic(defaultMic?.deviceId);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching devices:', error);
+    }
+  };
+
+  const initializeSession = async (token: string) => {
+    if (socketErrorRef.current) return;
+
+    try {
+      await cleanupSession();
+
+      const OV = new OpenVidu();
+      const newSession = OV.initSession();
+      sessionRef.current = newSession;
+
+      if (isComponentMounted.current) {
+        setSession(newSession);
+      }
+
+      // Configure session events
+      newSession.on('streamCreated', handleStreamCreated);
+      newSession.on('streamDestroyed', handleStreamDestroyed);
+      newSession.on('sessionDisconnected', handleSessionDisconnected);
+      newSession.on('networkQualityLevelChanged', handleNetworkQualityChange);
+
+      await newSession.connect(token, { clientData: userName });
+
+      if (!isComponentMounted.current) return;
+
+      // Initialize publisher with optimized settings
+      const publisher = await createPublisher();
+      if (publisher && isComponentMounted.current) {
+        publisherRef.current = publisher;
+        setPublisher(publisher);
+        await newSession.publish(publisher);
+      }
+    } catch (error) {
+      console.error('Error initializing session:', error);
+      handleReconnection();
+    }
+  };
+
+  const createPublisher = async () => {
+    const OV = new OpenVidu();
+    return await OV.initPublisherAsync(undefined, {
+      audioSource: selectedMic,
+      videoSource: selectedCamera,
+      publishAudio: isAudioActive,
+      publishVideo: isVideoActive,
+      resolution: '640x480', // Lower resolution for better performance
+      frameRate: 24, // Reduced frame rate
+      insertMode: 'APPEND',
+      mirror: false,
+      videoSimulcast: true, // Enable simulcast for better adaptation
+    });
+  };
+
+  const handleStreamCreated = (event) => {
+    if (
+      !sessionRef.current ||
+      event.stream.connection.connectionId ===
+        sessionRef.current.connection.connectionId
+    ) {
+      return;
+    }
+
+    const subscriber = sessionRef.current.subscribe(event.stream, undefined);
+    subscriber.subscribeToAudio(true);
+    subscriber.subscribeToVideo(true);
+
+    if (isComponentMounted.current) {
+      setSubscribers((prev) => [...prev, subscriber]);
+    }
+  };
+  const handleStreamDestroyed = (event) => {
+    if (isComponentMounted.current) {
+      setSubscribers((prev) =>
+        prev.filter((sub) => sub.stream.streamId !== event.stream.streamId),
+      );
+    }
+  };
+  const handleNetworkQualityChange = (event) => {
+    const { newValue } = event;
+    if (newValue < 3) {
+      // Poor network quality
+      // Automatically reduce video quality
+      if (publisherRef.current) {
+        publisherRef.current.publishVideo(false);
+        setTimeout(() => {
+          if (publisherRef.current && isComponentMounted.current) {
+            publisherRef.current.publishVideo(isVideoActive);
+          }
+        }, 3000);
+      }
+    }
+  };
+  const handleReconnection = () => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+    }
+
+    reconnectTimeoutRef.current = setTimeout(() => {
+      if (isComponentMounted.current && tokenRef.current) {
+        initializeSession(tokenRef.current);
+      }
+    }, 2000);
+  };
+
+  const handleSessionDisconnected = () => {
+    handleReconnection();
+  };
 
   useEffect(() => {
     if (!socket) return;
 
     const handleRoomJoined = (response) => {
       if (!tokenRef.current) {
-        console.log('✅ room_joined event');
         tokenRef.current = response.data.token;
-        setToken(response.data.token);
-      } else {
-        console.log('🔍 Token already exists, ignoring duplicate token.');
+        initializeSession(response.data.token);
       }
     };
-    socket.on('error', (error) => {
-      // 방장 에러 처리()
-      console.error('❌ Socket error:', error);
+
+    const handleSocketError = (error) => {
+      console.error('Socket error:', error);
       socketErrorRef.current = true;
-      toast.error(error.message, <GoAlert />);
+      toast.error(error.message, { icon: <GoAlert /> });
       navigate('/');
-    });
+    };
+
+    const handleUserLeft = () => {
+      cleanupSession();
+    };
+
     socket.on('room_joined', handleRoomJoined);
+    socket.on('error', handleSocketError);
+    socket.on('user_left', handleUserLeft);
 
     return () => {
-      console.log('🔌 소켓 연결 탈출');
-      if (!socketErrorRef.current) socket.off('room_joined', handleRoomJoined);
-      socket.off('error');
+      socket.off('room_joined', handleRoomJoined);
+      socket.off('error', handleSocketError);
+      socket.off('user_left', handleUserLeft);
     };
-  }, [socket]);
+  }, [socket, navigate]);
 
   useEffect(() => {
-    const initSession = async () => {
-      if (!token || sessionRef.current || socketErrorRef.current) return;
-
-      try {
-        console.log('🔌 Connecting to session');
-        const OV = new OpenVidu();
-        const newSession = OV.initSession();
-
-        sessionRef.current = newSession;
-        setSession(newSession);
-
-        newSession.on('exception', (exception) => {
-          console.warn('Exception:', exception);
-        });
-
-        newSession.on('streamCreated', (event) => {
-          // 내 자신의 스트림이면 구독하지 않음
-          if (
-            event.stream.connection.connectionId ===
-            newSession.connection.connectionId
-          ) {
-            console.log('내 스트림은 구독하지 않습니다.');
-            return;
-          }
-          // 타인의 스트림인 경우에만 구독
-          const subscriber = newSession.subscribe(event.stream, undefined);
-          console.log('📡 Subscriber 생성됨:', subscriber);
-
-          subscriber.on('streamPlaying', () => {
-            console.log('Subscriber stream is playing:', event.stream.streamId);
-          });
-
-          subscriber.on('streamPropertyChanged', (event) => {
-            if (event.changedProperty === 'audioActive') {
-              console.log('🔊 Audio active changed:', event.newValue);
-            }
-          });
-
-          setSubscribers((prev) => [...prev, subscriber]);
-        });
-        newSession.on('streamDestroyed', (event) => {
-          setSubscribers((prevSubscribers) =>
-            prevSubscribers.filter(
-              (sub) => sub.stream.streamId !== event.stream.streamId,
-            ),
-          );
-        });
-        await newSession.connect(token, { clientData: userName });
-        console.log('✅ Successfully connected to session');
-        if (socketErrorRef.current) {
-          newSession.disconnect();
-          console.log('❌ Socket error 발생으로 세션 연결 취소');
-          return;
-        }
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const hasCamera = devices.some((d) => d.kind === 'videoinput');
-        const hasAudio = devices.some((d) => d.kind === 'audioinput');
-
-        console.log('🔍 Camera detected:', hasCamera);
-
-        const newPublisher = await OV.initPublisherAsync(undefined, {
-          audioSource: hasAudio ? undefined : false,
-          videoSource: hasCamera ? undefined : false,
-          publishAudio: hasAudio,
-          publishVideo: hasCamera,
-          resolution: '1280x720',
-          frameRate: 30,
-          insertMode: 'APPEND',
-          mirror: false,
-        });
-
-        newPublisher.on('streamPlaying', () =>
-          console.log('Publisher stream playing'),
-        );
-        newPublisher.on('accessAllowed', () => console.log('accessAllowed'));
-
-        await newSession.publish(newPublisher);
-        setPublisher(newPublisher);
-      } catch (error) {
-        console.error('❌ Error connecting to session:', error);
-      }
+    initializeDevices();
+    //디바이스 변경 이벤트를 위한 리스너
+    navigator.mediaDevices.ondevicechange = initializeDevices;
+    return () => {
+      navigator.mediaDevices.ondevicechange = null;
     };
+  }, []);
 
-    initSession();
+  //디바이스 변경시 업데이트
+  useEffect(() => {
+    if (session && publisher) {
+      const updatePublisher = async () => {
+        try {
+          const newPublisher = await createPublisher();
+          if (session && publisher && isComponentMounted.current) {
+            await session.unpublish(publisher);
+            await session.publish(newPublisher);
+            publisherRef.current = newPublisher;
+            setPublisher(newPublisher);
+          }
+        } catch (error) {
+          console.error('Error updating publisher:', error);
+        }
+      };
 
+      updatePublisher();
+    }
+  }, [selectedCamera, selectedMic]);
+
+  useEffect(() => {
     return () => {
       if (sessionRef.current) {
         sessionRef.current.disconnect();
-        if (session) {
-          console.log('❌ session있음  Session disconnected');
-          session.disconnect();
-        }
-
-        console.log('❌ Session disconnected');
+        console.log('✅ 세션 정상 종료');
         sessionRef.current = null;
       }
-      setSession(null);
-      setPublisher(null);
-      setSubscribers([]);
     };
-  }, [token, userName]);
+  }, []);
 
-  //장치 재 설정 시 업데이트
   useEffect(() => {
-    const updatePublisher = async () => {
-      if (!session || !publisher) return;
-
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const hasCamera = devices.some((d) => d.kind === 'videoinput');
-        const hasAudio = devices.some((d) => d.kind === 'audioinput');
-
-        const OV = new OpenVidu();
-        const newPublisher = await OV.initPublisherAsync(undefined, {
-          audioSource: selectedMic || (hasAudio ? undefined : false),
-          videoSource: selectedCamera || (hasCamera ? undefined : false),
-          publishAudio: hasAudio,
-          publishVideo: hasCamera,
-          resolution: '1280x720',
-          frameRate: 30,
-          insertMode: 'APPEND',
-          mirror: false,
-        });
-
-        if (session) {
-          await session.unpublish(publisher);
-          await session.publish(newPublisher);
-        }
-
-        setPublisher(newPublisher);
-      } catch (error) {
-        console.error('❌ Error updating publisher:', error);
-      }
-    };
-
-    updatePublisher();
-  }, [selectedCamera, selectedMic]);
+    if (newToken) {
+      console.log('토큰 인가 완료', newToken);
+      setToken(newToken);
+    }
+  }, []);
 
   const handleVideoOnOff = () => {
     if (publisher) {
@@ -272,14 +320,11 @@ function VideoRoom({ userName }: { userName: string }) {
   const handleCameraSelect = (deviceId: string) => {
     setSelectedCamera(deviceId);
     setShowCameraDropdown(false);
-    // In a real-world scenario you might need to reinitialize the publisher
-    // to apply the new video device.
   };
 
   const handleMicSelect = (deviceId: string) => {
     setSelectedMic(deviceId);
     setShowMicDropdown(false);
-    // Similarly, reinitialize the publisher to apply the new audio device if needed.
   };
   return (
     <WholeScreen>
