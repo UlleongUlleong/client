@@ -6,7 +6,10 @@ import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
 import { getRoomInfo } from '../../api/roomApi';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { GoAlert } from 'react-icons/go';
+import axios, { AxiosError } from 'axios';
 
 const LoadingScreen = () => {
   return (
@@ -34,7 +37,7 @@ const ChatRoom = () => {
   const [themeId, setThemeId] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (!socket || !roomId) return;
 
@@ -49,9 +52,23 @@ const ChatRoom = () => {
 
   useEffect(() => {
     const getUserName = async () => {
-      const profile = await getProfile();
-      if (profile) {
-        setUserName(profile.nickname);
+      try {
+        console.log('👤 유저 정보 불러오는 중...');
+        const profile = await getProfile();
+        if (profile) {
+          setUserName(profile.nickname);
+        } else {
+          toast.error('로그인 하시면 방에 입장이 가능합니다.', {
+            icon: <GoAlert />,
+          });
+          navigate('/login');
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            console.log('401에러');
+          }
+        }
       }
     };
     getUserName();
