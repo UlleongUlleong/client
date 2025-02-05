@@ -21,7 +21,11 @@ function AlcoholEachCategory({
       <GridTopBar>
         <CategoryTitle>{categoryName}</CategoryTitle>
         <Category>
-          <Link to={`/alcohol-lists/${categoryId}`} className="more">
+          <Link
+            to={`/alcohol-lists/${categoryId}`}
+            state={{ categoryName }} // state는 별도 속성으로 전달
+            className="more"
+          >
             더보기
           </Link>
         </Category>
