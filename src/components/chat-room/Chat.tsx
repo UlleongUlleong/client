@@ -91,7 +91,7 @@ const Chat = () => {
     });
 
     return () => {
-      console.log('🚪 채팅방 나가기 처리 - 브라우저탈출');
+      console.log('🚪 채팅방 나가기 처리');
       socket.emit('leave_room', { roomId: numericRoomId });
       socket.off('room_joined');
       socket.off('user_joined');
