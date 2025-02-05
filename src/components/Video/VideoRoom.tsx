@@ -83,9 +83,9 @@ function VideoRoom({ userName }: { userName: string }) {
     socket.on('error', (error) => {
       // 방장 에러 처리()
       console.error('❌ Socket error:', error);
-      // socketErrorRef.current = true;
+      socketErrorRef.current = true;
       toast.error(error.message, <GoAlert />);
-      // navigate('/');
+      navigate('/');
     });
     socket.on('room_joined', handleRoomJoined);
 

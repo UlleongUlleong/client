@@ -35,8 +35,10 @@ const Chat = () => {
       return;
     }
 
-    console.log('📢 방 참가 요청 전송:', numericRoomId);
-    socket.emit('join_room', { roomId: numericRoomId });
+    if (!sessionStorage.getItem('userId')) {
+      console.log('📢 방 참가 요청 전송:', numericRoomId);
+      socket.emit('join_room', { roomId: numericRoomId });
+    }
 
     socket.on('room_joined', (response) => {
       console.log(`✅ 유저 방 참가 완료:`, response);
