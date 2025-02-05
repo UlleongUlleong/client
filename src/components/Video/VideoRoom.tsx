@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
+import {
+  OpenVidu,
+  Session,
+  Publisher,
+  Subscriber,
+  StreamEvent,
+  ConnectionEvent,
+} from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff, Check } from 'lucide-react';
@@ -7,7 +14,6 @@ import { useSocketStore } from '../create-room/socket/useSocketStore';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { GoAlert } from 'react-icons/go';
-
 function VideoRoom({ userName }: { userName: string }) {
   const [session, setSession] = useState<Session | null>(null);
   const [publisher, setPublisher] = useState<Publisher | null>(null);
@@ -19,6 +25,7 @@ function VideoRoom({ userName }: { userName: string }) {
   const [selectedCamera, setSelectedCamera] = useState<string | undefined>(
     undefined,
   );
+
   const navigate = useNavigate();
   const tokenRef = useRef<string | null>(null);
   const [token, setToken] = useState<string>();
@@ -32,43 +39,38 @@ function VideoRoom({ userName }: { userName: string }) {
   const [showMicDropdown, setShowMicDropdown] = useState(false);
   const socketErrorRef = useRef<boolean>(false);
   const sessionRef = useRef<Session | null>(null);
-  const mountedRef = useRef<boolean>(true);
-  const publisherRef = useRef<Publisher | null>(null);
+
   //디바이스 변경시 재 렌더링
 
+  // useEffect(() => {
+  //   sessionStorage.removeItem('userId');
+  // }, []);
+
   useEffect(() => {
-    mountedRef.current = true;
+    const cleanupSession = () => {
+      console.log('🔌 세션 정리');
+      if (sessionRef.current) {
+        sessionRef.current.disconnect();
+        console.log('✅ 세션 정상 종료');
+        sessionRef.current = null;
+        sessionStorage.removeItem('userId');
+        setSession(null);
+        setPublisher(null);
+        setSubscribers([]);
+      }
+    };
+
+    // 페이지를 떠날 때 세션 정리
+    window.addEventListener('beforeunload', cleanupSession);
+    console.log('떠나나요');
+
     return () => {
-      mountedRef.current = false;
+      console.log('여기서 떠나나요');
       cleanupSession();
+
+      window.removeEventListener('beforeunload', cleanupSession);
     };
   }, []);
-  const cleanupSession = async () => {
-    if (publisherRef.current) {
-      try {
-        await publisherRef.current.stream?.disposeMediaStream();
-        publisherRef.current = null;
-      } catch (error) {
-        console.error('Publisher cleanup error:', error);
-      }
-    }
-
-    if (sessionRef.current) {
-      try {
-        await sessionRef.current.disconnect();
-        console.log('✅ 세션 정상 종료');
-      } catch (error) {
-        console.error('Session cleanup error:', error);
-      }
-      sessionRef.current = null;
-    }
-
-    if (mountedRef.current) {
-      setSession(null);
-      setPublisher(null);
-      setSubscribers([]);
-    }
-  };
 
   useEffect(() => {
     if (newToken) {
@@ -85,46 +87,113 @@ function VideoRoom({ userName }: { userName: string }) {
 
     fetchDevices();
   }, []);
-
   useEffect(() => {
     if (!socket) return;
+    console.log('소켓있음');
 
-    const handleRoomJoined = (response) => {
-      if (!tokenRef.current) {
-        console.log('✅ room_joined event');
-        tokenRef.current = response.data.token;
-        setToken(response.data.token);
-      } else {
-        console.log('🔍 Token already exists, ignoring duplicate token.');
-      }
-    };
-    socket.on('error', (error) => {
-      // 방장 에러 처리()
+    const handleSocketError = (error) => {
       console.error('❌ Socket error:', error);
       socketErrorRef.current = true;
-      toast.error(error.message, <GoAlert />);
-      navigate('/');
-    });
-    socket.on('room_joined', handleRoomJoined);
 
-    socket.on('user_left', (response) => {
-      console.log('👋 유저가 방을 떠남:', response);
       if (sessionRef.current) {
         sessionRef.current.disconnect();
-        console.log('❌ Session disconnected');
+        console.log('❌ Socket error -> 세션 강제 종료');
         sessionRef.current = null;
       }
-      setSession(null);
-      setPublisher(null);
-      setSubscribers([]);
-    });
+
+      toast.error(error.message, <GoAlert />);
+      sessionStorage.removeItem('userId');
+      navigate('/');
+    };
+    const handleRoomJoined = (response) => {
+      console.log('✅ room_joined event received:', response);
+      tokenRef.current = response.data.token;
+      setToken(response.data.token);
+    };
+    socket.on('error', handleSocketError);
+
+    socket.on('room_joined', handleRoomJoined);
 
     return () => {
-      console.log('🔌 소켓 연결 탈출');
-      if (!socketErrorRef.current) socket.off('room_joined', handleRoomJoined);
-      socket.off('error');
+      console.log('🔌 소켓 연결 해제');
+
+      socket.off('room_joined', handleRoomJoined);
+      socket.off('error', handleSocketError);
     };
   }, [socket]);
+
+  useEffect(() => {
+    if (!session) return;
+
+    session.on('reconnected', async () => {
+      console.log('🔄 세션 재연결됨. 스트림 복구 중...');
+
+      try {
+        setSubscribers([]);
+        setPublisher(null);
+
+        // Ensure session is still active before proceeding
+        if (!session || !session.connection) {
+          console.warn('⚠️ Session is not active after reconnection.');
+          return;
+        }
+
+        // Re-publish the local stream (if necessary)
+        const OV = new OpenVidu();
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const hasCamera = devices.some((d) => d.kind === 'videoinput');
+        const hasAudio = devices.some((d) => d.kind === 'audioinput');
+
+        const newPublisher = await OV.initPublisherAsync(undefined, {
+          audioSource: hasAudio ? undefined : false,
+          videoSource: hasCamera ? undefined : false,
+          publishAudio: hasAudio,
+          publishVideo: hasCamera,
+          resolution: '1280x720',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false,
+        });
+
+        await session.publish(newPublisher);
+        setPublisher(newPublisher);
+
+        console.log('✅ 퍼블리셔가 재연결되었습니다.');
+      } catch (error) {
+        console.error('❌ 퍼블리셔 재설정 오류:', error);
+      }
+    });
+
+    const handleStreamDestroyed = (event: StreamEvent) => {
+      console.log('🛑 스트림 종료됨:', event.stream.streamId);
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.filter(
+          (sub) => sub.stream.streamId !== event.stream.streamId,
+        ),
+      );
+    };
+
+    const handleConnectionDestroyed = (event: ConnectionEvent) => {
+      console.log('🔌 사용자 연결 종료:', event.connection.connectionId);
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.filter(
+          (sub) =>
+            sub.stream.connection.connectionId !==
+            event.connection.connectionId,
+        ),
+      );
+      console.log('🔌 사용자 연결 종료:', event.connection.connectionId);
+      sessionStorage.removeItem('userId');
+    };
+
+    session.on('streamDestroyed', handleStreamDestroyed);
+    session.on('connectionDestroyed', handleConnectionDestroyed);
+
+    return () => {
+      session.off('streamDestroyed', handleStreamDestroyed);
+      session.off('connectionDestroyed', handleConnectionDestroyed);
+    };
+  }, [session]);
 
   useEffect(() => {
     const initSession = async () => {
@@ -148,6 +217,13 @@ function VideoRoom({ userName }: { userName: string }) {
         });
 
         newSession.on('streamCreated', (event) => {
+          if (!newSession.connection) {
+            console.warn(
+              '⚠️ Session connection is null! Waiting for connection...',
+            );
+            return;
+          }
+
           // 내 자신의 스트림이면 구독하지 않음
           if (
             event.stream.connection.connectionId ===
@@ -180,9 +256,6 @@ function VideoRoom({ userName }: { userName: string }) {
           );
         });
         await newSession.connect(token, { clientData: userName });
-
-        if (!mountedRef.current) return;
-
         console.log('✅ Successfully connected to session');
         if (socketErrorRef.current) {
           newSession.disconnect();
@@ -210,10 +283,7 @@ function VideoRoom({ userName }: { userName: string }) {
           console.log('Publisher stream playing'),
         );
         newPublisher.on('accessAllowed', () => console.log('accessAllowed'));
-        if (mountedRef.current && newPublisher) {
-          publisherRef.current = newPublisher;
-          setPublisher(newPublisher);
-        }
+
         await newSession.publish(newPublisher);
         setPublisher(newPublisher);
       } catch (error) {
@@ -233,7 +303,7 @@ function VideoRoom({ userName }: { userName: string }) {
       setPublisher(null);
       setSubscribers([]);
     };
-  }, [token, userName]);
+  }, [token]);
 
   //장치 재 설정 시 업데이트
   useEffect(() => {
