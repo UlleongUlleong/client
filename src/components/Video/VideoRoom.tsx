@@ -268,10 +268,10 @@ function VideoRoom({ userName }: { userName: string }) {
         console.log('🔍 Camera detected:', hasCamera);
 
         const newPublisher = await OV.initPublisherAsync(undefined, {
-          audioSource: hasAudio ? undefined : false,
-          videoSource: hasCamera ? undefined : false,
-          publishAudio: hasAudio,
-          publishVideo: hasCamera,
+          audioSource: undefined,
+          videoSource: undefined,
+          publishAudio: false,
+          publishVideo: false,
           resolution: '1280x720',
           frameRate: 30,
           insertMode: 'APPEND',
