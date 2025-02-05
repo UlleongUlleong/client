@@ -22,10 +22,6 @@ const SelectKeywords = ({
 
   const buttonSize = title === 'register' ? 'small' : 'large';
 
-  // useEffect(() => {
-  //   console.log(moods, alcohols);
-  // }, [moods, alcohols]);
-
   const handleKeywordClick = (id: number, type: 'mood' | 'alcohol') => {
     if (type === 'mood') {
       setMoods((prev) =>
@@ -115,31 +111,17 @@ const SelectKeywords = ({
             />
             <KeywordButton
               size={buttonSize}
-              keyword="칵테일"
+              keyword="위스키"
               id={4}
               onClick={() => handleKeywordClick(4, 'alcohol')}
               isSelected={alcohols.includes(4)}
             />
             <KeywordButton
               size={buttonSize}
-              keyword="하이볼"
+              keyword="기타"
               id={5}
               onClick={() => handleKeywordClick(5, 'alcohol')}
               isSelected={alcohols.includes(5)}
-            />
-            <KeywordButton
-              size={buttonSize}
-              keyword="전통주"
-              id={6}
-              onClick={() => handleKeywordClick(6, 'alcohol')}
-              isSelected={alcohols.includes(6)}
-            />
-            <KeywordButton
-              size={buttonSize}
-              keyword="위스키"
-              id={7}
-              onClick={() => handleKeywordClick(7, 'alcohol')}
-              isSelected={alcohols.includes(7)}
             />
           </div>
         </div>
