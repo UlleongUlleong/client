@@ -14,7 +14,7 @@ import { IAlcohol } from '../../models/alcohol';
 import Spinner from '../../assets/Spinner.gif';
 import { LoadingMain } from './Reviews';
 import { useCategoryStore } from '../../store/useCategoryStore';
-
+import { useLocation } from 'react-router-dom';
 function ReviewLists() {
   const [sort, setSort] = useState(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;
@@ -24,6 +24,8 @@ function ReviewLists() {
   const category = useCategoryStore((state) => state.alcoholCategories);
   const [alcoholsData, setAlcoholsData] = useState<IAlcohol[]>([]);
   const { id } = useParams();
+  const location = useLocation();
+  const { categoryName } = location.state;
   //검색 시 location state로 넘어와서 관리
   const categoryId = Number(id);
   const { ref, inView } = useInView();
@@ -36,11 +38,6 @@ function ReviewLists() {
     isError,
     error,
   } = useAlcoholsQuery(categoryId, 5, sort);
-  const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
-  const filteredItems = alcoholCategories.find(
-    (item) => item.id === categoryId,
-  );
-  const categoryName = filteredItems.name;
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -85,7 +82,9 @@ function ReviewLists() {
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
       <GridTopBar>
-        <CategoryTitle>{categoryName}</CategoryTitle>
+        <CategoryTitle>
+          {categoryName === '평점 TOP 10' ? '전체' : categoryName}
+        </CategoryTitle>
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
       <AlcoholGrid alcohols={alcoholsData} />
