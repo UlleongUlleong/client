@@ -54,9 +54,12 @@ function Mypage() {
       formData.append('profile_image', file);
 
       try {
-        const response = await AddProfileImage(formData);
-        console.log('성공', response);
+        await AddProfileImage(formData);
         alert('프로필 사진이 변경되었습니다!');
+
+        const updateProfile = await getProfile();
+        setProfile(updateProfile);
+        setProfileImage(updateProfile.imageUrl);
       } catch (error) {
         console.log('실패', error);
       }
@@ -80,6 +83,10 @@ function Mypage() {
       await RemoveProfileImage();
       setProfileImage(null);
       alert('프로필 사진이 삭제되었습니다!');
+
+      const updateProfile = await getProfile();
+      setProfile(updateProfile);
+      setProfileImage(updateProfile.imageUrl);
     } catch (error) {
       console.error('프로필 사진 삭제 실패:', error);
     }
@@ -88,17 +95,19 @@ function Mypage() {
 
   const handleCloseModal = () => {
     setIsImageModalOpen(false);
-  }
+  };
 
   const handleWithdrawConfirm = async () => {
-    alert("회원 탈퇴가 완료되었습니다. 계정은 일주일 동안 유지되고, 로그인 시에 다시 활성화됩니다. 탈퇴 후 일주일이 지나면 계정은 복구할 수 없습니다.");
+    alert(
+      '회원 탈퇴가 완료되었습니다. 계정은 일주일 동안 유지되고, 로그인 시에 다시 활성화됩니다. 탈퇴 후 일주일이 지나면 계정은 복구할 수 없습니다.',
+    );
 
     try {
       await logoutApi();
-      navigate("/");
+      navigate('/');
     } catch (error) {
-      console.log("로그아웃 실패:", error);
-      alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+      console.log('로그아웃 실패:', error);
+      alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -111,9 +120,9 @@ function Mypage() {
       } catch (error) {
         console.log('fetchProfile : ', error);
         if (!isAlertShown.current) {
-          alert("로그인이 필요합니다!");
+          alert('로그인이 필요합니다!');
           isAlertShown.current = true;
-          navigate("/");
+          navigate('/');
         }
       }
     };
@@ -179,7 +188,10 @@ function Mypage() {
             <div className="profile-image-wrapper">
               <div className="profile-image">
                 {profileImage ? (
-                  <img src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${profile.imageUrl}`} alt={profile.imageUrl} />
+                  <img
+                    src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${profile.imageUrl}`}
+                    alt={profile.imageUrl}
+                  />
                 ) : (
                   <FaRegUserCircle size={200} />
                 )}
@@ -234,16 +246,22 @@ function Mypage() {
                   >
                     회원정보 수정
                   </li>
-                  <li onClick={() => {
-                    toggleResetModal();
-                    setIsDropdownOpen(false);
-                  }}>
+                  <li
+                    onClick={() => {
+                      toggleResetModal();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
                     비밀번호 수정
                   </li>
-                  <li onClick={() => {
-                    toggleWithdrawModal();
-                    setIsDropdownOpen(false);
-                  }}>회원 탈퇴</li>
+                  <li
+                    onClick={() => {
+                      toggleWithdrawModal();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    회원 탈퇴
+                  </li>
                 </ul>
               </div>
             )}
@@ -453,6 +471,16 @@ const MypageStyle = styled.div`
     border-radius: 20px;
     border: 1px solid #ddd;
     text-align: center;
+    white-space: nowrap;
+    @media (max-width: 768px) {
+      font-size: 14px;
+      padding: 4px 16px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
   }
 
   .settings-icon {
@@ -560,7 +588,7 @@ const MypageStyle = styled.div`
       border-bottom: none;
     }
   }
-  
+
   .image-modal {
     position: fixed;
     top: 50%;
