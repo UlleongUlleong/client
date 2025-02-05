@@ -13,7 +13,7 @@ import { useCategoryStore } from '../store/useCategoryStore';
 export const useAlcoholsByCategory = () => {
   const category = useCategoryStore((state) => state.alcoholCategories);
   // const alcoholCategories = [{ id: 0, name: 'top 10' }, ...category];
-
+  console.log('category', category);
   const queries = useQueries({
     queries: category.map((category) => ({
       queryKey: ['alcohols', category.name],
@@ -31,7 +31,7 @@ export const useAlcoholsByCategory = () => {
     acc[index] = data;
     return acc;
   }, {});
-
+  console.log('categoriesData', categoriesData);
   return {
     categoriesData,
     isLoading,

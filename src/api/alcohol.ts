@@ -87,7 +87,7 @@ export const fetchEachAlcoholsByCategory = async (
     const response = await apiClient.get('/api/alcohol', {
       params: { category, limit },
     });
-
+    console.log('response', response.data);
     return {
       alcohols: response.data,
       id: category,

@@ -5,7 +5,7 @@ export const MainContainer = styled.div`
   width: 94%;
   position: relative;
   overflow-y: auto;
-  padding-bottom: 30px;
+  padding-bottom: 50px;
 `;
 
 export const StyledSlider = styled(Slider)`
