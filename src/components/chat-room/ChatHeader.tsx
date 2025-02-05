@@ -11,6 +11,7 @@ const ChatHeader = ({ title }: ChatHeaderProps) => {
   const navigate = useNavigate();
 
   const onClickOutButton = () => {
+    sessionStorage.removeItem('userId');
     navigate('/');
   };
 
