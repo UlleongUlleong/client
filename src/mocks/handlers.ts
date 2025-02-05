@@ -1,9 +1,50 @@
 import { http, HttpResponse, delay } from 'msw';
-import { alcoholTypeCategories } from '../models/categories';
-import { categoryForFetch } from '../models/categories';
 
 // id name score type price
-
+const moods = {
+  status: 'success',
+  data: [
+    {
+      id: 1,
+      name: '혼술',
+    },
+    {
+      id: 2,
+      name: '반주',
+    },
+  ],
+  message: '술 카테고리 조회',
+};
+const alcolCategory = {
+  status: 'success',
+  data: [
+    {
+      id: 1,
+      name: '소주',
+    },
+    {
+      id: 2,
+      name: '맥주',
+    },
+    {
+      id: 3,
+      name: '위스키',
+    },
+    {
+      id: 4,
+      name: '와인',
+    },
+    {
+      id: 5,
+      name: '막걸리',
+    },
+    {
+      id: 6,
+      name: '기타',
+    },
+  ],
+  message: '술 카테고리 조회',
+};
 const moodList = [
   '혼술',
   '반주',
@@ -12,7 +53,6 @@ const moodList = [
   '고민상담',
   '레시피공유',
 ];
-
 function generateDummyRoomData(count: number, category: string) {
   let currentId = 0;
   const maxMember = Math.floor(Math.random() * 10);
@@ -28,27 +68,21 @@ function generateDummyRoomData(count: number, category: string) {
 
 function generateDummyData(count: number, category: number) {
   let curr = 0;
-  const cat = categoryForFetch.find((cat) => cat.id === category);
+
   return Array.from({ length: count }, () => ({
     id: ++curr,
-    name: `${cat.name}${curr}`,
+    name: `${category}${curr}`,
     imageUrl:
       'https://wineall.co.kr/web/product/big/202204/e0b9cfb8b7e703a4e086f6c2a7f72e28.png',
 
     scoreAverage: parseFloat((Math.random() * 5).toFixed(1)),
-    type: `${cat.name}`,
+    type: `${category}`,
     price: 20000 + (curr - 1) * 500,
     reviewCount: Math.floor(Math.random() * 100),
     interestCount: Math.floor(Math.random() * 100),
   }));
 }
 // 전체 카테고리 더미 데이터
-const dummy = [];
-dummy.push({ popular: generateDummyData(10, 0) });
-
-alcoholTypeCategories.forEach((category) => {
-  dummy.push({ [category.name]: generateDummyData(10, category.id) });
-});
 
 const wineData = generateDummyData(30, 1);
 const reviews = wineData.sort((a, b) => b.reviewCount - a.reviewCount);
@@ -59,33 +93,190 @@ export const handlers = [
   http.all('*', async () => {
     await delay(100);
   }),
-  http.get(
-    'https://ulleong-idbiv.run.goorm.site/api/chat/rooms/offset',
-    ({ request }) => {
-      const url = new URL(request.url);
-      const page = parseInt(url.searchParams.get('page'));
-      const pageSize = parseInt(url.searchParams.get('pageSize') || '6');
-      if (page && pageSize) {
-        const start = (page - 1) * pageSize;
-        const end = start + pageSize;
-        const recent = generateDummyRoomData(30, '최신 순');
-        const data = recent.slice(start, end);
-        console.log('최신순 챗룸 데이터', data);
-        return new HttpResponse(
-          JSON.stringify({
-            data,
-            pagination: {
-              page,
-              pageSize,
-              totalPages: Math.ceil(dummy.length / pageSize),
-            },
-          }),
-        );
+  http.get('https://api.sulleong.coderoom.site/api/alcohol*', ({ request }) => {
+    const url = new URL(request.url);
+    console.log('들어옴');
+
+    const category = parseInt(url.searchParams.get('category'));
+    const keyword = url.searchParams.get('keyword');
+    const sort = parseInt(url.searchParams.get('sort'));
+    const offset = parseInt(url.searchParams.get('offset') || '0');
+    const limit = parseInt(url.searchParams.get('limit') || '4');
+    const cursorParam = url.searchParams.get('cursor');
+    const cursor = cursorParam ? parseInt(cursorParam) : NaN;
+    console.log(
+      'category',
+      category,
+      'cursor',
+      cursor,
+      isNaN(cursor),
+      'sort',
+      sort,
+      'limit',
+      limit,
+      'searchText',
+      keyword,
+    );
+
+    if (category) {
+      console.log('category response');
+      return new HttpResponse(
+        JSON.stringify({
+          data: generateDummyData(10, category),
+        }),
+      );
+    }
+    if (isNaN(category) && isNaN(cursor)) {
+      console.log('popular response');
+      return new HttpResponse(
+        JSON.stringify({
+          data: generateDummyData(10, 0),
+        }),
+      );
+    }
+    // 검색어가 있는 경우 필터링
+
+    let filteredData = generateDummyData(30, category);
+    if (keyword) {
+      filteredData = filteredData.filter((item) =>
+        item.name.toLowerCase().includes(keyword.toLowerCase()),
+      );
+    }
+    if (category && limit && isNaN(cursor)) {
+      const slicedData = wineData.slice(0, limit);
+      return new HttpResponse(
+        JSON.stringify({
+          category: slicedData,
+        }),
+      );
+    }
+
+    // 정렬 적용
+    if (sort) {
+      switch (sort) {
+        case 0:
+          filteredData = wineData;
+          break;
+        case 2:
+          filteredData = reviews;
+          break;
+        case 3:
+          filteredData = score;
+          break;
+        case 4:
+          filteredData = love;
+          break;
       }
-    },
-  ),
+    }
+
+    let startIdx = 0;
+    let newCursor = 0;
+    // cursor가 있는 경우 cursor 이후의 데이터만 반환
+
+    if (!isNaN(cursor)) {
+      const cursorIndex = filteredData.findIndex((item) => item.id === cursor);
+      startIdx = cursorIndex + 1;
+      filteredData = filteredData.slice(startIdx, startIdx + limit);
+      newCursor = filteredData.length
+        ? filteredData[filteredData.length - 1].id
+        : null; // 데이터가 없을 경우 null로 종료를 명시
+
+      console.log('cursor값 response', newCursor !== cursor);
+      return new HttpResponse(
+        JSON.stringify({
+          data: filteredData,
+          status: 'success',
+          message: '성공',
+          pagination: {
+            nextCursor: newCursor,
+            hasNext: newCursor !== cursor,
+          },
+        }),
+      );
+    }
+    if (isNaN(cursor)) {
+      // offset과 limit 적용
+      filteredData = filteredData.slice(offset, offset + limit);
+      return new HttpResponse(
+        JSON.stringify({
+          data: filteredData,
+          status: 'success',
+          message: '성공',
+          pagination: {
+            total: 6,
+            pageSize: limit,
+            page: offset + limit,
+            totalPages: 2,
+          },
+        }),
+      );
+    }
+  }),
+  http.get('https://api.sulleong.coderoom.site/api/users/me/profile', () => {
+    const profile = {
+      statusCode: 200,
+      message: '내 프로필을 가져왔습니다.',
+      data: {
+        nickname: '동동동',
+        moodCategory: [
+          {
+            id: 1,
+            name: '혼술',
+          },
+          {
+            id: 2,
+            name: '반주',
+          },
+        ],
+        alcoholCategory: [
+          {
+            id: 2,
+            name: '맥주',
+          },
+          {
+            id: 4,
+            name: '와인',
+          },
+        ],
+      },
+      path: '/api/users/me/profile',
+    };
+    return new HttpResponse(JSON.stringify(profile));
+  }),
+
+  http.get('https://api.sulleong.coderoom.site/api/categories/alcohol', () => {
+    return new HttpResponse(JSON.stringify(alcolCategory));
+  }),
+  http.get('https://api.sulleong.coderoom.site/api/categories/moods', () => {
+    return new HttpResponse(JSON.stringify(moods));
+  }),
+  // http.get(
+  //   'https://api.sulleong.coderoom.site/api/chat/rooms/offset',
+  //   ({ request }) => {
+  //     const url = new URL(request.url);
+  //     const page = parseInt(url.searchParams.get('page'));
+  //     const pageSize = parseInt(url.searchParams.get('pageSize') || '6');
+  //     if (page && pageSize) {
+  //       const start = (page - 1) * pageSize;
+  //       const end = start + pageSize;
+  //       const recent = generateDummyRoomData(30, '최신 순');
+  //       const data = recent.slice(start, end);
+  //       console.log('최신순 챗룸 데이터', data);
+  //       return new HttpResponse(
+  //         JSON.stringify({
+  //           data,
+  //           pagination: {
+  //             page,
+  //             pageSize,
+  //             totalPages: Math.ceil(dummy.length / pageSize),
+  //           },
+  //         }),
+  //       );
+  //     }
+  //   },
+  // ),
   http.get(
-    'https://ulleong-idbiv.run.goorm.site/api/chat/rooms/cursor',
+    'https://api.sulleong.coderoom.site/api/chat/rooms/cursor',
     ({ request }) => {
       const url = new URL(request.url);
       const sort = parseInt(url.searchParams.get('sort'));
@@ -219,128 +410,6 @@ export const handlers = [
           status: 400,
         }),
       );
-    },
-  ),
-
-  http.get(
-    'https://ulleong-idbiv.run.goorm.site/api/alcohol/search',
-    ({ request }) => {
-      const url = new URL(request.url);
-      const category = parseInt(url.searchParams.get('category'));
-      const keyword = url.searchParams.get('keyword');
-      const sort = parseInt(url.searchParams.get('sort'));
-      const offset = parseInt(url.searchParams.get('offset') || '0');
-      const limit = parseInt(url.searchParams.get('limit') || '4');
-      const cursor = parseInt(url.searchParams.get('cursor'));
-      console.log(
-        'category',
-        category,
-        'cursor',
-        cursor,
-        isNaN(cursor),
-        'sort',
-        sort,
-        'limit',
-        limit,
-        'searchText',
-        keyword,
-      );
-
-      if (category && isNaN(cursor)) {
-        console.log('category response');
-        return new HttpResponse(
-          JSON.stringify({
-            data: generateDummyData(10, category),
-          }),
-        );
-      }
-      if (isNaN(category) && isNaN(cursor)) {
-        console.log('popular response');
-        return new HttpResponse(
-          JSON.stringify({
-            data: generateDummyData(10, 0),
-          }),
-        );
-      }
-      // 검색어가 있는 경우 필터링
-
-      let filteredData = generateDummyData(30, category);
-      if (keyword) {
-        filteredData = filteredData.filter((item) =>
-          item.name.toLowerCase().includes(keyword.toLowerCase()),
-        );
-      }
-      if (category && limit && isNaN(cursor)) {
-        const slicedData = wineData.slice(0, limit);
-        return new HttpResponse(
-          JSON.stringify({
-            category: slicedData,
-          }),
-        );
-      }
-
-      // 정렬 적용
-      if (sort) {
-        switch (sort) {
-          case 0:
-            filteredData = wineData;
-            break;
-          case 2:
-            filteredData = reviews;
-            break;
-          case 3:
-            filteredData = score;
-            break;
-          case 4:
-            filteredData = love;
-            break;
-        }
-      }
-
-      let startIdx = 0;
-      let newCursor = 0;
-      // cursor가 있는 경우 cursor 이후의 데이터만 반환
-
-      if (!isNaN(cursor)) {
-        const cursorIndex = filteredData.findIndex(
-          (item) => item.id === cursor,
-        );
-        startIdx = cursorIndex + 1;
-        filteredData = filteredData.slice(startIdx, startIdx + limit);
-        newCursor = filteredData.length
-          ? filteredData[filteredData.length - 1].id
-          : null; // 데이터가 없을 경우 null로 종료를 명시
-
-        console.log('cursor값 response', newCursor !== cursor);
-        return new HttpResponse(
-          JSON.stringify({
-            data: filteredData,
-            status: 'success',
-            message: '성공',
-            pagination: {
-              nextCursor: newCursor,
-              hasNext: newCursor !== cursor,
-            },
-          }),
-        );
-      }
-      if (isNaN(cursor)) {
-        // offset과 limit 적용
-        filteredData = filteredData.slice(offset, offset + limit);
-        return new HttpResponse(
-          JSON.stringify({
-            data: filteredData,
-            status: 'success',
-            message: '성공',
-            pagination: {
-              total: 6,
-              pageSize: limit,
-              page: offset + limit,
-              totalPages: 2,
-            },
-          }),
-        );
-      }
     },
   ),
 ];

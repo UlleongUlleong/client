@@ -3,13 +3,13 @@ import styled from 'styled-components';
 export const ChatRoomContainer = styled.div`
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
   display: flex;
   margin: 0 auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;
   width: 300px;
+  cursor: pointer;
   margin: 0 auto;
 
   @media (max-width: 468px) {
@@ -25,11 +25,11 @@ export const ChatImage = styled.div`
   }
 `;
 
-export const ChatRoomParty = styled.div<{ isFull: boolean }>`
+export const ChatRoomParty = styled.div<{ $isFull: boolean }>`
   position: relative;
   display: flex;
   padding: 5px 10px;
-  right: ${(props) => (props.isFull ? '95px' : '110px')};
+  right: ${(props) => (props.$isFull ? '95px' : '110px')};
   top: 45px;
   color: white;
   background-color: rgba(0, 0, 0, 0.7);

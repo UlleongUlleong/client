@@ -11,7 +11,7 @@ import { GoCheckCircle, GoAlert } from 'react-icons/go';
 
 const EmailVerificationTab = () => {
   const [verificationCode, setVerificationCode] = useState<string>('');
-  const [timeLeft, setTimeLeft] = useState<number>(30);
+  const [timeLeft, setTimeLeft] = useState<number>(600);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -36,7 +36,7 @@ const EmailVerificationTab = () => {
 
   const handleResendCode = async () => {
     try {
-      setTimeLeft(30); // 고치기
+      setTimeLeft(600);
       setErrorMessage(null);
       const response = await requestEmailCode(email);
       toast.success(response.message, { icon: <GoCheckCircle /> });
@@ -69,7 +69,6 @@ const EmailVerificationTab = () => {
           '*',
         );
       }
-
       setTimeout(() => {
         window.close();
       }, 1000);
@@ -86,7 +85,11 @@ const EmailVerificationTab = () => {
   return (
     <StyledContainer>
       <div className="logo">
-        <img className="logo-img" src="src/assets/images/logo.png" alt="Logo" />
+        <img
+          className="logo-img"
+          src="/public/assets/image/logo/logo.png"
+          alt="Logo"
+        />
       </div>
       <div className="verification-container">
         <h3>이메일 인증</h3>

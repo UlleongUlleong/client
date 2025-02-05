@@ -34,7 +34,11 @@ const FindPassword = () => {
   return (
     <FindPasswordStyle>
       <div className="logo">
-        <img className="logo-img" src="src/assets/images/logo.png" alt="Logo" />
+        <img
+          className="logo-img"
+          src="/public/assets/image/logo/logo.png"
+          alt="Logo"
+        />
       </div>
       <div className="find-password-container">
         <h3>임시 비밀번호 발급</h3>

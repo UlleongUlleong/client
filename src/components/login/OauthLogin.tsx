@@ -20,15 +20,21 @@ const OauthLogin = () => {
         <button onClick={() => handleOauthLogin('google')}>
           <img
             className="google"
-            src="src/assets/images/google-icon.png"
+            src="/assets/image/oauth-icon/google-icon.png"
             alt="Google Login"
           />
         </button>
         <button onClick={() => handleOauthLogin('kakao')}>
-          <img src="src/assets/images/kakao-icon.png" alt="Kakao Login" />
+          <img
+            src="/assets/image/oauth-icon/kakao-icon.png"
+            alt="Kakao Login"
+          />
         </button>
         <button onClick={() => handleOauthLogin('naver')}>
-          <img src="src/assets/images/naver-icon.png" alt="Naver Login" />
+          <img
+            src="/assets/image/oauth-icon/naver-icon.png"
+            alt="Naver Login"
+          />
         </button>
       </div>
     </OauthLoginStyle>

@@ -8,7 +8,7 @@ const LoginBox = () => {
   return (
     <LoginBoxStyle>
       <div className="logo">
-        <img className="logo-img" src="src/assets/images/logo.png" />
+        <img className="logo-img" src="/assets/image/logo/logo.png" />
       </div>
       <h1>login</h1>
       <div className="login-form">

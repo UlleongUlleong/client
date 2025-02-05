@@ -16,10 +16,10 @@ export const DropdownContainer = styled.div`
   }
 `;
 
-export const DropdownButton = styled.div<{ isOpen: boolean }>`
+export const DropdownButton = styled.div<{ $isOpen: boolean }>`
   padding: 8px 11px;
   background-color: #ffffff;
-  border: 1px solid ${(props) => (props.isOpen ? '#000000' : '#e0e0e0')};
+  border: 1px solid ${(props) => (props.$isOpen ? '#000000' : '#e0e0e0')};
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -38,12 +38,12 @@ export const DropdownButton = styled.div<{ isOpen: boolean }>`
     display: inline-block;
     padding: 3px;
     transform: ${(props) =>
-      props.isOpen ? 'rotate(-135deg)' : 'rotate(45deg)'};
+      props.$isOpen ? 'rotate(-135deg)' : 'rotate(45deg)'};
     transition: transform 0.2s ease;
   }
 `;
 
-export const DropdownList = styled.ul<{ isOpen: boolean }>`
+export const DropdownList = styled.ul<{ $isOpen: boolean }>`
   position: relative;
 
   left: 0;
@@ -54,10 +54,10 @@ export const DropdownList = styled.ul<{ isOpen: boolean }>`
   margin-top: 4px;
   padding: 0;
   list-style: none;
-  opacity: ${(props) => (props.isOpen ? 1 : 0)};
-  visibility: ${(props) => (props.isOpen ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+  visibility: ${(props) => (props.$isOpen ? 'visible' : 'hidden')};
   transform: ${(props) =>
-    props.isOpen ? 'translateY(0)' : 'translateY(-10px)'};
+    props.$isOpen ? 'translateY(0)' : 'translateY(-10px)'};
   transition: all 0.2s ease;
   z-index: 1;
 `;

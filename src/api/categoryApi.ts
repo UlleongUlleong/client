@@ -18,7 +18,7 @@ export const alcoholCategory = async (): Promise<Category[]> => {
     );
     return response.data.data;
   } catch (error) {
-    console.log('alcoholCategory error :', error);
+    console.error('alcoholCategory error :', error);
     throw error;
   }
 };
@@ -30,7 +30,7 @@ export const moodsCategory = async (): Promise<Category[]> => {
     );
     return response.data.data;
   } catch (error) {
-    console.log('moodsCategory error :', error);
+    console.error('moodsCategory error :', error);
     throw error;
   }
 };

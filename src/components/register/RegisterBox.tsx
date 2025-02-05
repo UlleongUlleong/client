@@ -63,14 +63,33 @@ const RegisterBox = () => {
       toast.success(response.message, { icon: <GoCheckCircle /> });
       navigate('/');
     } catch (error: any) {
-      toast.error(error.message, { icon: <GoAlert /> });
+      if (error.status === 400) {
+        toast.error('입력한 비밀번호가 서로 다릅니다.', {
+          icon: <GoAlert />,
+        });
+      } else if (error.status === 401) {
+        toast.error('인증 후에 회원가입을 진행해주세요.', {
+          icon: <GoAlert />,
+        });
+      } else if (error.status >= 500) {
+        toast.error('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', {
+          icon: <GoAlert />,
+        });
+      } else {
+        toast.error(
+          '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.',
+          {
+            icon: <GoAlert />,
+          },
+        );
+      }
     }
   };
 
   return (
     <RegisterBoxStyle>
       <div className="logo">
-        <img className="logo-img" src="src/assets/images/logo.png" />
+        <img className="logo-img" src="/assets/image/logo/logo.png" />
       </div>
       <h1>회원가입</h1>
       <div className="register-form">

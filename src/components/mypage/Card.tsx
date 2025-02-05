@@ -15,7 +15,7 @@ function Card({ id, name, scoreAverage, imageUrl }: LikeAlcoholType) {
   return (
     <CardWrapper onClick={handleCardClick}>
       <CardImage
-        src={imageUrl ? imageUrl : '/assets/image/default-image.png'}
+        src={imageUrl ? `https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}` : '/assets/image/default-image.png'}
         alt={name}
       />
       <CardContent>
@@ -43,8 +43,8 @@ function Card({ id, name, scoreAverage, imageUrl }: LikeAlcoholType) {
 }
 
 const CardWrapper = styled.div`
-  max-width: 200px;
-  width: auto;
+max-width: 200px;
+  width: 200px;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;

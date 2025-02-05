@@ -8,7 +8,6 @@ import { sortReviewOptions } from '../../models/dropDownOption';
 import { useInView } from 'react-intersection-observer';
 import { useAlcoholsQuery } from '../../hooks/getAlcoholsByCategory';
 import { Loading } from '../../styles/Home';
-import { categoryForIndex } from '../../models/categories';
 import Dropdown from '../../components/SortDropDown';
 import Spinner from '../../assets/Spinner.gif';
 import { GridTopBar } from './Home';
@@ -17,8 +16,12 @@ import { useLocation } from 'react-router-dom';
 import { IAlcohol } from '../../models/alcohol';
 import { LoadingMain } from './Reviews';
 import { NoResults } from '../../styles/Alcohol';
+import { useCategoryStore } from '../../store/useCategoryStore';
 
 function SearchAlcohol() {
+  const category = useCategoryStore((state) => state.alcoholCategories);
+  const categoryList = [{ id: 0, name: '전체' }, ...category];
+  const nameList: string[] = categoryList.map((item) => item.name);
   const [sort, setSort] = useState(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;
     const savedOption = localStorage.getItem(pageKey);
@@ -50,7 +53,7 @@ function SearchAlcohol() {
   if (categoryId === 0) {
     categoryName = '전체';
   } else {
-    categoryName = categoryForIndex[categoryId];
+    categoryName = nameList[categoryId];
   }
   useEffect(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;

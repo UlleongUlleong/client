@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 import { FaCog, FaPlus, FaRegUserCircle } from 'react-icons/fa';
 import Slider from 'react-slick';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Card from '../../components/mypage/Card';
@@ -17,19 +17,31 @@ import {
   getInterestAlcohol,
   getProfile,
   getReviewAlcohol,
+  RemoveProfileImage,
 } from '../../api/profileApi';
+import ImageModal from '../../components/mypage/ImageModal';
+import WithDrawModal from '../../components/mypage/WithdrawModal';
+import { logoutApi } from '../../api/users/loginApi';
+import PasswordResetModal from '../../components/mypage/PasswordResetModal';
 
 function Mypage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profile, setProfile] = useState<ProfileType | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [likeAlcohol, setLikeAlcohol] = useState<LikeAlcoholType[]>([]);
   const [reviewAlcohol, setReviewAlcohol] = useState<ReviewAlcoholType[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const toggleWithdrawModal = () => setIsWithdrawModalOpen((prev) => !prev);
+  const toggleResetModal = () => setIsResetPasswordOpen((prev) => !prev);
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+  const navigate = useNavigate();
+  const isAlertShown = useRef(false);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
       const reader = new FileReader();
@@ -42,9 +54,12 @@ function Mypage() {
       formData.append('profile_image', file);
 
       try {
-        const response = AddProfileImage(formData);
-        console.log('성공', response);
+        await AddProfileImage(formData);
         alert('프로필 사진이 변경되었습니다!');
+
+        const updateProfile = await getProfile();
+        setProfile(updateProfile);
+        setProfileImage(updateProfile.imageUrl);
       } catch (error) {
         console.log('실패', error);
       }
@@ -53,8 +68,46 @@ function Mypage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileInputClick = () => {
+    setIsImageModalOpen(true);
+  };
+
+  const handleImageUploadClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
+    }
+    setIsImageModalOpen(false);
+  };
+
+  const handleRemoveImage = async () => {
+    try {
+      await RemoveProfileImage();
+      setProfileImage(null);
+      alert('프로필 사진이 삭제되었습니다!');
+
+      const updateProfile = await getProfile();
+      setProfile(updateProfile);
+      setProfileImage(updateProfile.imageUrl);
+    } catch (error) {
+      console.error('프로필 사진 삭제 실패:', error);
+    }
+    setIsImageModalOpen(false);
+  };
+
+  const handleCloseModal = () => {
+    setIsImageModalOpen(false);
+  };
+
+  const handleWithdrawConfirm = async () => {
+    alert(
+      '회원 탈퇴가 완료되었습니다. 계정은 일주일 동안 유지되고, 로그인 시에 다시 활성화됩니다. 탈퇴 후 일주일이 지나면 계정은 복구할 수 없습니다.',
+    );
+
+    try {
+      await logoutApi();
+      navigate('/');
+    } catch (error) {
+      console.log('로그아웃 실패:', error);
+      alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -63,8 +116,14 @@ function Mypage() {
       try {
         const data = await getProfile();
         setProfile(data);
+        setProfileImage(data.imageUrl);
       } catch (error) {
         console.log('fetchProfile : ', error);
+        if (!isAlertShown.current) {
+          alert('로그인이 필요합니다!');
+          isAlertShown.current = true;
+          navigate('/');
+        }
       }
     };
     const fetchInterestAlcohol = async () => {
@@ -95,23 +154,27 @@ function Mypage() {
     slidesToShow: Math.min(5, itemsLength),
     slidesToScroll: 1,
     arrows: true,
+    centerMode: itemsLength < 5,
+    centerPadding: itemsLength < 5 ? '0px' : '50px',
     responsive: [
       {
         breakpoint: 1280,
         settings: {
           slidesToShow: Math.min(3, itemsLength),
+          centerMode: itemsLength < 3,
         },
       },
       {
         breakpoint: 880,
         settings: {
           slidesToShow: Math.min(2, itemsLength),
+          centerMode: itemsLength < 2,
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: Math.min(1, itemsLength),
+          slidesToShow: 1,
         },
       },
     ],
@@ -125,7 +188,10 @@ function Mypage() {
             <div className="profile-image-wrapper">
               <div className="profile-image">
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" />
+                  <img
+                    src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${profile.imageUrl}`}
+                    alt={profile.imageUrl}
+                  />
                 ) : (
                   <FaRegUserCircle size={200} />
                 )}
@@ -180,7 +246,22 @@ function Mypage() {
                   >
                     회원정보 수정
                   </li>
-                  <li>회원 탈퇴</li>
+                  <li
+                    onClick={() => {
+                      toggleResetModal();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    비밀번호 수정
+                  </li>
+                  <li
+                    onClick={() => {
+                      toggleWithdrawModal();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    회원 탈퇴
+                  </li>
                 </ul>
               </div>
             )}
@@ -219,11 +300,11 @@ function Mypage() {
             </Link>
           </div>
           <div className="container">
-            <Slider {...sliderSettings(likeAlcohol.length)}>
+            <Slider {...sliderSettings(reviewAlcohol.length)}>
               {reviewAlcohol.map((card) => (
                 <Card
                   key={card.id}
-                  id={card.id}
+                  id={card.alcoholId}
                   imageUrl={card.alcohol.imageUrl}
                   name={card.alcohol.name}
                   scoreAverage={card.score}
@@ -237,6 +318,28 @@ function Mypage() {
             closeModal={toggleModal}
             onUpdateComplete={() => window.location.reload()}
             profile={profile}
+          />
+        )}
+        {isImageModalOpen && (
+          <ImageModal
+            isImageModalOpen={isImageModalOpen}
+            handleCloseModal={handleCloseModal}
+            handleImageUploadClick={handleImageUploadClick}
+            handleRemoveImage={handleRemoveImage}
+          />
+        )}
+        {isWithdrawModalOpen && (
+          <WithDrawModal
+            isOpen={isWithdrawModalOpen}
+            onClose={toggleWithdrawModal}
+            onConfirm={handleWithdrawConfirm}
+          />
+        )}
+        {isResetPasswordOpen && (
+          <PasswordResetModal
+            toggleResetModal={toggleResetModal}
+            isResetPasswordOpen={isResetPasswordOpen}
+            setIsResetPasswordOpen={setIsResetPasswordOpen}
           />
         )}
       </MypageStyle>
@@ -305,10 +408,8 @@ const MypageStyle = styled.div`
     overflow: hidden;
   }
   .profile-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     border: 2px solid black;
+    object-fit: cover;
   }
 
   .plus-icon {
@@ -370,6 +471,16 @@ const MypageStyle = styled.div`
     border-radius: 20px;
     border: 1px solid #ddd;
     text-align: center;
+    white-space: nowrap;
+    @media (max-width: 768px) {
+      font-size: 14px;
+      padding: 4px 16px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 12px;
+      padding: 4px 10px;
+    }
   }
 
   .settings-icon {
@@ -436,12 +547,13 @@ const MypageStyle = styled.div`
   }
 
   .slick-track {
+    margin-left: 0;
     display: flex;
     justify-content: center;
   }
 
   .slick-slide {
-    display: flex;
+    display: flex !important;
     justify-content: center;
     align-items: center;
   }
@@ -475,6 +587,23 @@ const MypageStyle = styled.div`
     li:last-child {
       border-bottom: none;
     }
+  }
+
+  .image-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 `;
 

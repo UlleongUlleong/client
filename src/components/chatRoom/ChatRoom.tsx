@@ -12,6 +12,9 @@ import {
 } from '../../styles/ChatRoom';
 import { useNavigate } from 'react-router-dom';
 import { IChatRoom } from '../../models/chatRoom';
+import { toast } from 'react-toastify';
+import { isLogin } from '../../api/user';
+import { GoAlert } from 'react-icons/go';
 export interface Theme {
   id: number;
   url: string;
@@ -27,12 +30,24 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   const isFull = partyNumber === room.maxParticipants;
   const FULL = 'FULL';
   const navigate = useNavigate();
-  const handleChatRoomClick = () => {
-    navigate(`/chat/${room.id}`);
+
+  const handleChatRoomClick = async () => {
+    try {
+      const loginStatus = await isLogin();
+      if (loginStatus) {
+        navigate(`/chat/${room.id}`);
+      } else {
+        toast.error('로그인이 필요한 서비스입니다.', <GoAlert />);
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
+
   return (
-    <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
-      <ChatRoomParty isFull={isFull}>
+    <ChatRoomContainer key={room.id}>
+      <ChatRoomParty $isFull={isFull}>
         <PersonIcon
           sx={{
             position: 'relative',
@@ -41,7 +56,7 @@ function ChatRoom({ room }: { room: IChatRoom }) {
         />
         <div className="number">{isFull ? FULL : partyNumber}</div>
       </ChatRoomParty>
-      <ChatImage>
+      <ChatImage onClick={handleChatRoomClick}>
         {room.theme ? (
           <img src={`/assets/image/chatTheme/${room.theme}`} alt={room.theme} />
         ) : (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import {} from '../../models/profile';
+import { } from '../../models/profile';
 import { AlcoholReviewType } from '../../models/alcohol';
 
 function ReviewCard({ id, score, comment, user }: AlcoholReviewType) {
@@ -8,7 +8,8 @@ function ReviewCard({ id, score, comment, user }: AlcoholReviewType) {
   return (
     <ReviewCardStyle>
       <div className="image-container">
-        <img src={'https://picsum.photos/200'} alt={imageUrl}></img>
+        <img src={imageUrl ? `https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}` : '/assets/image/default-image.png'}
+          alt={imageUrl}></img>
         <div className="rating">{score}점</div>
       </div>
       <div className="review">
@@ -36,7 +37,9 @@ const ReviewCardStyle = styled.div`
     gap: 4px;
     img {
       width: 60px;
+      height: 60px;
       border-radius: 50%;
+      object-fit: cover;
     }
     .rating {
       font-size: 12px;
