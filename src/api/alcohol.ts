@@ -71,7 +71,7 @@ export const fetchAlcoholsTop10 = async (
     });
 
     return {
-      alcohols: response.data,
+      alcohols: response.data.data,
     };
   } catch (error) {
     console.error(error);
