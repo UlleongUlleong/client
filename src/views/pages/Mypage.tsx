@@ -408,7 +408,8 @@ const MypageStyle = styled.div`
     overflow: hidden;
   }
   .profile-image img {
-    border: 2px solid black;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
