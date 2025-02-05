@@ -9,16 +9,7 @@ import { useSocketStore } from '../../components/create-room/socket/useSocketSto
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { GoAlert } from 'react-icons/go';
-import axios, { AxiosError } from 'axios';
-
-const LoadingScreen = () => {
-  return (
-    <LoadingScreenStyle>
-      <img src="/assets/image/gif/loading-trans.gif" alt="로딩" />
-      <div>Loading...</div>
-    </LoadingScreenStyle>
-  );
-};
+import LoadingScreen from '../../components/chat-room/LoadingScreen';
 
 interface RoomDetailInfo {
   id: number;
@@ -39,6 +30,9 @@ const ChatRoom = () => {
 
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const [isExisting, setIsExisting] = useState<boolean>(false);
+
   useEffect(() => {
     if (!socket || !roomId) return;
 
@@ -46,7 +40,7 @@ const ChatRoom = () => {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 시간 줄이기
+    }, 1500); // 시간 줄이기
 
     return () => clearTimeout(timer);
   }, [socket, roomId]);
@@ -86,11 +80,14 @@ const ChatRoom = () => {
     }
   };
 
-  if (loading) return <LoadingScreen />;
+  if (loading || isExisting) return <LoadingScreen />;
 
   return (
     <ChatRoomStyle $img={theme}>
-      <ChatHeader title={roomName || '로딩 중...'} />
+      <ChatHeader
+        title={roomName || '로딩 중...'}
+        setIsExisting={setIsExisting}
+      />
       <div className="chat-container">
         <div className="members-container">
           {userName ? (
@@ -135,24 +132,6 @@ const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
   .chatting {
     width: 30%;
     min-width: 300px;
-  }
-`;
-
-const LoadingScreenStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #303030;
-  color: white;
-
-  img {
-    width: 80px;
-  }
-
-  div {
-    font-size: 1.4rem;
   }
 `;
 

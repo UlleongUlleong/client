@@ -20,6 +20,7 @@ import EmailDuplicateTest from '../components/register/email-verify/EmailDuplica
 import ChatRoom from './pages/ChatRoom';
 import CreateRoom from './pages/CreateRoom';
 import Test from '../components/chat-room/Test';
+import LoadingScreen from '../components/chat-room/LoadingScreen';
 
 const Index = () => {
   const routeLists = [

@@ -1,90 +1,65 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-.page {
-  width: calc(100% - 80px);
-  position: relative;
-  margin-left: 40px;
-  padding: 0px;
-  min-height: 100vh;
-}
-
-.error-page-wrapper {
+.not-found-page {
+  width: 94%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-  position: relative;
-  margin-left: 80px;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-family: 'Poppins', sans-serif;
 }
 
-.error-content {
-  position: relative;
-  width: 70%;
-  height: 80%;
-  border: 3px solid #eeeeee;
-  background: #fff;
-  box-shadow: 0px 5px 10px rgba(255, 255, 255, 0.1); /* 흰 그림자 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.content {
-  max-width: 600px;
+.not-found-container {
   text-align: center;
+  padding: 50px;
+  border-radius: 12px;
+  animation: fadeIn 0.8s ease-in-out;
 }
 
-.header {
-  font-size: 18vw;
-  line-height: 1em;
-  position: relative;
-  color: #d84040;
-}
-
-.sub-header {
-  font-size: 2em;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  color: #1d1616;
-  max-width: 600px;
-  position: relative;
-}
-
-.description {
-  font-size: 1.2em;
-  color: #1d1616;
-}
-
-.button-container {
-  margin: 25px 0;
-  display: inline-flex;
-}
-
-.button {
-  display: inline-block;
-  margin: 0 10px;
-  font-family: 'Poppins', sans-serif;
-  text-decoration: none;
-  border: 2px solid #4e473a; /* 흰색 테두리 */
-  color: #4e473a; /* 흰색 텍스트 */
-  font-weight: 700;
-  padding: 10px 25px;
-  border-radius: 25px;
-  text-transform: uppercase;
-  transition: all 0.3s ease;
-}
-
-.button:hover {
-  background: #eeeeee; /* 흰색 배경 */
-  color: #1d1616; /* 검은색 텍스트 */
-}
-
-/* Reset CSS */
-* {
-  margin: 0;
+.not-found-title {
+  font-size: 4vw;
+  font-weight: 500;
   padding: 0;
-  outline: none;
-  box-sizing: border-box;
+  margin: 0;
+}
+
+.not-found-subtitle {
+  font-size: 1.6rem;
+  color: #b3b3b3;
+  /* margin: 10px 0; */
+}
+
+.not-found-description {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.not-found-button {
+  display: inline-block;
+  background: #000;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.not-found-button:hover {
+  background: #444;
+  transform: translateY(-3px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
