@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getProfile } from '../../api/profileApi';
+import VideoRoom from '../../components/Video/VideoRoom';
 import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
 import { getRoomInfo } from '../../api/roomApi';
@@ -27,7 +29,7 @@ const ChatRoom = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const { socket } = useSocketStore();
   const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
-
+  const [userName, setUserName] = useState<string | null>(null);
   const [roomName, setRoomName] = useState<string | null>(null);
   const [themeId, setThemeId] = useState<string | null>(null);
 
@@ -44,6 +46,16 @@ const ChatRoom = () => {
 
     return () => clearTimeout(timer);
   }, [socket, roomId]);
+
+  useEffect(() => {
+    const getUserName = async () => {
+      const profile = await getProfile();
+      if (profile) {
+        setUserName(profile.nickname);
+      }
+    };
+    getUserName();
+  }, []);
 
   const fetchRoomInfo = async () => {
     try {
@@ -67,9 +79,11 @@ const ChatRoom = () => {
       <ChatHeader title={roomName || '로딩 중...'} />
       <div className="chat-container">
         <div className="members-container">
-          {
-            // 다른 컴포넌트 들어올 곳
-          }
+          {userName ? (
+            <VideoRoom userName={userName} />
+          ) : (
+            <div>비디오 연결 요청 중...</div>
+          )}
         </div>
         <div className="chatting">
           <Chat />

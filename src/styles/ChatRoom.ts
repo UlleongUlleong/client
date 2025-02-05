@@ -3,13 +3,13 @@ import styled from 'styled-components';
 export const ChatRoomContainer = styled.div`
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
   display: flex;
   margin: 0 auto;
 `;
 export const ChatImage = styled.div`
   height: 200px;
   width: 300px;
+  cursor: pointer;
   margin: 0 auto;
 
   @media (max-width: 468px) {

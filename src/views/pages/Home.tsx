@@ -44,7 +44,7 @@ function Home() {
   const mergedData = data?.pages?.flatMap((page) => page.data) || [];
 
   const navigateToMakeRoom = () => {
-    navigate('/rooms');
+    navigate('/create-room');
   };
 
   const settings = {

@@ -27,7 +27,6 @@ export const validNickname = async (nickname: string): Promise<string> => {
 export const getProfile = async () => {
   try {
     const response = await apiClient.get('/api/users/me/profile');
-    console.log(response.data.data);
     return response.data.data;
   } catch (error) {
     console.log('getProfile : ', error);
@@ -73,9 +72,11 @@ export const AddProfileImage = async (formData: FormData) => {
   try {
     const response = await apiClient.put(
       '/api/users/me/profile/image',
-      formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
     console.log(response);
     return response;
   } catch (error) {
@@ -88,9 +89,9 @@ export const RemoveProfileImage = async () => {
     const response = await apiClient.delete('/api/users/me/profile/image');
     return response;
   } catch (error) {
-    console.log('RemoveProfileImage :', error)
+    console.log('RemoveProfileImage :', error);
   }
-}
+};
 
 export const WithdrawUser = async (password: string) => {
   try {
@@ -102,10 +103,10 @@ export const WithdrawUser = async (password: string) => {
     return response;
   } catch (error: any) {
     if (error.response) {
-      console.error("WithdrawUser API 오류:", error.response.data);
-      console.error("HTTP 상태 코드:", error.response.status);
+      console.error('WithdrawUser API 오류:', error.response.data);
+      console.error('HTTP 상태 코드:', error.response.status);
     } else {
-      console.error("WithdrawUser 요청 실패:", error.message);
+      console.error('WithdrawUser 요청 실패:', error.message);
     }
     throw error;
   }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ChatRoom from './ChatRoom';
 import { IChatRoom } from '../../models/chatRoom';
-import { StyleChatRoomsGrid } from '../../styles/ChatRoomGrid';
+import { StyleChatRoomsGrid, MarginSet } from '../../styles/ChatRoomGrid';
 import Spinner from '../../assets/Spinner.gif';
 import { useChatRoomsWithCursor } from '../../hooks/getChatroom';
 import { useInView } from 'react-intersection-observer';
@@ -13,27 +13,33 @@ import { CategoryTitle } from '../../styles/ChatRoomGrid';
 import { sortChatRoomOptions } from '../../models/dropDownOption';
 import { NoResults } from '../../styles/Alcohol.ts';
 import { getProfile } from '../../api/profileApi.ts';
+import { isLogin } from '../../api/user.ts';
 function ChatRoomGrid() {
   const [chatRoomData, setChatRoomData] = useState<IChatRoom[]>([]);
   const [userMoodCategory, setUserMoodCategory] = useState<ICategory[]>([]);
   const [userAlcoholCategory, setUserAlcoholCategory] = useState<ICategory[]>(
     [],
   );
-
+  const [login, setLogin] = useState(false);
   const [sortChatRooms, setSortChatRooms] = useState(() => {
     const pageKey = `selectedOption_${window.location.pathname}`;
     const savedOption = localStorage.getItem(pageKey);
     return savedOption || 'participantCount';
   });
+
   useEffect(() => {
-    const getUserCategory = async () => {
-      const user = await getProfile();
-      if (user) {
-        setUserMoodCategory(user.moodCategory);
-        setUserAlcoholCategory(user.alcoholCategory);
+    const checkLogin = async () => {
+      const isAuthenticated = await isLogin();
+      setLogin(isAuthenticated);
+      if (isAuthenticated) {
+        const profile = await getProfile();
+        if (profile) {
+          setUserMoodCategory(profile.moodCategory);
+          setUserAlcoholCategory(profile.alcoholCategory);
+        }
       }
     };
-    getUserCategory();
+    checkLogin();
   }, []);
 
   const { ref, inView } = useInView();
@@ -84,7 +90,7 @@ function ChatRoomGrid() {
   return (
     <>
       <GridTopBar>
-        {userMoodCategory != undefined || userAlcoholCategory != undefined ? (
+        {userMoodCategory.length > 0 || userAlcoholCategory.length > 0 ? (
           <CategoryTitle>사용자 추천 순</CategoryTitle>
         ) : (
           <CategoryTitle> 기본 순</CategoryTitle>
@@ -95,12 +101,14 @@ function ChatRoomGrid() {
       {chatRoomData.length === 0 ? (
         <NoResults>채팅방이 없습니다.</NoResults>
       ) : (
-        <StyleChatRoomsGrid>
-          {chatRoomData.map((room: IChatRoom) => (
-            <ChatRoom key={room.id} room={room} />
-          ))}
-          {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
-        </StyleChatRoomsGrid>
+        <MarginSet>
+          <StyleChatRoomsGrid>
+            {chatRoomData.map((room: IChatRoom) => (
+              <ChatRoom key={room.id} room={room} />
+            ))}
+            {hasNextPage && <div ref={ref} style={{ height: '20px' }} />}
+          </StyleChatRoomsGrid>
+        </MarginSet>
       )}
 
       {isError && <div>{error}</div>}

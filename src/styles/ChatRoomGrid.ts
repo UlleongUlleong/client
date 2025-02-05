@@ -3,8 +3,7 @@ import styled from 'styled-components';
 export const StyleChatRoomsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, 340px);
-  gap: 20px;
-  justify-content: center;
+  justify-content: space-around;
   width: 100%;
   &::after {
     content: '';
@@ -15,6 +14,10 @@ export const StyleChatRoomsGrid = styled.div`
   @media (max-width: 468px) {
     grid-template-columns: repeat(auto-fill, 280px);
   }
+`;
+
+export const MarginSet = styled.div`
+  margin: 0 40px;
 `;
 
 export const Category = styled.div`

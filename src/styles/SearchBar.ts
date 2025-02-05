@@ -2,10 +2,10 @@ import styled from 'styled-components';
 
 export const TopBar = styled.div`
   display: flex;
-  margin-top: 20px;
+
   justify-content: center;
   align-items: center;
-  height: 100px;
+  height: 120px;
 
   @media (max-width: 468px) {
     min-width: 200px;
@@ -19,8 +19,8 @@ export const LoginButton = styled.button`
   border: 0.5px solid gray;
   border-radius: 5px;
   color: #3b3b3b;
-  position: absolute;
-  right: 25px;
+  position: relative;
+  left: 10px;
   cursor: pointer;
 
   @media (max-width: 468px) {

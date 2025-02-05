@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import SelectTheme from '../../components/create-room/SelecteTheme';
 import SelectKeywords from '../../components/create-room/SelectKeywords';
 import RoomInfoInput from '../../components/create-room/RoomInfoInput';
-import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
 import { useNavigate } from 'react-router-dom';
+import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
 
 const CreateRoom = () => {
   const { socket, connectSocket } = useSocketStore();
@@ -25,7 +25,9 @@ const CreateRoom = () => {
     const handleRoomCreated = (response: any) => {
       console.log('✅ 방 생성 응답:', response);
       if (response?.data?.roomId) {
-        navigate(`/chat/${response.data.roomId}`);
+        navigate(`/chat/${response.data.roomId}`, {
+          state: { token: response.data.token },
+        });
         sessionStorage.setItem('userId', response.data.userId);
       } else {
         alert('방 생성 실패');

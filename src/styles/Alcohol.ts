@@ -4,7 +4,8 @@ export const CardContainer = styled.div`
   width: 200px;
   background-color: white;
   border-radius: 10px;
-  margin: 20px;
+  margin: 20px auto;
+
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 `;
 

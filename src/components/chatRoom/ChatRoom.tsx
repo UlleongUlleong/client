@@ -27,11 +27,13 @@ function ChatRoom({ room }: { room: IChatRoom }) {
   const isFull = partyNumber === room.maxParticipants;
   const FULL = 'FULL';
   const navigate = useNavigate();
+
   const handleChatRoomClick = () => {
     navigate(`/chat/${room.id}`);
   };
+
   return (
-    <ChatRoomContainer key={room.id} onClick={handleChatRoomClick}>
+    <ChatRoomContainer key={room.id}>
       <ChatRoomParty $isFull={isFull}>
         <PersonIcon
           sx={{
@@ -41,7 +43,7 @@ function ChatRoom({ room }: { room: IChatRoom }) {
         />
         <div className="number">{isFull ? FULL : partyNumber}</div>
       </ChatRoomParty>
-      <ChatImage>
+      <ChatImage onClick={handleChatRoomClick}>
         {room.theme ? (
           <img src={`/assets/image/chatTheme/${room.theme}`} alt={room.theme} />
         ) : (
