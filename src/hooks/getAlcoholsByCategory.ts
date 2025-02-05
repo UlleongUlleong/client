@@ -12,10 +12,10 @@ import { useCategoryStore } from '../store/useCategoryStore';
 
 export const useAlcoholsByCategory = () => {
   const category = useCategoryStore((state) => state.alcoholCategories);
-  const alcoholCategories = [{ id: 0, name: 'top 10' }, ...category];
+  // const alcoholCategories = [{ id: 0, name: 'top 10' }, ...category];
 
   const queries = useQueries({
-    queries: alcoholCategories.map((category) => ({
+    queries: category.map((category) => ({
       queryKey: ['alcohols', category.name],
       queryFn: () => fetchEachAlcoholsByCategory(category.id, 10),
       staleTime: 5 * 60 * 1000,
