@@ -19,9 +19,11 @@ import FindPassword from '../components/login/FindPassword';
 import EmailDuplicateTest from '../components/register/email-verify/EmailDuplicateTest';
 import ChatRoom from './pages/ChatRoom';
 import CreateRoom from './pages/CreateRoom';
+import Test from '../components/chat-room/Test';
 
 const Index = () => {
   const routeLists = [
+    { path: '/test', element: <Test />, noNav: true },
     {
       path: '/',
       element: <Home />,
