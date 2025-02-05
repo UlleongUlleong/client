@@ -10,9 +10,10 @@ import { useParams } from 'react-router-dom';
 
 const LoadingScreen = () => {
   return (
-    <LoadingContainer>
-      <h2>채팅방 로딩 중...</h2>
-    </LoadingContainer>
+    <LoadingScreenStyle>
+      <img src="/assets/image/gif/loading-trans.gif" alt="로딩" />
+      <div>Loading...</div>
+    </LoadingScreenStyle>
   );
 };
 
@@ -31,7 +32,7 @@ const ChatRoom = () => {
   const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [roomName, setRoomName] = useState<string | null>(null);
-  const [themeId, setThemeId] = useState<string | null>(null);
+  const [theme, setTheme] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -65,7 +66,8 @@ const ChatRoom = () => {
       if (response.data) {
         setRoomInfo(response.data);
         setRoomName(response.data.name);
-        setThemeId(response.data.themeId);
+        setTheme(response.data.theme);
+        console.log('방정보패치', response);
       }
     } catch (error: any) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
@@ -75,7 +77,7 @@ const ChatRoom = () => {
   if (loading) return <LoadingScreen />;
 
   return (
-    <ChatRoomStyle $img={themeId}>
+    <ChatRoomStyle $img={theme}>
       <ChatHeader title={roomName || '로딩 중...'} />
       <div className="chat-container">
         <div className="members-container">
@@ -98,9 +100,8 @@ interface ChatRoomStyleProps {
 }
 
 const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
-  background: url('/assets/image/chatTheme/theme0${({ $img }) =>
-      $img || '1'}.jpg')
-    no-repeat center center;
+  background: url('/assets/image/chatTheme/${({ $img }) => $img}') no-repeat
+    center center;
   background-size: cover;
   height: 100%;
 
@@ -125,14 +126,22 @@ const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
   }
 `;
 
-const LoadingContainer = styled.div`
+const LoadingScreenStyle = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #303030;
   color: white;
-  font-size: 1.5rem;
+
+  img {
+    width: 80px;
+  }
+
+  div {
+    font-size: 1.4rem;
+  }
 `;
 
 export default ChatRoom;
