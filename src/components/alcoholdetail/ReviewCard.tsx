@@ -37,8 +37,9 @@ const ReviewCardStyle = styled.div`
     gap: 4px;
     img {
       width: 60px;
-      min-height: 60px;
+      height: 60px;
       border-radius: 50%;
+      object-fit: cover;
     }
     .rating {
       font-size: 12px;
