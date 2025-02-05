@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
-import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
+import { Video, Mic, ChevronDown, MicOff, VideoOff, Check } from 'lucide-react';
 import { useSocketStore } from '../create-room/socket/useSocketStore';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -35,10 +35,6 @@ function VideoRoom({ userName }: { userName: string }) {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
   const isComponentMounted = useRef(true);
   const sessionRef = useRef<Session | null>(null);
-
-  if (newToken) {
-    tokenRef.current = newToken;
-  }
 
   //디바이스 변경시 재 렌더링
 
@@ -288,6 +284,7 @@ function VideoRoom({ userName }: { userName: string }) {
     if (newToken) {
       console.log('토큰 인가 완료', newToken);
       setToken(newToken);
+      tokenRef.current = newToken;
     }
   }, []);
 
@@ -374,8 +371,12 @@ function VideoRoom({ userName }: { userName: string }) {
                     <DropdownItem
                       key={device.deviceId}
                       onClick={() => handleCameraSelect(device.deviceId)}
+                      selected={selectedCamera === device.deviceId}
                     >
                       {device.label || `Camera ${device.deviceId}`}
+                      {selectedCamera === device.deviceId && (
+                        <Check size={16} color="#00aced" />
+                      )}
                     </DropdownItem>
                   ))}
               </Dropdown>
@@ -411,8 +412,14 @@ function VideoRoom({ userName }: { userName: string }) {
                     <DropdownItem
                       key={device.deviceId}
                       onClick={() => handleMicSelect(device.deviceId)}
+                      selected={selectedMic === device.deviceId}
                     >
-                      {device.label || `Mic ${device.deviceId}`}
+                      <DeviceLabel>
+                        {device.label || `Mic ${device.deviceId}`}
+                      </DeviceLabel>
+                      {selectedMic === device.deviceId && (
+                        <Check size={16} color="#00aced" />
+                      )}
                     </DropdownItem>
                   ))}
               </Dropdown>
@@ -512,16 +519,23 @@ const Dropdown = styled.div`
   min-width: 200px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 `;
-
-const DropdownItem = styled.div`
+const DropdownItem = styled.div<{ selected: boolean }>`
   padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
   color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${(props) => (props.selected ? '#f5f5f5' : '#fff')};
 
   &:hover {
     background-color: #eee;
   }
 `;
 
+const DeviceLabel = styled.span`
+  margin-right: 8px;
+  flex: 1;
+`;
 export default VideoRoom;
