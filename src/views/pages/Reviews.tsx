@@ -38,9 +38,8 @@ function Reviews() {
 
   const category = useCategoryStore((state) => state.alcoholCategories);
 
-  // const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
   const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
-  console.log('카테고리 데이터', categoriesData);
+
   if (isLoading)
     return (
       <LoadingMain>
