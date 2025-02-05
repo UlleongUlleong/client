@@ -18,8 +18,8 @@ function VideoRoom({ userName }: { userName: string }) {
   const [session, setSession] = useState<Session | null>(null);
   const [publisher, setPublisher] = useState<Publisher | null>(null);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-  const [isAudioActive, setIsAudioActive] = useState(true);
-  const [isVideoActive, setIsVideoActive] = useState(true);
+  const [isAudioActive, setIsAudioActive] = useState(false);
+  const [isVideoActive, setIsVideoActive] = useState(false);
   const { socket } = useSocketStore();
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<string | undefined>(

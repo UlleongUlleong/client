@@ -18,18 +18,20 @@ export const LoadingMain = styled.div`
   margin: 0 auto;
 `;
 
-interface AlcoholTop10 {
-  alcohols: IAlcohol[];
-}
-
 //리뷰 메인 페이지
 function Reviews() {
-  const [top10, setTop10] = useState<AlcoholTop10>(null);
+  const [top10, setTop10] = useState<IAlcohol[]>([]);
 
   useEffect(() => {
     const fetchAlcohols = async (top: number) => {
-      const top10Data = await fetchAlcoholsTop10(top);
-      setTop10(top10Data);
+      try {
+        const top10Data = await fetchAlcoholsTop10(top);
+        if (top10Data) {
+          setTop10(top10Data.alcohols.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch alcohols:', error);
+      }
     };
     fetchAlcohols(10);
   }, []);
@@ -38,6 +40,7 @@ function Reviews() {
 
   // const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
   const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
+
   if (isLoading)
     return (
       <LoadingMain>
@@ -49,12 +52,14 @@ function Reviews() {
   return (
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
+
       <AlcoholEachCategory
         key={0}
         categoryId={0}
-        categoryName={'평점 TOP 10'}
-        alcoholsData={top10.alcohols}
+        categoryName={'별점 Top 10'}
+        alcoholsData={top10}
       />
+
       {category.map((category) => (
         <AlcoholEachCategory
           key={category.id}
