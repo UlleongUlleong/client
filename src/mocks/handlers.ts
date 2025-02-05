@@ -89,11 +89,133 @@ const reviews = wineData.sort((a, b) => b.reviewCount - a.reviewCount);
 const love = wineData.sort((a, b) => b.interestCount - a.interestCount);
 const score = wineData.sort((a, b) => b.scoreAverage - a.scoreAverage);
 
+const dummy = {
+  statusCode: 200,
+  message: '술 메인페이지',
+  data: [
+    {
+      id: 112,
+      name: '진로',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 5,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/ba62caf4-7781-4566-afef-532e77068c78.jpg',
+    },
+    {
+      id: 141,
+      name: '조니워커 레드',
+      alcoholCategory: {
+        id: 4,
+        name: '위스키',
+      },
+      scoreAverage: 5,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/2aeda260-e137-47a8-b94c-a8c3f9d8e028.jpg',
+    },
+    {
+      id: 120,
+      name: '진로골드',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 5,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/77b397b9-e62d-43ee-9008-7ac990dd8902.jpg',
+    },
+    {
+      id: 123,
+      name: 'OB',
+      alcoholCategory: {
+        id: 2,
+        name: '맥주',
+      },
+      scoreAverage: 5,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/29312a7a-beae-4a4e-825d-755eff925d3a.jpg',
+    },
+    {
+      id: 122,
+      name: '카스',
+      alcoholCategory: {
+        id: 2,
+        name: '맥주',
+      },
+      scoreAverage: 5,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/19051037-6a80-4019-a3aa-03c8bfbca711.jpg',
+    },
+    {
+      id: 117,
+      name: '한라산',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 4.5,
+      reviewCount: 2,
+      imageUrl: 'alcohol-images/bc95eb07-844e-465d-92e0-169611e61d83.jpg',
+    },
+    {
+      id: 113,
+      name: '안동소주',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 3.5,
+      reviewCount: 2,
+      imageUrl: 'alcohol-images/49d916bc-54fa-464a-8e2f-73f2b8b6cd43.jpg',
+    },
+    {
+      id: 115,
+      name: '처음처럼',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 3,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/e25e807d-b283-4aac-9d52-8e7f88159f62.jpg',
+    },
+    {
+      id: 111,
+      name: '참이슬',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 2.3,
+      reviewCount: 4,
+      imageUrl: 'alcohol-images/2b9debfc-d361-4b3f-9777-8727b0f64182.jpg',
+    },
+    {
+      id: 118,
+      name: '참이슬 후레쉬',
+      alcoholCategory: {
+        id: 1,
+        name: '소주',
+      },
+      scoreAverage: 1,
+      reviewCount: 1,
+      imageUrl: 'alcohol-images/431dde0f-e57c-4a10-9cfd-a1f5d81a718a.jpg',
+    },
+  ],
+  path: '/api/alcohol?limit=10&sort=scoreAverage&category=0',
+  pagination: {
+    hasNext: true,
+    nextCursor: 114,
+  },
+};
 export const handlers = [
   http.all('*', async () => {
     await delay(100);
   }),
-  http.get('https://api.sulleong.coderoom.site/api/alcohol*', ({ request }) => {
+
+  http.get('https://api.sulleong.coderoom.site/api/alcohol', ({ request }) => {
     const url = new URL(request.url);
     console.log('들어옴');
 
@@ -117,7 +239,10 @@ export const handlers = [
       'searchText',
       keyword,
     );
-
+    if (category === 0 && isNaN(cursor)) {
+      console.log('데이터 들어옴 ');
+      return new HttpResponse(JSON.stringify(dummy));
+    }
     if (category) {
       console.log('category response');
       return new HttpResponse(

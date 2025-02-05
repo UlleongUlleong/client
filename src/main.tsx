@@ -16,10 +16,10 @@ function renderApp() {
     </QueryClientProvider>,
   );
 }
-if (process.env.NODE_ENV === 'development') {
-  worker.start().then(() => {
-    renderApp();
-  });
-} else {
-  renderApp();
-}
+// if (process.env.NODE_ENV === 'development') {
+//   worker.start().then(() => {
+//     renderApp();
+//   });
+// } else {
+renderApp();
+// }
