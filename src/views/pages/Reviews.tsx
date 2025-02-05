@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SearchBar from '../../components/SearchBar';
 import { ReviewsMainContainer } from '../../styles/Reviews';
 import AlcoholEachCategory from './AlcoholEachCategory';
@@ -16,8 +16,10 @@ export const LoadingMain = styled.div`
 `;
 //리뷰 메인 페이지
 function Reviews() {
+  useEffect(() => {});
   const category = useCategoryStore((state) => state.alcoholCategories);
-  const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
+  // const top10 = await fetchAlcoholsTop10(10);
+  // const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
   const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
   if (isLoading)
     return (
@@ -30,7 +32,7 @@ function Reviews() {
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
 
-      {alcoholCategories.map((category) => (
+      {category.map((category) => (
         <AlcoholEachCategory
           key={category.id}
           categoryId={category.id}
