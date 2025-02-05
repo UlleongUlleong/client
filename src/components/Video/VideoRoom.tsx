@@ -140,15 +140,15 @@ function VideoRoom({ userName }: { userName: string }) {
 
         // Re-publish the local stream (if necessary)
         const OV = new OpenVidu();
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const hasCamera = devices.some((d) => d.kind === 'videoinput');
-        const hasAudio = devices.some((d) => d.kind === 'audioinput');
+        // const devices = await navigator.mediaDevices.enumerateDevices();
+        // const hasCamera = devices.some((d) => d.kind === 'videoinput');
+        // const hasAudio = devices.some((d) => d.kind === 'audioinput');
 
         const newPublisher = await OV.initPublisherAsync(undefined, {
-          audioSource: hasAudio ? undefined : false,
-          videoSource: hasCamera ? undefined : false,
-          publishAudio: hasAudio,
-          publishVideo: hasCamera,
+          audioSource: undefined,
+          videoSource: undefined,
+          publishAudio: false,
+          publishVideo: false,
           resolution: '1280x720',
           frameRate: 30,
           insertMode: 'APPEND',
