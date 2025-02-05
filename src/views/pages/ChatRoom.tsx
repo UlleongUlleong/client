@@ -55,20 +55,15 @@ const ChatRoom = () => {
       try {
         console.log('👤 유저 정보 불러오는 중...');
         const profile = await getProfile();
-        if (profile) {
-          setUserName(profile.nickname);
-        } else {
-          toast.error('로그인 하시면 방에 입장이 가능합니다.', {
-            icon: <GoAlert />,
-          });
-          navigate('/login');
-        }
+
+        console.log('👤 프로필 있음...');
+        setUserName(profile.nickname);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response?.status === 401) {
-            console.log('401에러');
-          }
-        }
+        console.error('❌ 유저 정보 불러오는 중 오류 발생:', error);
+        toast.error('로그인이 필요한 서비스입니다.', {
+          icon: <GoAlert />,
+        });
+        navigate('/login');
       }
     };
     getUserName();
@@ -84,7 +79,7 @@ const ChatRoom = () => {
         setRoomName(response.data.name);
         setThemeId(response.data.themeId);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
     }
   };
