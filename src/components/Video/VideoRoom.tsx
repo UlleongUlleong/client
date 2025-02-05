@@ -32,24 +32,50 @@ function VideoRoom({ userName }: { userName: string }) {
   const [showMicDropdown, setShowMicDropdown] = useState(false);
   const socketErrorRef = useRef<boolean>(false);
   const sessionRef = useRef<Session | null>(null);
+  const mountedRef = useRef<boolean>(true);
+  const publisherRef = useRef<Publisher | null>(null);
   //디바이스 변경시 재 렌더링
 
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
-      if (sessionRef.current) {
-        sessionRef.current.disconnect();
-        console.log('✅ 세션 정상 종료');
-        sessionRef.current = null;
-      }
+      mountedRef.current = false;
+      cleanupSession();
     };
   }, []);
+  const cleanupSession = async () => {
+    if (publisherRef.current) {
+      try {
+        await publisherRef.current.stream?.disposeMediaStream();
+        publisherRef.current = null;
+      } catch (error) {
+        console.error('Publisher cleanup error:', error);
+      }
+    }
+
+    if (sessionRef.current) {
+      try {
+        await sessionRef.current.disconnect();
+        console.log('✅ 세션 정상 종료');
+      } catch (error) {
+        console.error('Session cleanup error:', error);
+      }
+      sessionRef.current = null;
+    }
+
+    if (mountedRef.current) {
+      setSession(null);
+      setPublisher(null);
+      setSubscribers([]);
+    }
+  };
 
   useEffect(() => {
     if (newToken) {
       console.log('토큰 인가 완료', newToken);
       setToken(newToken);
     }
-  }, []);
+  }, [newToken]);
 
   useEffect(() => {
     const fetchDevices = async () => {
@@ -154,6 +180,9 @@ function VideoRoom({ userName }: { userName: string }) {
           );
         });
         await newSession.connect(token, { clientData: userName });
+
+        if (!mountedRef.current) return;
+
         console.log('✅ Successfully connected to session');
         if (socketErrorRef.current) {
           newSession.disconnect();
@@ -181,7 +210,10 @@ function VideoRoom({ userName }: { userName: string }) {
           console.log('Publisher stream playing'),
         );
         newPublisher.on('accessAllowed', () => console.log('accessAllowed'));
-
+        if (mountedRef.current && newPublisher) {
+          publisherRef.current = newPublisher;
+          setPublisher(newPublisher);
+        }
         await newSession.publish(newPublisher);
         setPublisher(newPublisher);
       } catch (error) {
