@@ -24,7 +24,7 @@ export interface FetchEachAlcoholsResponse {
 }
 
 export interface IAlcoholTop {
-  alcohols: IAlcohol[];
+  alcohols: { data: IAlcohol[] };
 }
 
 export const fetchAlcohols = async ({
@@ -71,7 +71,7 @@ export const fetchAlcoholsTop10 = async (
     });
 
     return {
-      alcohols: response.data.data,
+      alcohols: response.data,
     };
   } catch (error) {
     console.error(error);
