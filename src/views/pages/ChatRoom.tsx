@@ -8,9 +8,10 @@ import { useParams } from 'react-router-dom';
 
 const LoadingScreen = () => {
   return (
-    <LoadingContainer>
-      <h2>채팅방 로딩 중...</h2>
-    </LoadingContainer>
+    <LoadingScreenStyle>
+      <img src="/assets/image/gif/loading-trans.gif" alt="로딩" />
+      <div>Loading...</div>
+    </LoadingScreenStyle>
   );
 };
 
@@ -111,14 +112,22 @@ const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
   }
 `;
 
-const LoadingContainer = styled.div`
+const LoadingScreenStyle = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #303030;
   color: white;
-  font-size: 1.5rem;
+
+  img {
+    width: 80px;
+  }
+
+  div {
+    font-size: 1.4rem;
+  }
 `;
 
 export default ChatRoom;
