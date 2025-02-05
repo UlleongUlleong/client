@@ -23,6 +23,10 @@ export interface FetchEachAlcoholsResponse {
   alcohols: { data: IAlcohol[] };
 }
 
+export interface IAlcoholTop {
+  alcohols: IAlcohol[];
+}
+
 export const fetchAlcohols = async ({
   categoryId,
   keyword,
@@ -60,7 +64,7 @@ export const fetchAlcohols = async ({
 
 export const fetchAlcoholsTop10 = async (
   limit: number,
-): Promise<FetchEachAlcoholsResponse> => {
+): Promise<IAlcoholTop> => {
   try {
     const response = await apiClient.get('/api/alcohol', {
       params: { limit, sort: 'scoreAverage', category: 0 },
@@ -68,7 +72,6 @@ export const fetchAlcoholsTop10 = async (
 
     return {
       alcohols: response.data,
-      id: 0,
     };
   } catch (error) {
     console.error(error);
