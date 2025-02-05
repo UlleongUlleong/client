@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { OpenVidu, Session, Publisher, Subscriber } from 'openvidu-browser';
 import StreamComponent from './StreamComponent';
 import styled from 'styled-components';
-import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
+import { Video, Mic, ChevronDown, MicOff, VideoOff, Check } from 'lucide-react';
 import { useSocketStore } from '../create-room/socket/useSocketStore';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -33,33 +33,17 @@ function VideoRoom({ userName }: { userName: string }) {
   const socketErrorRef = useRef<boolean>(false);
   const sessionRef = useRef<Session | null>(null);
   //디바이스 변경시 재 렌더링
+
   useEffect(() => {
-    const unloadHandler = () => {
-      if (sessionRef.current) {
-        sessionRef.current.disconnect();
-        if (session) {
-          console.log('❌ session있음  Session disconnected');
-          session.disconnect();
-        }
-        console.log('세션 강제 종료');
-      }
-    };
-
-    window.addEventListener('beforeunload', unloadHandler);
-
     return () => {
-      window.removeEventListener('beforeunload', unloadHandler);
       if (sessionRef.current) {
         sessionRef.current.disconnect();
-        if (session) {
-          console.log('❌ session있음  Session disconnected');
-          session.disconnect();
-        }
-        console.log('컴포넌트 unmount시 세션 종료');
+        console.log('✅ 세션 정상 종료');
         sessionRef.current = null;
       }
     };
   }, []);
+
   useEffect(() => {
     if (newToken) {
       console.log('토큰 인가 완료', newToken);
@@ -97,6 +81,18 @@ function VideoRoom({ userName }: { userName: string }) {
     });
     socket.on('room_joined', handleRoomJoined);
 
+    socket.on('user_left', (response) => {
+      console.log('👋 유저가 방을 떠남:', response);
+      if (sessionRef.current) {
+        sessionRef.current.disconnect();
+        console.log('❌ Session disconnected');
+        sessionRef.current = null;
+      }
+      setSession(null);
+      setPublisher(null);
+      setSubscribers([]);
+    });
+
     return () => {
       console.log('🔌 소켓 연결 탈출');
       if (!socketErrorRef.current) socket.off('room_joined', handleRoomJoined);
@@ -106,9 +102,14 @@ function VideoRoom({ userName }: { userName: string }) {
 
   useEffect(() => {
     const initSession = async () => {
-      if (!token || sessionRef.current || socketErrorRef.current) return;
+      if (!token || socketErrorRef.current) return;
 
       try {
+        if (sessionRef.current) {
+          sessionRef.current.disconnect();
+          sessionRef.current = null;
+          console.log('이전 세션 종료');
+        }
         console.log('🔌 Connecting to session');
         const OV = new OpenVidu();
         const newSession = OV.initSession();
@@ -193,11 +194,6 @@ function VideoRoom({ userName }: { userName: string }) {
     return () => {
       if (sessionRef.current) {
         sessionRef.current.disconnect();
-        if (session) {
-          console.log('❌ session있음  Session disconnected');
-          session.disconnect();
-        }
-
         console.log('❌ Session disconnected');
         sessionRef.current = null;
       }
@@ -272,14 +268,11 @@ function VideoRoom({ userName }: { userName: string }) {
   const handleCameraSelect = (deviceId: string) => {
     setSelectedCamera(deviceId);
     setShowCameraDropdown(false);
-    // In a real-world scenario you might need to reinitialize the publisher
-    // to apply the new video device.
   };
 
   const handleMicSelect = (deviceId: string) => {
     setSelectedMic(deviceId);
     setShowMicDropdown(false);
-    // Similarly, reinitialize the publisher to apply the new audio device if needed.
   };
   return (
     <WholeScreen>
@@ -329,8 +322,12 @@ function VideoRoom({ userName }: { userName: string }) {
                     <DropdownItem
                       key={device.deviceId}
                       onClick={() => handleCameraSelect(device.deviceId)}
+                      selected={selectedCamera === device.deviceId}
                     >
                       {device.label || `Camera ${device.deviceId}`}
+                      {selectedCamera === device.deviceId && (
+                        <Check size={16} color="#00aced" />
+                      )}
                     </DropdownItem>
                   ))}
               </Dropdown>
@@ -366,8 +363,14 @@ function VideoRoom({ userName }: { userName: string }) {
                     <DropdownItem
                       key={device.deviceId}
                       onClick={() => handleMicSelect(device.deviceId)}
+                      selected={selectedMic === device.deviceId}
                     >
-                      {device.label || `Mic ${device.deviceId}`}
+                      <DeviceLabel>
+                        {device.label || `Mic ${device.deviceId}`}
+                      </DeviceLabel>
+                      {selectedMic === device.deviceId && (
+                        <Check size={16} color="#00aced" />
+                      )}
                     </DropdownItem>
                   ))}
               </Dropdown>
@@ -467,16 +470,23 @@ const Dropdown = styled.div`
   min-width: 200px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 `;
-
-const DropdownItem = styled.div`
+const DropdownItem = styled.div<{ selected: boolean }>`
   padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
   color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: ${(props) => (props.selected ? '#f5f5f5' : '#fff')};
 
   &:hover {
     background-color: #eee;
   }
 `;
 
+const DeviceLabel = styled.span`
+  margin-right: 8px;
+  flex: 1;
+`;
 export default VideoRoom;

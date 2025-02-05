@@ -5,14 +5,19 @@ import { useNavigate } from 'react-router-dom';
 
 interface ChatHeaderProps {
   title: string;
+  setIsExisting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChatHeader = ({ title }: ChatHeaderProps) => {
+const ChatHeader = ({ title, setIsExisting }: ChatHeaderProps) => {
   const navigate = useNavigate();
 
   const onClickOutButton = () => {
+    setIsExisting(true);
     sessionStorage.removeItem('userId');
-    navigate('/');
+
+    setTimeout(() => {
+      navigate('/');
+    }, 1000);
   };
 
   return (
