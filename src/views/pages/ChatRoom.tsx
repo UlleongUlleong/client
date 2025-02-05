@@ -29,7 +29,7 @@ const ChatRoom = () => {
   const [roomInfo, setRoomInfo] = useState<RoomDetailInfo | null>(null);
 
   const [roomName, setRoomName] = useState<string | null>(null);
-  const [themeId, setThemeId] = useState<string | null>(null);
+  const [theme, setTheme] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
 
@@ -53,7 +53,8 @@ const ChatRoom = () => {
       if (response.data) {
         setRoomInfo(response.data);
         setRoomName(response.data.name);
-        setThemeId(response.data.themeId);
+        setTheme(response.data.theme);
+        console.log('방정보패치', response);
       }
     } catch (error: any) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
@@ -63,7 +64,7 @@ const ChatRoom = () => {
   if (loading) return <LoadingScreen />;
 
   return (
-    <ChatRoomStyle $img={themeId}>
+    <ChatRoomStyle $img={theme}>
       <ChatHeader title={roomName || '로딩 중...'} />
       <div className="chat-container">
         <div className="members-container">
@@ -84,9 +85,8 @@ interface ChatRoomStyleProps {
 }
 
 const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
-  background: url('/assets/image/chatTheme/theme0${({ $img }) =>
-      $img || '1'}.jpg')
-    no-repeat center center;
+  background: url('/assets/image/chatTheme/${({ $img }) => $img}') no-repeat
+    center center;
   background-size: cover;
   height: 100%;
 
