@@ -394,7 +394,7 @@ const MemberList = styled.div`
 const VideoContainer = styled.div`
   position: relative;
   margin: 10px;
-  border-radius: 10px;
+  border-radius: 8px;
   aspect-ratio: 4 / 3;
   background-color: black;
 `;
