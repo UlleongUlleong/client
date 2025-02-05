@@ -26,8 +26,8 @@ const SelectTheme = ({ themeId, setThemeId }: SelecteThemeProps) => {
               <GoTriangleLeft />
             </button>
           </div>
-          <div>
-            <img src={`/assets/image/chatTheme/theme0${themeId}.webp`} />
+          <div className="img-container">
+            <img src={`/assets/image/chatTheme-small/theme0${themeId}.webp`} />
           </div>
           <div className="btn">
             <button onClick={() => handleClickButton('right')}>
@@ -74,15 +74,19 @@ const SelectThemeStyle = styled.div`
         width: 10%;
       }
 
-      img {
-        width: 100%;
-        height: auto;
-        border-radius: 4px;
-      }
-
       svg {
         font-size: 40px;
       }
+    }
+  }
+
+  .img-container {
+    width: 80%;
+
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
     }
   }
 `;

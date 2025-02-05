@@ -97,11 +97,12 @@ const CreateRoomStyle = styled.div`
   width: 100%;
   padding: 2% 0;
   box-sizing: border-box;
-  overflow: auto;
+  overflow-y: auto;
 
   .content {
     height: 100%;
     max-height: 100%;
+    width: 80%;
   }
 
   .button-group {
