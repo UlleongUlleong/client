@@ -149,7 +149,7 @@ function VideoRoom({ userName }: { userName: string }) {
       videoSource: selectedCamera,
       publishAudio: isAudioActive,
       publishVideo: isVideoActive,
-      resolution: '640x480', // Lower resolution for better performance
+      resolution: '1280x720', // Lower resolution for better performance
       frameRate: 24, // Reduced frame rate
       insertMode: 'APPEND',
       mirror: false,
