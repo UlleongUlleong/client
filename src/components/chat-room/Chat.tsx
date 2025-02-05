@@ -21,6 +21,7 @@ const Chat = () => {
   const [messages, setMessages] = useState<MessageContent[]>([]);
   const [message, setMessage] = useState('');
   const chatRef = useRef<HTMLDivElement>(null);
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!socket) {
@@ -102,6 +103,10 @@ const Chat = () => {
     };
   }, [socket, roomId, connectSocket]);
 
+  useEffect(() => {
+    messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   const showScrollBar = () => {
     if (chatRef.current) {
       chatRef.current.style.scrollbarWidth = 'thin';
@@ -160,6 +165,7 @@ const Chat = () => {
             />
           ),
         )}
+        <div ref={messageEndRef}></div>
       </div>
       <form onSubmit={handleSubmit} className="input-box">
         <textarea
@@ -185,7 +191,9 @@ const ChatStyle = styled.div`
   justify-content: space-between;
 
   .chat {
+    flex-grow: 1;
     overflow-y: auto;
+    max-height: calc(100% - 80px);
     --scrollbar-opacity: 0;
     transition:
       scrollbar-color 0.3s,
@@ -213,6 +221,7 @@ const ChatStyle = styled.div`
   }
 
   .input-box {
+    flex-shrink: 0;
     width: 100%;
     padding: 20px 10px;
     display: flex;
