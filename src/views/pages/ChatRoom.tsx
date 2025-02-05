@@ -30,6 +30,9 @@ const ChatRoom = () => {
 
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+  const [isExisting, setIsExisting] = useState<boolean>(false);
+
   useEffect(() => {
     if (!socket || !roomId) return;
 
@@ -37,7 +40,7 @@ const ChatRoom = () => {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000); // 시간 줄이기
+    }, 1500); // 시간 줄이기
 
     return () => clearTimeout(timer);
   }, [socket, roomId]);
@@ -77,11 +80,14 @@ const ChatRoom = () => {
     }
   };
 
-  if (loading) return <LoadingScreen />;
+  if (loading || isExisting) return <LoadingScreen />;
 
   return (
     <ChatRoomStyle $img={theme}>
-      <ChatHeader title={roomName || '로딩 중...'} />
+      <ChatHeader
+        title={roomName || '로딩 중...'}
+        setIsExisting={setIsExisting}
+      />
       <div className="chat-container">
         <div className="members-container">
           {userName ? (

@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { MdLogout } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 interface ChatHeaderProps {
   title: string;
+  setIsExisting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChatHeader = ({ title }: ChatHeaderProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
+const ChatHeader = ({ title, setIsExisting }: ChatHeaderProps) => {
   const navigate = useNavigate();
 
   const onClickOutButton = () => {
-    setLoading(true);
+    setIsExisting(true);
     sessionStorage.removeItem('userId');
 
     setTimeout(() => {
-      setLoading(false);
       navigate('/');
-    }, 2000);
+    }, 1000);
   };
 
   return (
