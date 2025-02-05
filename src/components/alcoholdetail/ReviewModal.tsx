@@ -41,11 +41,11 @@ function ReviewModal({ closeModal, id }: ModalProps) {
         closeModal();
         window.location.reload();
       } catch (error: any) {
-        if (error.message === "엑세스 토큰이 필요합니다.") {
-          alert("로그인이 필요합니다! 로그인해주세요.");
+        if (error.message === '엑세스 토큰이 필요합니다.') {
+          alert('로그인이 필요합니다! 로그인해주세요.');
           closeModal();
         } else {
-          alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+          alert('알 수 없는 오류가 발생했습니다. 다시 시도해주세요.');
           closeModal();
         }
       }
@@ -104,7 +104,9 @@ const ReviewModalStyle = styled.div`
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     width: 30%;
+    min-width: 450px;
     height: 60%;
+    min-height: 480px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -144,7 +146,7 @@ const ReviewModalStyle = styled.div`
       transition: border-color 0.3s ease-in-out;
 
       &:focus {
-        border-color: #007bff;
+        border-color: #273ec2;
         background-color: #ffffff;
       }
     }
