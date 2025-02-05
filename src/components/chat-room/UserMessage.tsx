@@ -36,7 +36,7 @@ const MessageStyle = styled.div<MessageStyleProps>`
   flex-direction: column;
   align-items: ${({ $me }) => ($me ? 'flex-end' : 'flex-start')};
 
-  padding: 16px;
+  padding: 14px;
 
   .nickname {
     font-size: 0.75rem;
@@ -46,8 +46,12 @@ const MessageStyle = styled.div<MessageStyleProps>`
   }
 
   .user-message {
-    background: ${({ $me }) => ($me ? '#D9D9D9' : '#D0D5F3')};
-    width: 65%;
+    background: #D0D5F3
+    width: auto;
+    max-width: 90%;
+    word-wrap: break-word;
+    word-break: break-word; 
+    white-space: pre-wrap;
     border-radius: 4px;
     padding: 6px;
     font-size: 0.9rem;
