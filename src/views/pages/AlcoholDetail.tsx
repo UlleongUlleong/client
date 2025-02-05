@@ -149,12 +149,11 @@ const AlcoholDetailStyle = styled.div`
   }
 
   .content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
     gap: 40px;
     width: 100%;
     justify-content: center;
-    align-items: start;
+    align-items: flex-start;
     margin-bottom: 40px;
 
     @media (max-width: 768px) {

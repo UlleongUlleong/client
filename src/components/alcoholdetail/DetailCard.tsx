@@ -23,7 +23,6 @@ function DetailCard({
   isMyReview,
   toggleModal,
 }: DetailCardProps) {
-
   const handleBookmarkClick = () => {
     const fetchHandleBookmark = async () => {
       if (!id) return;
@@ -32,7 +31,7 @@ function DetailCard({
         window.location.reload();
       } catch (error) {
         console.log('handleBookmarkClick :', error);
-        alert("로그인이 필요합니다! 로그인해주세요.");
+        alert('로그인이 필요한 서비스입니다.');
       }
     };
     fetchHandleBookmark();
@@ -49,7 +48,10 @@ function DetailCard({
   return (
     <DetailCardStyle>
       <div className="cardImage">
-        <img src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}`} alt={name} />
+        <img
+          src={`https://ulleong-bucket.s3.ap-northeast-2.amazonaws.com/${imageUrl}`}
+          alt={name}
+        />
       </div>
       <div className="cardTitle">{name}</div>
       <div

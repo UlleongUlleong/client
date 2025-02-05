@@ -42,7 +42,7 @@ function ReviewModal({ closeModal, id }: ModalProps) {
         window.location.reload();
       } catch (error: any) {
         if (error.message === '엑세스 토큰이 필요합니다.') {
-          alert('로그인이 필요합니다! 로그인해주세요.');
+          alert('로그인이 필요한 서비스입니다.');
           closeModal();
         } else {
           alert('알 수 없는 오류가 발생했습니다. 다시 시도해주세요.');
