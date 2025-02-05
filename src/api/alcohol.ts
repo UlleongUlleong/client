@@ -63,7 +63,7 @@ export const fetchAlcoholsTop10 = async (
 ): Promise<FetchEachAlcoholsResponse> => {
   try {
     const response = await apiClient.get('/api/alcohol', {
-      params: { limit, sort: 'star', category: 0 },
+      params: { limit, sort: 'scoreAverage', category: 0 },
     });
 
     return {
