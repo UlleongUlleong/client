@@ -4,6 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { worker } from './mocks/browser.ts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import './index.css';
 function renderApp() {
   const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
