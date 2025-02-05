@@ -9,16 +9,7 @@ import { useSocketStore } from '../../components/create-room/socket/useSocketSto
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { GoAlert } from 'react-icons/go';
-import axios, { AxiosError } from 'axios';
-
-const LoadingScreen = () => {
-  return (
-    <LoadingScreenStyle>
-      <img src="/assets/image/gif/loading-trans.gif" alt="로딩" />
-      <div>Loading...</div>
-    </LoadingScreenStyle>
-  );
-};
+import LoadingScreen from '../../components/chat-room/LoadingScreen';
 
 interface RoomDetailInfo {
   id: number;
@@ -135,24 +126,6 @@ const ChatRoomStyle = styled.div<ChatRoomStyleProps>`
   .chatting {
     width: 30%;
     min-width: 300px;
-  }
-`;
-
-const LoadingScreenStyle = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #303030;
-  color: white;
-
-  img {
-    width: 80px;
-  }
-
-  div {
-    font-size: 1.4rem;
   }
 `;
 

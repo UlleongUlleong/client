@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MdLogout } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
@@ -8,11 +8,17 @@ interface ChatHeaderProps {
 }
 
 const ChatHeader = ({ title }: ChatHeaderProps) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const onClickOutButton = () => {
+    setLoading(true);
     sessionStorage.removeItem('userId');
-    navigate('/');
+
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/');
+    }, 2000);
   };
 
   return (
