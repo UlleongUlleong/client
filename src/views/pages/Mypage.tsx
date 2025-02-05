@@ -22,6 +22,7 @@ import {
 import ImageModal from '../../components/mypage/ImageModal';
 import WithDrawModal from '../../components/mypage/WithdrawModal';
 import { logoutApi } from '../../api/users/loginApi';
+import PasswordResetModal from '../../components/mypage/PasswordResetModal';
 
 function Mypage() {
   const [profile, setProfile] = useState<ProfileType | null>(null);
@@ -32,9 +33,11 @@ function Mypage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState(false);
   const toggleModal = () => setIsModalOpen(!isModalOpen);
-  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   const toggleWithdrawModal = () => setIsWithdrawModalOpen((prev) => !prev);
+  const toggleResetModal = () => setIsResetPasswordOpen((prev) => !prev);
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   const navigate = useNavigate();
   const isAlertShown = useRef(false);
 
@@ -168,7 +171,6 @@ function Mypage() {
     ],
   });
 
-
   return (
     <>
       <MypageStyle>
@@ -231,6 +233,12 @@ function Mypage() {
                     }}
                   >
                     회원정보 수정
+                  </li>
+                  <li onClick={() => {
+                    toggleResetModal();
+                    setIsDropdownOpen(false);
+                  }}>
+                    비밀번호 수정
                   </li>
                   <li onClick={() => {
                     toggleWithdrawModal();
@@ -307,6 +315,13 @@ function Mypage() {
             isOpen={isWithdrawModalOpen}
             onClose={toggleWithdrawModal}
             onConfirm={handleWithdrawConfirm}
+          />
+        )}
+        {isResetPasswordOpen && (
+          <PasswordResetModal
+            toggleResetModal={toggleResetModal}
+            isResetPasswordOpen={isResetPasswordOpen}
+            setIsResetPasswordOpen={setIsResetPasswordOpen}
           />
         )}
       </MypageStyle>

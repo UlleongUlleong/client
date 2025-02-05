@@ -111,3 +111,16 @@ export const WithdrawUser = async (password: string) => {
     throw error;
   }
 };
+
+export const ResetPassword = async (password: string, confirmPassword: string) => {
+  try {
+    const response = await apiClient.put(`/api/users/password`, {
+      password: password,
+      confirmPassword: confirmPassword
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
