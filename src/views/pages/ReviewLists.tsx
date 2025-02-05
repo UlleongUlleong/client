@@ -36,7 +36,7 @@ function ReviewLists() {
     isError,
     error,
   } = useAlcoholsQuery(categoryId, 5, sort);
-  const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
+  const alcoholCategories = [{ id: 0, name: '전체' }, ...category];
   const filteredItems = alcoholCategories.find(
     (item) => item.id === categoryId,
   );
