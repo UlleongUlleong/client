@@ -194,6 +194,7 @@ const AlcoholDetailStyle = styled.div`
       padding: 10px;
       font-size: 1rem;
       text-decoration: underline;
+      cursor: pointer;
     }
 
     .review-container {
