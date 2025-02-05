@@ -10,9 +10,9 @@ interface SelecteThemeProps {
 const SelectTheme = ({ themeId, setThemeId }: SelecteThemeProps) => {
   const handleClickButton = (direction: 'left' | 'right') => {
     if (direction === 'left') {
-      setThemeId((prev) => (prev === 1 ? 7 : prev - 1));
+      setThemeId((prev) => (prev === 1 ? 9 : prev - 1));
     } else {
-      setThemeId((prev) => (prev === 7 ? 1 : prev + 1));
+      setThemeId((prev) => (prev === 9 ? 1 : prev + 1));
     }
   };
 
@@ -27,7 +27,7 @@ const SelectTheme = ({ themeId, setThemeId }: SelecteThemeProps) => {
             </button>
           </div>
           <div>
-            <img src={`/public/assets/image/chatTheme/theme0${themeId}.jpg`} />
+            <img src={`/assets/image/chatTheme/theme0${themeId}.jpg`} />
           </div>
           <div className="btn">
             <button onClick={() => handleClickButton('right')}>
