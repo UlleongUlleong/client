@@ -65,7 +65,11 @@ const EmailDuplicateTest = () => {
   return (
     <EmailDuplicateTestStyle>
       <div className="logo">
-        <img className="logo-img" src="src/assets/images/logo.png" alt="Logo" />
+        <img
+          className="logo-img"
+          src="/public/assets/image/logo/logo.png"
+          alt="Logo"
+        />
       </div>
       <div className="verification-container">
         <h3>이메일 중복검사</h3>
