@@ -12,7 +12,6 @@ import { useCategoryStore } from '../store/useCategoryStore';
 
 export const useAlcoholsByCategory = () => {
   const category = useCategoryStore((state) => state.alcoholCategories);
-  // const alcoholCategories = [{ id: 0, name: 'top 10' }, ...category];
 
   const queries = useQueries({
     queries: category.map((category) => ({

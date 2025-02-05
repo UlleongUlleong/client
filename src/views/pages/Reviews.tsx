@@ -38,7 +38,6 @@ function Reviews() {
 
   const category = useCategoryStore((state) => state.alcoholCategories);
 
-  // const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
   const { categoriesData, isLoading, isError } = useAlcoholsByCategory();
 
   if (isLoading)
@@ -65,7 +64,7 @@ function Reviews() {
           key={category.id}
           categoryId={category.id}
           categoryName={category.name}
-          alcoholsData={categoriesData[category.id]?.alcohols.data}
+          alcoholsData={categoriesData[category.id - 1]?.alcohols.data}
         />
       ))}
     </ReviewsMainContainer>
