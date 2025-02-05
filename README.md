@@ -117,9 +117,9 @@
 공동: UI 컴포넌트 개발, API 연동
 | 이름 | 역할 | 담당 업무 |
 | --- | --- | --- |
-| 박유빈<br>[@Yubeenpark](https://github.com/Yubeenpark) | 프론트엔드 개발,<br>UI/UX 디자인, <br>로고 디자인 | WebRTC 화상 통신, 메인과 리뷰 페이지 기능, 무한 스크롤과 전역 상태 관리 |
-| 정보미<br>[@bomii1](https://github.com/bomii1) | 프론트엔드 개발, <br> UI/UX 디자인 | socket.io 채팅, 로그인 및  oauth 소셜 로그인 전체 기능, 로그아웃|
-| 최은석<br>[@ces1225](https://github.com/ces1225) | 프론트엔드 개발, <br> UI/UX 디자인 |  북마크, 개인 페이지 전체 기능, 채팅 |
+| 박유빈<br>[@Yubeenpark](https://github.com/Yubeenpark) | 프론트엔드 개발,<br>UI/UX 디자인, <br>로고 디자인 | WebRTC 화상 통신, 메인과 리뷰 페이지 기능, 무한 스크롤 |
+| 정보미<br>[@bomii1](https://github.com/bomii1) | 프론트엔드 개발, <br> UI/UX 디자인 | socket.io 채팅, 로그인 및 oauth 소셜 로그인 전체 기능, 로그아웃 |
+| 최은석<br>[@ces1225](https://github.com/ces1225) | 프론트엔드 개발, <br> UI/UX 디자인 |  북마크, 유저 페이지 전체 기능, 채팅 |
 
 ## 🚀 시작하기
 
