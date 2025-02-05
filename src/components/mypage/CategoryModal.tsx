@@ -21,7 +21,9 @@ function CategoryModal({ closeModal, onUpdateComplete, profile }: ModalProps) {
   const [nickname, setNickname] = useState(profile.nickname);
   const [tempNickname, setTempNickname] = useState(profile.nickname);
   const [selectedMood, setSelectedMood] = useState<Set<number>>(new Set());
-  const [selectedAlcohol, setSelectedAlcohol] = useState<Set<number>>(new Set());
+  const [selectedAlcohol, setSelectedAlcohol] = useState<Set<number>>(
+    new Set(),
+  );
   const [moodOptions, setMoodOptions] = useState<Category[]>([]);
   const [alcoholOptions, setAlcoholOptions] = useState<Category[]>([]);
   const [isValidNickname, setIsValidNickname] = useState(true);
@@ -162,7 +164,8 @@ function CategoryModal({ closeModal, onUpdateComplete, profile }: ModalProps) {
               <span>{nickname}</span>
               <FaPen className="pen-icon" onClick={handleEditClick} />
             </>
-          )}        </h2>
+          )}{' '}
+        </h2>
         <div className="category-set">
           <span className="mood">주제 / 분위기</span>
           <span className="select">
@@ -181,8 +184,9 @@ function CategoryModal({ closeModal, onUpdateComplete, profile }: ModalProps) {
             {alcoholOptions.map((alcohol) => (
               <span
                 key={alcohol.id}
-                className={`value ${selectedAlcohol.has(alcohol.id) ? 'selected' : ''
-                  }`}
+                className={`value ${
+                  selectedAlcohol.has(alcohol.id) ? 'selected' : ''
+                }`}
                 onClick={() => handleAlcoholClick(alcohol.id)}
               >
                 {alcohol.name}
@@ -203,6 +207,7 @@ function CategoryModal({ closeModal, onUpdateComplete, profile }: ModalProps) {
     </CategoryModalStyle>
   );
 }
+
 const CategoryModalStyle = styled.div`
   position: fixed;
   top: 0;
@@ -220,7 +225,7 @@ const CategoryModalStyle = styled.div`
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     width: 50%;
     padding: 60px;
-    position: relative; 
+    position: relative;
   }
 
   .close-button {
@@ -260,7 +265,7 @@ const CategoryModalStyle = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: row; 
+      flex-direction: row;
 
       input {
         font-size: 20px;
@@ -268,14 +273,14 @@ const CategoryModalStyle = styled.div`
         border: 1px solid #ddd;
         border-radius: 5px;
         width: 120px;
-        margin-right: 8px; 
+        margin-right: 8px;
       }
 
       .edit-buttons {
         display: flex;
         gap: 8px;
         align-items: center;
-        margin-left: 0; 
+        margin-left: 0;
 
         .check-icon,
         .back-icon {
@@ -312,16 +317,24 @@ const CategoryModalStyle = styled.div`
         justify-content: center;
         font-size: clamp(12px, 3vw, 16px);
         padding: 4px 16px;
-        background-color: #f7f7f7;
+        background-color: #f5f4f4;
         border-radius: 20px;
-        border: 1px solid #ddd;
+        border: 1px solid #bcbcbc;
         margin: 4px;
         cursor: pointer;
         text-align: center;
         white-space: nowrap;
+        transition: all 0.2s ease-in-out;
 
         &.selected {
-          border: 1px solid #007bff;
+          border: 1px solid #273ec2;
+          background: #e8f0fe;
+          // transition: all 0.2s ease-in-out;
+          border-color: #273ec2;
+        }
+
+        &:hover {
+          background: #d7e4fc;
         }
       }
     }
@@ -331,7 +344,7 @@ const CategoryModalStyle = styled.div`
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    
+
     .save-btn {
       font-size: 16px;
       padding: 12px 40px;
