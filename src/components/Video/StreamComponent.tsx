@@ -24,7 +24,7 @@ export const StreamComponent: React.FC<{ streamManager: StreamManager }> = ({
 
   return (
     <StyledVideo>
-      <video autoPlay ref={videoRef} muted></video>
+      <video autoPlay ref={videoRef}></video>
       <div
         style={{
           position: 'absolute',
