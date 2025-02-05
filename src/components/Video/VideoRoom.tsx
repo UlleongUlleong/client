@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { Video, Mic, ChevronDown, MicOff, VideoOff } from 'lucide-react';
 import { useSocketStore } from '../create-room/socket/useSocketStore';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { GoAlert } from 'react-icons/go';
 
 function VideoRoom({ userName }: { userName: string }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -13,7 +15,6 @@ function VideoRoom({ userName }: { userName: string }) {
   const [isAudioActive, setIsAudioActive] = useState(true);
   const [isVideoActive, setIsVideoActive] = useState(true);
   const { socket } = useSocketStore();
-  const { roomId } = useParams<{ roomId: string }>();
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<string | undefined>(
     undefined,
@@ -44,6 +45,11 @@ function VideoRoom({ userName }: { userName: string }) {
 
     return () => {
       window.removeEventListener('beforeunload', unloadHandler);
+      if (sessionRef.current) {
+        sessionRef.current.disconnect();
+        console.log('컴포넌트 unmount시 세션 종료');
+        sessionRef.current = null;
+      }
     };
   }, []);
   useEffect(() => {
@@ -67,27 +73,35 @@ function VideoRoom({ userName }: { userName: string }) {
 
     const handleRoomJoined = (response) => {
       if (!tokenRef.current) {
-        console.log('✅ room_joined event: 토큰을 받아옵니다.', response.data);
+        console.log('✅ room_joined event');
         tokenRef.current = response.data.token;
         setToken(response.data.token);
       } else {
         console.log('🔍 Token already exists, ignoring duplicate token.');
       }
     };
-
+    socket.on('error', (error) => {
+      // 방장 에러 처리()
+      console.error('❌ Socket error:', error);
+      socketErrorRef.current = true;
+      toast.error(error.message, <GoAlert />);
+      navigate('/');
+    });
     socket.on('room_joined', handleRoomJoined);
 
     return () => {
-      socket.off('room_joined', handleRoomJoined);
-      // 🔹 이벤트 리스너 해제
+      console.log('🔌 소켓 연결 탈출');
+      if (!socketErrorRef.current) socket.off('room_joined', handleRoomJoined);
+      socket.off('error');
     };
   }, [socket]);
 
   useEffect(() => {
     const initSession = async () => {
-      if (!token || sessionRef.current) return;
+      if (!token || sessionRef.current || socketErrorRef.current) return;
 
       try {
+        console.log('🔌 Connecting to session');
         const OV = new OpenVidu();
         const newSession = OV.initSession();
 
@@ -126,7 +140,11 @@ function VideoRoom({ userName }: { userName: string }) {
         });
         await newSession.connect(token, { clientData: userName });
         console.log('✅ Successfully connected to session');
-
+        if (socketErrorRef.current) {
+          newSession.disconnect();
+          console.log('❌ Socket error 발생으로 세션 연결 취소');
+          return;
+        }
         const devices = await navigator.mediaDevices.enumerateDevices();
         const hasCamera = devices.some((d) => d.kind === 'videoinput');
         const hasAudio = devices.some((d) => d.kind === 'audioinput');
@@ -169,6 +187,8 @@ function VideoRoom({ userName }: { userName: string }) {
       setSubscribers([]);
     };
   }, [token, userName]);
+
+  //장치 재 설정 시 업데이트
   useEffect(() => {
     const updatePublisher = async () => {
       if (!session || !publisher) return;
