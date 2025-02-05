@@ -318,8 +318,8 @@ function VideoRoom({ userName }: { userName: string }) {
         const newPublisher = await OV.initPublisherAsync(undefined, {
           audioSource: selectedMic || (hasAudio ? undefined : false),
           videoSource: selectedCamera || (hasCamera ? undefined : false),
-          publishAudio: hasAudio,
-          publishVideo: hasCamera,
+          publishAudio: false,
+          publishVideo: false,
           resolution: '1280x720',
           frameRate: 30,
           insertMode: 'APPEND',
