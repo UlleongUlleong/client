@@ -37,6 +37,10 @@ function VideoRoom({ userName }: { userName: string }) {
     const unloadHandler = () => {
       if (sessionRef.current) {
         sessionRef.current.disconnect();
+        if (session) {
+          console.log('❌ session있음  Session disconnected');
+          session.disconnect();
+        }
         console.log('세션 강제 종료');
       }
     };
@@ -47,6 +51,10 @@ function VideoRoom({ userName }: { userName: string }) {
       window.removeEventListener('beforeunload', unloadHandler);
       if (sessionRef.current) {
         sessionRef.current.disconnect();
+        if (session) {
+          console.log('❌ session있음  Session disconnected');
+          session.disconnect();
+        }
         console.log('컴포넌트 unmount시 세션 종료');
         sessionRef.current = null;
       }
@@ -83,9 +91,9 @@ function VideoRoom({ userName }: { userName: string }) {
     socket.on('error', (error) => {
       // 방장 에러 처리()
       console.error('❌ Socket error:', error);
-      // socketErrorRef.current = true;
+      socketErrorRef.current = true;
       toast.error(error.message, <GoAlert />);
-      // navigate('/');
+      navigate('/');
     });
     socket.on('room_joined', handleRoomJoined);
 
@@ -185,6 +193,11 @@ function VideoRoom({ userName }: { userName: string }) {
     return () => {
       if (sessionRef.current) {
         sessionRef.current.disconnect();
+        if (session) {
+          console.log('❌ session있음  Session disconnected');
+          session.disconnect();
+        }
+
         console.log('❌ Session disconnected');
         sessionRef.current = null;
       }

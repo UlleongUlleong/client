@@ -6,7 +6,10 @@ import Chat from '../../components/chat-room/Chat';
 import ChatHeader from '../../components/chat-room/ChatHeader';
 import { getRoomInfo } from '../../api/roomApi';
 import { useSocketStore } from '../../components/create-room/socket/useSocketStore';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { GoAlert } from 'react-icons/go';
+import axios, { AxiosError } from 'axios';
 
 const LoadingScreen = () => {
   return (
@@ -35,7 +38,7 @@ const ChatRoom = () => {
   const [theme, setTheme] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (!socket || !roomId) return;
 
@@ -50,9 +53,18 @@ const ChatRoom = () => {
 
   useEffect(() => {
     const getUserName = async () => {
-      const profile = await getProfile();
-      if (profile) {
+      try {
+        console.log('👤 유저 정보 불러오는 중...');
+        const profile = await getProfile();
+
+        console.log('👤 프로필 있음...');
         setUserName(profile.nickname);
+      } catch (error) {
+        console.error('❌ 유저 정보 불러오는 중 오류 발생:', error);
+        toast.error('로그인이 필요한 서비스입니다.', {
+          icon: <GoAlert />,
+        });
+        navigate('/login');
       }
     };
     getUserName();
@@ -69,7 +81,7 @@ const ChatRoom = () => {
         setTheme(response.data.theme);
         console.log('방정보패치', response);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('❌ 방 정보를 불러오는 중 오류 발생:', error);
     }
   };

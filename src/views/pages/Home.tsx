@@ -22,6 +22,9 @@ import styled from 'styled-components';
 import { useFetchRecentChatRooms } from '../../hooks/getChatroom.ts';
 import { NoResults } from '../../styles/Alcohol.ts';
 import { LoadingMain } from './Reviews.tsx';
+import { isLogin } from '../../api/user.ts';
+import { toast } from 'react-toastify';
+import { GoAlert } from 'react-icons/go';
 
 export const GridTopBar = styled.div`
   height: 50px;
@@ -43,8 +46,18 @@ function Home() {
   const { data, status } = useFetchRecentChatRooms(10);
   const mergedData = data?.pages?.flatMap((page) => page.data) || [];
 
-  const navigateToMakeRoom = () => {
-    navigate('/create-room');
+  const navigateToMakeRoom = async () => {
+    try {
+      const loginStatus = await isLogin();
+      if (loginStatus) {
+        navigate('/create-room');
+      } else {
+        toast.error('로그인이 필요한 서비스입니다.', <GoAlert />);
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const settings = {
