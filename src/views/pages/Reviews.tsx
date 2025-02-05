@@ -53,7 +53,7 @@ function Reviews() {
         key={0}
         categoryId={0}
         categoryName={'평점 TOP 10'}
-        alcoholsData={top10.alcohols}
+        alcoholsData={top10.alcohols.data}
       />
       {category.map((category) => (
         <AlcoholEachCategory
