@@ -175,6 +175,7 @@ const Chat = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
+          maxLength={500}
         />
         <button className="send-btn" type="submit" disabled={message === ''}>
           <FiSend />
