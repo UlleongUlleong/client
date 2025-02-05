@@ -45,6 +45,7 @@ function Reviews() {
         <img src={Spinner} alt="loading" className="w-8 h-8 animate-spin" />
       </LoadingMain>
     );
+
   if (isError) return <NoResults>에러 발생</NoResults>;
   return (
     <ReviewsMainContainer>
@@ -53,7 +54,7 @@ function Reviews() {
         key={0}
         categoryId={0}
         categoryName={'평점 TOP 10'}
-        alcoholsData={top10[0]?.alcohols.data}
+        alcoholsData={top10.alcohols.data}
       />
       {category.map((category) => (
         <AlcoholEachCategory
