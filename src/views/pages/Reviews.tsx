@@ -19,8 +19,7 @@ export const LoadingMain = styled.div`
 `;
 
 interface AlcoholTop10 {
-  id: number;
-  alcohols: { data: IAlcohol[] };
+  alcohols: IAlcohol[];
 }
 
 //리뷰 메인 페이지
@@ -54,7 +53,7 @@ function Reviews() {
         key={0}
         categoryId={0}
         categoryName={'평점 TOP 10'}
-        alcoholsData={top10.alcohols.data}
+        alcoholsData={top10.alcohols}
       />
       {category.map((category) => (
         <AlcoholEachCategory
