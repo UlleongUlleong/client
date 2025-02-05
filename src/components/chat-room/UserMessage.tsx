@@ -46,11 +46,11 @@ const MessageStyle = styled.div<MessageStyleProps>`
   }
 
   .user-message {
-    background: #D0D5F3
+    background: ${({ $me }) => ($me ? '#D9D9D9' : '#D0D5F3')};
     width: auto;
     max-width: 90%;
     word-wrap: break-word;
-    word-break: break-word; 
+    word-break: break-word;
     white-space: pre-wrap;
     border-radius: 4px;
     padding: 6px;
