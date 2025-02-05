@@ -99,7 +99,9 @@ function AlcoholDetail() {
           )}
         </div>
         <div className="review-container">
-          <h1>{alcoholData?.reviewCount}개의 리뷰</h1>
+          <div className="title-alignment">
+            <h2>{alcoholData?.reviewCount}개의 리뷰</h2>
+          </div>
           <div className="container">
             <div className="reviews">
               {reviewData && reviewData.length > 0 ? (
@@ -113,7 +115,15 @@ function AlcoholDetail() {
                   />
                 ))
               ) : (
-                <p>등록된 리뷰가 없습니다.</p>
+                <p className="empty-review">
+                  <span>등록된 리뷰가 없습니다.</span>
+                  <button
+                    className="write-review"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    리뷰 작성하기 Click
+                  </button>
+                </p>
               )}
             </div>
           </div>
@@ -158,13 +168,41 @@ const AlcoholDetailStyle = styled.div`
         visibility: hidden;
       }
     }
+
+    .title-alignment {
+      display: flex;
+      justify-content: flex-start;
+
+      h2 {
+        font-size: 1.4rem;
+        padding-bottom: 6px;
+      }
+    }
+
+    .empty-review {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      font-size: 1.1rem;
+    }
+
+    .write-review {
+      background: none;
+      border: none;
+      padding: 10px;
+      font-size: 1rem;
+      text-decoration: underline;
+    }
+
     .review-container {
       .container {
         width: 600px;
         height: 600px;
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        background-color: #dbd4d4;
+        background-color: #f1f1f1;
         display: flex;
         justify-content: center;
         .reviews {
