@@ -36,7 +36,7 @@ function ReviewLists() {
     isError,
     error,
   } = useAlcoholsQuery(categoryId, 5, sort);
-  const alcoholCategories = [{ id: 0, name: '전체' }, ...category];
+  const alcoholCategories = [{ id: 0, name: '평점 TOP 10' }, ...category];
   const filteredItems = alcoholCategories.find(
     (item) => item.id === categoryId,
   );
@@ -85,7 +85,9 @@ function ReviewLists() {
     <ReviewsMainContainer>
       <SearchBar isMoodCategories={false} />
       <GridTopBar>
-        <CategoryTitle>{categoryName}</CategoryTitle>
+        <CategoryTitle>
+          {categoryName === '평점 TOP 10' ? '전체' : categoryName}
+        </CategoryTitle>
         <Dropdown onSelect={handleSort} sortOptions={sortReviewOptions} />
       </GridTopBar>
       <AlcoholGrid alcohols={alcoholsData} />
