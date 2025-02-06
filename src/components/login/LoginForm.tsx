@@ -76,7 +76,7 @@ const LoginForm = () => {
     const top = window.screenY + (window.innerHeight - height) / 2;
 
     const win = window.open(
-      `https://www.sulleong.coderoom.site//find-password`,
+      `https://www.sulleong.coderoom.site/find-password`,
       'FindPassword',
       `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
     );
