@@ -53,7 +53,7 @@ const RegisterForm = ({
     const top = window.screenY + (window.innerHeight - height) / 2;
 
     const newWindow = window.open(
-      `http://localhost:5173/email-duplication?email=${encodeURIComponent(email)}`,
+      `https://www.sulleong.coderoom.site/email-duplication?email=${encodeURIComponent(email)}`,
       'EmailDuplicationTest',
       `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no`,
     );
