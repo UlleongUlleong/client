@@ -87,7 +87,7 @@ const EmailVerificationTab = () => {
       <div className="logo">
         <img
           className="logo-img"
-          src="/public/assets/image/logo/logo.png"
+          src="/assets/image/logo/logo.png"
           alt="Logo"
         />
       </div>
