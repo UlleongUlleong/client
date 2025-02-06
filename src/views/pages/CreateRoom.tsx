@@ -102,7 +102,8 @@ const CreateRoomStyle = styled.div`
   .content {
     height: 100%;
     max-height: 100%;
-    width: 80%;
+    width: 50%;
+    min-width: 600px;
   }
 
   .button-group {
