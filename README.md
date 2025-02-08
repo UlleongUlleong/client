@@ -13,8 +13,8 @@
 🏠<strong>취향별 공간</strong>: 맥주 마실 사람하고만 대화하고 싶다면 카테고리를 사용해보세요! 혼술, 왁자지껄 등 다양한 분위기와 맥주, 와인 등 특정 술 카테고리로 그날그날 원하는 분위기로 대화해요.  <br>
 💬<strong>실시간 & 화상 채팅</strong>: 실시간으로 채팅하거나 얼굴을 보며 함께께 술을 마시면 술 맛도 2배! 술을 자유롭게 마시면서 대화할 수 있어요.<br>
 👍🏼<strong>술 리뷰 공유</strong>: 술에 관한 얘기를 나누고 싶은 데 마땅하게 대화나눌 사람이 없다면 리뷰 서비스를 이용해보세요! 마셨던 술을 평가하고, 취향이 비슷한 사람들과 이야기를 나눠봐요. 사람들의 리뷰를 참고하여 나의 최애 술을 찾아봐요.
-<br><br><img src="https://github.com/user-attachments/assets/04c6cd10-2680-464a-840d-4d05487e77b9" width="500" height="500"/>
-<img src="https://github.com/user-attachments/assets/60db3e1c-6dda-46ab-9c0f-edb7504319cc" width="500" height="500"/>
+<br><br><img src="https://github.com/user-attachments/assets/04c6cd10-2680-464a-840d-4d05487e77b9" />
+<img src="https://github.com/user-attachments/assets/60db3e1c-6dda-46ab-9c0f-edb7504319cc" />
 ## 🛠️ 기술 스택
 
 - **프레임워크**: React + Vite
