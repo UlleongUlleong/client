@@ -3,7 +3,7 @@
 
 # **술렁술렁 (SlleongSlleong)**
 *실시간으로 술에 관한 대화를 하며, 같이 술을 즐기는 서비스*
-<br><br><img src="https://github.com/user-attachments/assets/04c6cd10-2680-464a-840d-4d05487e77b9" width="500" height="500"/>
+
 
 ## 🚀 프로젝트 소개
 
@@ -13,15 +13,17 @@
 🏠<strong>취향별 공간</strong>: 맥주 마실 사람하고만 대화하고 싶다면 카테고리를 사용해보세요! 혼술, 왁자지껄 등 다양한 분위기와 맥주, 와인 등 특정 술 카테고리로 그날그날 원하는 분위기로 대화해요.  <br>
 💬<strong>실시간 & 화상 채팅</strong>: 실시간으로 채팅하거나 얼굴을 보며 함께께 술을 마시면 술 맛도 2배! 술을 자유롭게 마시면서 대화할 수 있어요.<br>
 👍🏼<strong>술 리뷰 공유</strong>: 술에 관한 얘기를 나누고 싶은 데 마땅하게 대화나눌 사람이 없다면 리뷰 서비스를 이용해보세요! 마셨던 술을 평가하고, 취향이 비슷한 사람들과 이야기를 나눠봐요. 사람들의 리뷰를 참고하여 나의 최애 술을 찾아봐요.
-
+<br><br><img src="https://github.com/user-attachments/assets/04c6cd10-2680-464a-840d-4d05487e77b9" width="500" height="500"/>
+<img src="https://github.com/user-attachments/assets/60db3e1c-6dda-46ab-9c0f-edb7504319cc" width="500" height="500"/>
 ## 🛠️ 기술 스택
 
 - **프레임워크**: React + Vite
 - **언어**: TypeScript
 - **상태 관리**: Zustand, React Query
+- **화상 채팅**: socket.io, openVidu
 - **네트워크 요청**: Axios
 - **라우팅**: React Router
-- **스타일링**: Styled Components, MUI
+- **스타일링**: Styled Components
 - **코드 품질**: ESLint, Prettier
 - **테스트**: MSW (Mock Service Worker)
 - **배포**: Cloudflare
@@ -32,15 +34,33 @@
 - webRTC를 이용한 화상 채팅 (openVidu)
 - 채팅방 카테고리 설정을 통해 원하는 분위기와 주류 채팅방 검색, 참여
 - 최신순, 참여자 순으로 정렬
+
 ### 회원
 - 회원가입
 - 소셜 로그인 
 - 사용자 맞춤 카테고리 설정 
-- 사용자 프로필 사진 업로드 
+- 사용자 프로필 사진 업로드
+
+
 ### 리뷰
 - 여러 종류의 술에 대한 평점, 리뷰를 보고 남기기
 - 술 종류별로 검색
 - 북마크하거나 리뷰한 술만 모아보기
+
+
+## 👀 페이지 소개
+![image](https://github.com/user-attachments/assets/7a39b702-1cfe-444e-b529-3fd5ccff37f3)
+![image](https://github.com/user-attachments/assets/d4b34d0a-3074-43eb-bd79-2368bcf30211)
+![image](https://github.com/user-attachments/assets/2ccd1030-c6fb-4588-a054-624144b39cd2)
+
+
+![image](https://github.com/user-attachments/assets/8128ed2b-17d8-4bbf-b347-ed857e1a833b)
+![image](https://github.com/user-attachments/assets/199fc67e-fdea-4258-9158-b5115ea8b9a0)
+
+![image](https://github.com/user-attachments/assets/5304cde6-aa29-4761-9589-1f0d4b175a8c)
+![image](https://github.com/user-attachments/assets/356b703b-7745-418a-96d4-249499dbb08a)
+![image](https://github.com/user-attachments/assets/69d20ab4-5612-4300-91c7-23e2cdfc9a9d)
+
 
 ## ⚙️ 시스템 아키텍처 
 ![image](https://github.com/user-attachments/assets/7eb8d920-a38d-4d24-9fcb-1d405a68f363)
